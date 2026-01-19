@@ -3,7 +3,6 @@ sidebar_position: 1
 ---
 
 # Introduction to CESMII and i3X
-JW was here
 
 ## What is CESMII?
 
