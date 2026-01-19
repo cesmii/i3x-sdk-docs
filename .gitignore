@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Docusaurus build and cache
+.docusaurus/
+build/
+.cache-loader
+
+# Package manager lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

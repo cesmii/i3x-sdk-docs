@@ -1,0 +1,382 @@
+---
+sidebar_position: 1
+---
+
+# Introduction to CESMII and i3X
+
+## What is CESMII?
+
+**CESMII - The Smart Manufacturing Institute** is a public-private partnership and Manufacturing USA institute founded in 2016 in partnership with the U.S. Department of Energy's Office of Energy Efficiency and Renewable Energy. As the national institute focused on smart manufacturing, CESMII accelerates the adoption of advanced manufacturing technologies through research, development, and deployment of smart manufacturing solutions.
+
+### Mission and Vision
+
+CESMII's mission is to radically impact manufacturing performance through measurable improvements in:
+- Quality
+- Throughput
+- Costs and profitability
+- Safety
+- Asset reliability
+- Energy productivity
+
+The institute works to democratize smart manufacturing, making advanced technologies accessible to manufacturers of all sizes across the United States manufacturing ecosystem.
+
+### Organizational Structure
+
+- **Program Home**: University of California, Los Angeles (UCLA) - Office of Advanced Research Computing
+- **Leadership**: CEO and executive team guiding strategic initiatives
+- **Members**: Manufacturing companies, technology providers, academic institutions, and research organizations
+- **Regional Centers**: Smart Manufacturing Innovation Centers (SMICs) located throughout the U.S.
+
+## CESMII's Four Strategic Pillars
+
+### 1. Technology Development
+
+CESMII drives innovation in enabling technologies for smart manufacturing:
+- Advanced sensors
+- Data analytics and modeling
+- Industrial IoT platforms
+- Automation and controls
+- Artificial intelligence and machine learning
+
+### 2. Platform Development
+
+The institute developed the **Smart Manufacturing Innovation Platform™ (SMIP™)** - a vendor-agnostic, interoperable platform that:
+- Normalizes data across diverse protocols
+- Enforces reusable information models
+- Provides guaranteed API contracts for application development
+- Enables rapid, cost-effective deployment of smart manufacturing solutions
+
+### 3. Education & Workforce Development
+
+CESMII democratizes smart manufacturing knowledge through:
+- Training programs and certifications
+- Curriculum development
+- YouTube training videos
+- Webinars and workshops
+- Industry partnerships
+
+### 4. Technology Deployment
+
+Supporting manufacturers in implementing smart manufacturing solutions:
+- Project funding opportunities
+- Use case demonstrations
+- Technology validation
+- Industry partnerships
+
+## Smart Manufacturing Profiles (SM Profiles)
+
+One of CESMII's key innovations is the **Smart Manufacturing Profile™** concept - standardized information models that describe manufacturing equipment and processes.
+
+### What are SM Profiles?
+
+SM Profiles are OPC UA Information Model type definitions that provide:
+- **Equipment Characteristics**: Standardized descriptions of manufacturing assets
+- **Identification Metadata**: Manufacturer, model, serial number information
+- **Runtime Data Structure**: How operational data is organized
+- **Behavioral Contracts**: Expected interactions and capabilities
+
+### Benefits of SM Profiles
+
+- **Interoperability**: Equipment from different vendors can be understood uniformly
+- **Portability**: Applications written once work across multiple platforms
+- **Semantic Understanding**: Data comes with meaning and context
+- **Reduced Integration Costs**: Standard interfaces eliminate custom integration work
+
+### SM Profile Ecosystem
+
+- **100+ Companion Specifications**: Created in partnership with VDMA and OPC Foundation
+- **Cloud Library**: Free, open-source repository at uacloudlibrary.opcfoundation.org
+- **Profile Designer**: Tools for creating and publishing SM Profiles
+- **Marketplace**: Platform for discovering and sharing profiles at marketplace.cesmii.org
+
+## What is i3X?
+
+**i3X** (pronounced "i-three-X") is CESMII's demonstration server and reference implementation of the **Contextualized Manufacturing Information API** - a common, standardized API for accessing manufacturing data.
+
+### Purpose of i3X
+
+i3X serves multiple purposes in the CESMII ecosystem:
+
+1. **Demonstration Platform**: Shows how the CM Information API works in practice
+2. **Developer Sandbox**: Provides a testing environment for application developers
+3. **Reference Implementation**: Demonstrates best practices for API implementation
+4. **Prototype Validation**: Tests new API features and specifications
+
+### i3X Endpoints
+
+- **Base URL**: `https://i3x.cesmii.net`
+- **API Documentation**: `https://i3x.cesmii.net/docs`
+- **OpenAPI Specification**: Interactive Swagger UI for exploring endpoints
+
+### What You Can Do with i3X
+
+- **Explore the API**: Test endpoints and understand request/response formats
+- **Develop Applications**: Build and test client applications against real data
+- **Validate Concepts**: Prototype ideas before production deployment
+- **Learn Best Practices**: See how a compliant implementation works
+
+### i3X vs. Production Platforms
+
+Important distinctions:
+
+| Aspect | i3X | Production Platforms |
+|--------|-----|---------------------|
+| Purpose | Demo & testing | Real manufacturing operations |
+| Data | Sample/test data | Actual production data |
+| Availability | Best effort | High availability SLAs |
+| Security | Development level | Enterprise-grade |
+| Performance | Shared resources | Dedicated resources |
+| Support | Community support | Commercial support |
+
+## The CM Information API
+
+### The Problem
+
+The manufacturing industry suffers from API fragmentation:
+- Multiple proprietary APIs from different vendors
+- No standardization across platforms
+- Applications locked to specific platforms
+- High integration costs
+- Limited application portability
+
+### The Solution
+
+The **Contextualized Manufacturing Information (CM Information) API** provides:
+- **Common Interface**: Standard set of server primitives
+- **Platform Independence**: Works across diverse manufacturing systems
+- **Application Portability**: Write once, deploy anywhere
+- **Reduced Complexity**: Standardized contracts simplify development
+
+### Key Features
+
+1. **RESTful Design**: Modern, web-standard API architecture
+2. **Entity Model**: Flexible representation of manufacturing assets
+3. **Time-Series Data**: Efficient access to historical and real-time data
+4. **SM Profile Support**: Native support for Smart Manufacturing Profiles
+5. **Standard Authentication**: OAuth, JWT, and API key support
+6. **Comprehensive Documentation**: OpenAPI/Swagger specifications
+
+### API Coverage
+
+The CM Information API supports:
+- **Entity Management**: CRUD operations on manufacturing entities
+- **Data Access**: Reading current and historical values
+- **Hierarchies**: Parent-child relationships between entities
+- **Metadata**: Rich descriptive information
+- **Aggregations**: Statistical summaries of time-series data
+- **Filtering & Querying**: Flexible data retrieval
+- **Batch Operations**: Efficient multi-entity operations
+
+## The CESMII/VDMA Collaboration
+
+In late 2024, CESMII and **VDMA** (German Engineering Federation - Verband Deutscher Maschinen- und Anlagenbau) formed a Joint Working Group to develop the CM Information API specification.
+
+### Shared Goals
+
+- Manufacturing technology interoperability
+- Common information models and APIs
+- Reducing integration complexity
+- Enabling application ecosystems
+
+### Joint Working Group
+
+Following **W3C Best Practices** for standards development:
+- Open collaboration
+- Public review process
+- RFC-style feedback
+- Industry participation
+- Transparent governance
+
+### VDMA Contributions
+
+VDMA brings:
+- 90+ OPC UA Companion Specifications
+- Machine builder expertise
+- European manufacturing perspective
+- Industry 4.0 experience
+
+## How CESMII, SM Profiles, i3X, and the API Work Together
+
+```
+┌─────────────────────────────────────────────────────┐
+│  CESMII - The Organization                          │
+│  Mission: Accelerate Smart Manufacturing Adoption   │
+└─────────────────────────────────────────────────────┘
+                        │
+        ┌───────────────┼───────────────┐
+        │               │               │
+        ▼               ▼               ▼
+┌──────────────┐ ┌─────────────┐ ┌──────────────┐
+│ SM Profiles  │ │  CM Info    │ │     SMIP     │
+│              │ │    API      │ │   Platform   │
+│ Information  │ │             │ │              │
+│   Models     │ │ Standard    │ │ Reference    │
+│              │ │ Interface   │ │ Implementation│
+└──────────────┘ └─────────────┘ └──────────────┘
+        │               │               │
+        │               ▼               │
+        │        ┌─────────────┐        │
+        │        │     i3X     │        │
+        │        │             │        │
+        │        │   Demo &    │        │
+        └───────▶│  Reference  │◀───────┘
+                 │    Server   │
+                 └─────────────┘
+                        │
+                        ▼
+                 ┌─────────────┐
+                 │ Application │
+                 │ Developers  │
+                 └─────────────┘
+```
+
+### The Flow
+
+1. **SM Profiles** define what manufacturing data looks like
+2. **CM Information API** defines how to access that data
+3. **i3X** demonstrates the API with real SM Profile instances
+4. **Applications** use the API to access contextualized manufacturing data
+5. **SMIP and other platforms** implement the API for production use
+
+## Getting Started
+
+### For Application Developers
+
+1. **Explore i3X**: Visit https://i3x.cesmii.net/docs
+2. **Read the API Documentation**: Review the CM Information API specification
+3. **Try Sample Requests**: Use the Swagger UI to test endpoints
+4. **Build an Application**: Create a client using the standardized API
+5. **Join the Community**: Provide feedback via GitHub issues
+
+### For Platform Vendors
+
+1. **Review the RFC**: Read the specification at https://github.com/cesmii/API
+2. **Study i3X**: Examine the reference implementation
+3. **Implement the API**: Build server endpoints following the specification
+4. **Test Compliance**: Validate against the API requirements
+5. **Contribute Feedback**: Join the working group discussions
+
+### For Manufacturers
+
+1. **Learn About SM Profiles**: Understand how information models benefit your operations
+2. **Explore CESMII Resources**: Visit cesmii.org for training and funding opportunities
+3. **Engage with SMICs**: Connect with regional Smart Manufacturing Innovation Centers
+4. **Pilot Projects**: Start with small-scale implementations
+5. **Scale Adoption**: Expand successful pilots across facilities
+
+## Key Resources
+
+### CESMII Resources
+
+- **Main Website**: https://www.cesmii.org
+- **Marketplace**: https://marketplace.cesmii.org
+- **Profile Designer**: https://profiles.cesmii.org
+- **YouTube Channel**: https://www.youtube.com/@CESMII_SM
+
+### API & Technical Resources
+
+- **i3X Demo Server**: https://i3x.cesmii.net
+- **API RFC**: https://github.com/cesmii/API
+- **SM Profiles**: https://github.com/cesmii/SMProfiles
+- **GraphQL API (Legacy)**: https://github.com/cesmii/GraphQL-API
+
+### Standards & Specifications
+
+- **OPC UA Cloud Library**: https://uacloudlibrary.opcfoundation.org
+- **OPC Foundation**: https://opcfoundation.org
+- **VDMA**: https://www.vdma.org
+
+### Community & Support
+
+- **RFC Feedback**: rfc@cesmii.org
+- **Developer Support**: devops@cesmii.org
+- **General Inquiries**: info@cesmii.org
+- **GitHub Discussions**: https://github.com/cesmii/API/discussions
+
+## The Vision: An App Ecosystem for Manufacturing
+
+CESMII envisions a future where manufacturing applications work like smartphone apps:
+
+### The Analogy
+
+Just as iOS and Android provide common APIs that enable rich app ecosystems:
+- **Apple/Android** → Platform vendors (historians, MES, etc.)
+- **App Store** → CESMII Marketplace
+- **APIs** → CM Information API
+- **Apps** → Manufacturing applications (analytics, ML, visualization)
+- **Users** → Manufacturers benefiting from innovation
+
+### The Benefits
+
+- **Innovation**: Easier for developers to create manufacturing applications
+- **Choice**: Manufacturers can select from diverse applications
+- **Portability**: Applications work across different platforms
+- **Competition**: Drives better solutions and lower costs
+- **Accessibility**: Makes advanced technology available to all manufacturers
+
+## Current Status and Roadmap
+
+### Current State (2025)
+
+- **RFC Published**: CM Information API specification available for review
+- **i3X Operational**: Demo server available for testing
+- **Working Group Active**: CESMII/VDMA collaboration ongoing
+- **Community Engagement**: Public feedback and discussion period
+
+### Near-Term Goals
+
+- Finalize v1.0 API specification
+- Expand reference implementations
+- Grow developer community
+- Demonstrate production use cases
+- Increase SM Profile adoption
+
+### Long-Term Vision
+
+- Widespread API adoption across vendors
+- Vibrant marketplace of portable applications
+- Reduced integration costs industry-wide
+- Accelerated smart manufacturing transformation
+- Global standard for manufacturing information access
+
+## How to Get Involved
+
+### Provide Feedback
+
+- Review the RFC at https://github.com/cesmii/API
+- Submit issues and suggestions on GitHub
+- Participate in discussions
+- Email feedback to rfc@cesmii.org
+
+### Contribute
+
+- Implement the API in your platform
+- Build applications using the API
+- Create SM Profiles for your equipment
+- Share use cases and best practices
+- Join the working group
+
+### Learn More
+
+- Attend CESMII webinars and events
+- Watch training videos on YouTube
+- Visit a regional SMIC
+- Apply for project funding
+- Join as a CESMII member
+
+## Conclusion
+
+CESMII and i3X represent a collaborative effort to solve one of manufacturing's biggest challenges: data fragmentation and lack of interoperability. By providing standardized information models (SM Profiles) and a common API for accessing manufacturing data, CESMII is enabling a future where:
+
+- Applications are portable across platforms
+- Integration costs are dramatically reduced
+- Innovation accelerates through ecosystem effects
+- Smart manufacturing becomes accessible to all
+
+The i3X demonstration server provides a hands-on way to explore this vision, test the API, and understand how standardized manufacturing information access can transform the industry.
+
+Whether you're an application developer, platform vendor, or manufacturer, CESMII's work on SM Profiles and the CM Information API offers a path toward greater interoperability, reduced costs, and accelerated digital transformation in manufacturing.
+
+---
+
+**Ready to get started?** Visit https://i3x.cesmii.net to explore the API, or head to https://www.cesmii.org to learn more about CESMII's mission and programs.

@@ -1,0 +1,10 @@
+[Unit]
+Description=Docusaurus
+
+[Service]
+Type=simple
+ExecStart=/home/i3x/i3x-docs/start.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
