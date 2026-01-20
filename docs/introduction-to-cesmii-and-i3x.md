@@ -20,16 +20,9 @@ CESMII's mission is to radically impact manufacturing performance through measur
 
 The institute works to democratize smart manufacturing, making advanced technologies accessible to manufacturers of all sizes across the United States manufacturing ecosystem.
 
-### Organizational Structure
-
-- **Program Home**: University of California, Los Angeles (UCLA) - Office of Advanced Research Computing
-- **Leadership**: CEO and executive team guiding strategic initiatives
-- **Members**: Manufacturing companies, technology providers, academic institutions, and research organizations
-- **Regional Centers**: Smart Manufacturing Innovation Centers (SMICs) located throughout the U.S.
-
 ## CESMII's Four Strategic Pillars
 
-### 1. Technology Development
+### 1. New and Emerging Technology Development
 
 CESMII drives innovation in enabling technologies for smart manufacturing:
 - Advanced sensors
@@ -37,14 +30,6 @@ CESMII drives innovation in enabling technologies for smart manufacturing:
 - Industrial IoT platforms
 - Automation and controls
 - Artificial intelligence and machine learning
-
-### 2. Platform Development
-
-The institute developed the **Smart Manufacturing Innovation Platform™ (SMIP™)** - a vendor-agnostic, interoperable platform that:
-- Normalizes data across diverse protocols
-- Enforces reusable information models
-- Provides guaranteed API contracts for application development
-- Enables rapid, cost-effective deployment of smart manufacturing solutions
 
 ### 3. Education & Workforce Development
 
@@ -55,13 +40,13 @@ CESMII democratizes smart manufacturing knowledge through:
 - Webinars and workshops
 - Industry partnerships
 
-### 4. Technology Deployment
+### 4. Digital Transformation
 
 Supporting manufacturers in implementing smart manufacturing solutions:
-- Project funding opportunities
-- Use case demonstrations
-- Technology validation
-- Industry partnerships
+- Normalizes data across diverse protocols
+- Enforces reusable information models
+- Provides guaranteed API contracts for application development
+- Enables rapid, cost-effective deployment of smart manufacturing solutions
 
 ## Smart Manufacturing Profiles (SM Profiles)
 
@@ -150,50 +135,11 @@ The **Contextualized Manufacturing Information (CM Information) API** provides:
 ### Key Features
 
 1. **RESTful Design**: Modern, web-standard API architecture
-2. **Entity Model**: Flexible representation of manufacturing assets
+2. **Object Orientation**: Flexible representation of manufacturing assets
 3. **Time-Series Data**: Efficient access to historical and real-time data
 4. **SM Profile Support**: Native support for Smart Manufacturing Profiles
 5. **Standard Authentication**: OAuth, JWT, and API key support
 6. **Comprehensive Documentation**: OpenAPI/Swagger specifications
-
-### API Coverage
-
-The CM Information API supports:
-- **Entity Management**: CRUD operations on manufacturing entities
-- **Data Access**: Reading current and historical values
-- **Hierarchies**: Parent-child relationships between entities
-- **Metadata**: Rich descriptive information
-- **Aggregations**: Statistical summaries of time-series data
-- **Filtering & Querying**: Flexible data retrieval
-- **Batch Operations**: Efficient multi-entity operations
-
-## The CESMII/VDMA Collaboration
-
-In late 2024, CESMII and **VDMA** (German Engineering Federation - Verband Deutscher Maschinen- und Anlagenbau) formed a Joint Working Group to develop the CM Information API specification.
-
-### Shared Goals
-
-- Manufacturing technology interoperability
-- Common information models and APIs
-- Reducing integration complexity
-- Enabling application ecosystems
-
-### Joint Working Group
-
-Following **W3C Best Practices** for standards development:
-- Open collaboration
-- Public review process
-- RFC-style feedback
-- Industry participation
-- Transparent governance
-
-### VDMA Contributions
-
-VDMA brings:
-- 90+ OPC UA Companion Specifications
-- Machine builder expertise
-- European manufacturing perspective
-- Industry 4.0 experience
 
 ## How CESMII, SM Profiles, i3X, and the API Work Together
 
