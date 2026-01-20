@@ -61,7 +61,7 @@ This API is designed for implementation by:
 The API assumes that your platform:
 
 1. Has already contextualized raw manufacturing data
-2. Can map internal data structures to the API's entity model
+2. Can map internal data structures to the API's object model
 3. Supports time-series data storage and retrieval
 4. Implements appropriate security and access control
 5. Can handle concurrent client connections
@@ -71,7 +71,7 @@ The API assumes that your platform:
 This server implementation guide is organized into the following categories:
 
 1. **[Requirements](01-requirements.md)** - Core capabilities and compliance requirements
-2. **[Data Models](02-data-models.md)** - Entity and time-series data structures
+2. **[Data Models](02-data-models.md)** - Object model and time-series data structures
 3. **[Implementation Patterns](03-implementation-patterns.md)** - Code examples and best practices
 4. **[Smart Manufacturing Profiles](04-sm-profiles.md)** - OPC UA and SM Profile support
 5. **[Performance Optimization](05-performance.md)** - Caching, aggregation, and scaling
@@ -85,7 +85,7 @@ This server implementation guide is organized into the following categories:
 ## Getting Started
 
 1. Review the [Requirements](01-requirements.md) to understand what your implementation must support
-2. Study the [Data Models](02-data-models.md) to understand the API's entity and time-series structures
+2. Study the [Data Models](02-data-models.md) to understand the API's object model and time-series structures
 3. Explore the [Implementation Patterns](03-implementation-patterns.md) for code examples
 4. Implement security following the [Security](09-security.md) guidelines
 5. Set up monitoring using the [Monitoring](08-monitoring.md) recommendations

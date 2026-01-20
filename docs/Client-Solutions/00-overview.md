@@ -65,7 +65,7 @@ This client developer guide is organized into the following categories:
 1. **[Authentication](01-authentication.md)** - Authentication flows and token management
 2. **[Core Concepts](02-core-concepts.md)** - SM Profiles and contextualized data
 3. **[API Usage](03-api-usage.md)** - Common operations and usage patterns
-4. **[Data Models](04-data-models.md)** - Entity and time-series data structures
+4. **[Data Models](04-data-models.md)** - Object model and time-series data structures
 5. **[Best Practices](05-best-practices.md)** - Error handling, caching, and rate limiting
 6. **[Integration](06-integration.md)** - Framework-specific integration patterns
 7. **[Performance](07-performance.md)** - Optimization techniques

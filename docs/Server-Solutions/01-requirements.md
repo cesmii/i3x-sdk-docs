@@ -15,7 +15,7 @@ Your implementation MUST support:
 
 #### 2. Data Access
 
-- **Current Values**: Retrieve the latest values for entity attributes
+- **Current Values**: Retrieve the latest values for object attributes
 - **Historical Data**: Query time-series data with time range filters
 - **Data Quality**: Include quality indicators with data points
 - **Aggregations**: Support data aggregation (min, max, avg, count, etc.)
@@ -95,7 +95,7 @@ Your implementation should return appropriate status codes:
   401 Unauthorized        - Missing or invalid authentication
   403 Forbidden           - Insufficient permissions
   404 Not Found           - Resource doesn't exist
-  409 Conflict            - Conflicting state (e.g., duplicate entity)
+  409 Conflict            - Conflicting state (e.g., duplicate object)
   422 Unprocessable       - Validation errors
   429 Too Many Requests   - Rate limit exceeded
 
@@ -154,7 +154,7 @@ Use this checklist to ensure your implementation meets all requirements:
 ### Data Format
 - [ ] Return JSON responses
 - [ ] Use ISO 8601 for timestamps
-- [ ] Include links in entity responses
+- [ ] Include links in object responses
 - [ ] Support standard data types
 - [ ] Include quality indicators with data
 

@@ -12,63 +12,109 @@ api = Api(
     app,
     version='1.0.0',
     title='i3X API',
-    description='Contextualized Manufacturing Information API',
-    doc='/docs',
-    prefix='/api/v1'
+    description='Industrial Information Interface eXchange API',
+    doc='/docs'
 )
 
-# Define namespaces
-entities_ns = api.namespace('entities', description='Entity operations')
+# Define namespaces for API organization
+objects_ns = api.namespace('objects', description='Object operations')
+namespaces_ns = api.namespace('namespaces', description='Namespace operations')
+objecttypes_ns = api.namespace('objecttypes', description='ObjectType operations')
+subscriptions_ns = api.namespace('subscriptions', description='Subscription operations')
 
 # Define models
-entity_model = api.model('Entity', {
-    'id': fields.String(description='Unique entity identifier'),
-    'type': fields.String(required=True, description='Entity type'),
+object_model = api.model('Object', {
+    'elementId': fields.String(required=True, description='Unique object identifier'),
     'displayName': fields.String(required=True, description='Human-readable name'),
-    'namespace': fields.String(description='Namespace URI'),
-    'attributes': fields.Raw(description='Entity attributes'),
-    'metadata': fields.Raw(description='System metadata')
+    'typeId': fields.String(description='ObjectType elementId'),
+    'parentId': fields.String(description='Parent object elementId'),
+    'isComposition': fields.Boolean(description='Has child objects'),
+    'namespaceUri': fields.String(description='Namespace URI'),
+    'relationships': fields.Raw(description='Related object references')
 })
 
-# Define endpoints with documentation
-@entities_ns.route('/')
-class EntityList(Resource):
-    @entities_ns.doc('list_entities')
-    @entities_ns.param('limit', 'Maximum number of results', type='integer', default=100)
-    @entities_ns.param('offset', 'Offset for pagination', type='integer', default=0)
-    @entities_ns.param('type', 'Filter by entity type', type='string')
-    @entities_ns.marshal_list_with(entity_model)
+object_type_model = api.model('ObjectType', {
+    'elementId': fields.String(required=True, description='Unique type identifier'),
+    'displayName': fields.String(required=True, description='Human-readable name'),
+    'namespaceUri': fields.String(description='Namespace URI'),
+    'schema': fields.Raw(description='JSON Schema definition')
+})
+
+namespace_model = api.model('Namespace', {
+    'uri': fields.String(required=True, description='Namespace URI'),
+    'displayName': fields.String(required=True, description='Human-readable name')
+})
+
+value_response_model = api.model('ValueResponse', {
+    'elementId': fields.String(description='Object identifier'),
+    'value': fields.Raw(description='Current value'),
+    'timestamp': fields.String(description='ISO 8601 timestamp'),
+    'quality': fields.String(description='Quality indicator')
+})
+
+# Objects endpoints
+@objects_ns.route('/')
+class ObjectList(Resource):
+    @objects_ns.doc('list_objects')
+    @objects_ns.param('typeId', 'Filter by ObjectType elementId', type='string')
+    @objects_ns.param('includeMetadata', 'Include full metadata', type='boolean')
+    @objects_ns.marshal_list_with(object_model)
     def get(self):
-        """List all entities"""
-        pass
-    
-    @entities_ns.doc('create_entity')
-    @entities_ns.expect(entity_model)
-    @entities_ns.marshal_with(entity_model, code=201)
-    def post(self):
-        """Create a new entity"""
+        """List all objects (GET /objects)"""
         pass
 
-@entities_ns.route('/<string:entity_id>')
-class Entity(Resource):
-    @entities_ns.doc('get_entity')
-    @entities_ns.marshal_with(entity_model)
-    @entities_ns.response(404, 'Entity not found')
-    def get(self, entity_id):
-        """Get a specific entity"""
+@objects_ns.route('/list')
+class ObjectsByIds(Resource):
+    @objects_ns.doc('get_objects_by_ids')
+    def post(self):
+        """Get objects by elementId(s) (POST /objects/list)"""
         pass
-    
-    @entities_ns.doc('update_entity')
-    @entities_ns.expect(entity_model)
-    @entities_ns.marshal_with(entity_model)
-    def put(self, entity_id):
-        """Update an entity"""
+
+@objects_ns.route('/value')
+class ObjectValue(Resource):
+    @objects_ns.doc('get_object_value')
+    def post(self):
+        """Get current values for object(s) (POST /objects/value)"""
         pass
-    
-    @entities_ns.doc('delete_entity')
-    @entities_ns.response(204, 'Entity deleted')
-    def delete(self, entity_id):
-        """Delete an entity"""
+
+@objects_ns.route('/history')
+class ObjectHistory(Resource):
+    @objects_ns.doc('get_object_history')
+    def post(self):
+        """Get historical values for object(s) (POST /objects/history)"""
+        pass
+
+@objects_ns.route('/related')
+class ObjectRelated(Resource):
+    @objects_ns.doc('get_related_objects')
+    def post(self):
+        """Get related objects (POST /objects/related)"""
+        pass
+
+# Namespaces endpoints
+@namespaces_ns.route('/')
+class NamespaceList(Resource):
+    @namespaces_ns.doc('list_namespaces')
+    @namespaces_ns.marshal_list_with(namespace_model)
+    def get(self):
+        """List all namespaces (GET /namespaces)"""
+        pass
+
+# ObjectTypes endpoints
+@objecttypes_ns.route('/')
+class ObjectTypeList(Resource):
+    @objecttypes_ns.doc('list_object_types')
+    @objecttypes_ns.param('namespaceUri', 'Filter by namespace URI', type='string')
+    @objecttypes_ns.marshal_list_with(object_type_model)
+    def get(self):
+        """List all object types (GET /objecttypes)"""
+        pass
+
+@objecttypes_ns.route('/query')
+class ObjectTypeQuery(Resource):
+    @objecttypes_ns.doc('query_object_types')
+    def post(self):
+        """Query object types by elementId(s) (POST /objecttypes/query)"""
         pass
 ```
 
@@ -96,11 +142,11 @@ spec = APISpec(
     ),
     servers=[
         dict(
-            url="https://api.example.com/api/v1",
+            url="https://api.example.com",
             description="Production server"
         ),
         dict(
-            url="https://i3x.cesmii.net/api/v1",
+            url="https://i3x.cesmii.net",
             description="Demo server"
         )
     ],
@@ -118,14 +164,18 @@ spec.components.security_scheme(
 )
 
 # Add schemas
-spec.components.schema("Entity", schema=EntitySchema)
-spec.components.schema("Error", schema=ErrorSchema)
+spec.components.schema("Object", schema=ObjectSchema)
+spec.components.schema("ObjectType", schema=ObjectTypeSchema)
+spec.components.schema("Namespace", schema=NamespaceSchema)
+spec.components.schema("ValueResponse", schema=ValueResponseSchema)
+spec.components.schema("HTTPValidationError", schema=HTTPValidationErrorSchema)
 
 # Add paths
 with app.test_request_context():
-    spec.path(view=list_entities)
-    spec.path(view=get_entity)
-    spec.path(view=create_entity)
+    spec.path(view=list_objects)
+    spec.path(view=get_object_value)
+    spec.path(view=list_namespaces)
+    spec.path(view=list_object_types)
 
 # Serve OpenAPI spec
 @app.route('/openapi.json')
@@ -167,31 +217,38 @@ info:
     url: https://opensource.org/licenses/BSD-3-Clause
 
 servers:
-  - url: https://api.example.com/api/v1
+  - url: https://api.example.com
     description: Production server
-  - url: https://i3x.cesmii.net/api/v1
+  - url: https://i3x.cesmii.net
     description: Demo server
 
 paths:
-  /entities:
+  /namespaces:
     get:
-      summary: List all entities
-      operationId: listEntities
+      summary: List all namespaces
+      operationId: listNamespaces
       tags:
-        - Entities
+        - Namespaces
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Namespace'
+      security:
+        - bearerAuth: []
+
+  /objecttypes:
+    get:
+      summary: List all object types
+      operationId: listObjectTypes
+      tags:
+        - ObjectTypes
       parameters:
-        - name: limit
-          in: query
-          schema:
-            type: integer
-            default: 100
-            maximum: 1000
-        - name: offset
-          in: query
-          schema:
-            type: integer
-            default: 0
-        - name: type
+        - name: namespaceUri
           in: query
           schema:
             type: string
@@ -201,105 +258,257 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Entity'
-                  pagination:
-                    $ref: '#/components/schemas/Pagination'
+                type: array
+                items:
+                  $ref: '#/components/schemas/ObjectType'
       security:
         - bearerAuth: []
-    
-    post:
-      summary: Create a new entity
-      operationId: createEntity
+
+  /objects:
+    get:
+      summary: List all objects
+      operationId: listObjects
       tags:
-        - Entities
+        - Objects
+      parameters:
+        - name: typeId
+          in: query
+          schema:
+            type: string
+        - name: includeMetadata
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Object'
+      security:
+        - bearerAuth: []
+
+  /objects/value:
+    post:
+      summary: Get current values for object(s)
+      operationId: getObjectValue
+      tags:
+        - Objects
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/EntityCreate'
+              $ref: '#/components/schemas/GetObjectValueRequest'
       responses:
-        '201':
-          description: Entity created
+        '200':
+          description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Entity'
+                type: array
+                items:
+                  $ref: '#/components/schemas/ValueResponse'
         '422':
           description: Validation error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - bearerAuth: []
+
+  /objects/history:
+    post:
+      summary: Get historical values for object(s)
+      operationId: getObjectHistory
+      tags:
+        - Objects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetObjectHistoryRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ValueResponse'
+      security:
+        - bearerAuth: []
+
+  /subscriptions:
+    get:
+      summary: List all subscriptions
+      operationId: listSubscriptions
+      tags:
+        - Subscriptions
+      responses:
+        '200':
+          description: Successful response
+      security:
+        - bearerAuth: []
+
+    post:
+      summary: Create a new subscription
+      operationId: createSubscription
+      tags:
+        - Subscriptions
+      responses:
+        '201':
+          description: Subscription created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateSubscriptionResponse'
       security:
         - bearerAuth: []
 
 components:
   schemas:
-    Entity:
+    Namespace:
       type: object
       required:
-        - id
-        - type
+        - uri
         - displayName
       properties:
-        id:
+        uri:
           type: string
-          example: "urn:platform:entity:12345"
-        type:
+          example: "urn:platform:namespace:production"
+        displayName:
           type: string
-          example: "Equipment"
+          example: "Production Equipment"
+
+    ObjectType:
+      type: object
+      required:
+        - elementId
+        - displayName
+      properties:
+        elementId:
+          type: string
+          example: "urn:platform:type:Equipment"
+        displayName:
+          type: string
+          example: "Manufacturing Equipment"
+        namespaceUri:
+          type: string
+        schema:
+          type: object
+          additionalProperties: true
+
+    Object:
+      type: object
+      required:
+        - elementId
+        - displayName
+      properties:
+        elementId:
+          type: string
+          example: "urn:platform:object:12345"
         displayName:
           type: string
           example: "Packaging Line 1"
-        namespace:
+        typeId:
           type: string
-          example: "urn:platform:namespace:production"
-        description:
+        parentId:
           type: string
-        attributes:
-          type: object
-          additionalProperties: true
-        metadata:
-          $ref: '#/components/schemas/Metadata'
-    
-    Pagination:
-      type: object
-      properties:
-        limit:
-          type: integer
-        offset:
-          type: integer
-        total:
-          type: integer
-        hasMore:
+          nullable: true
+        isComposition:
           type: boolean
-    
-    Error:
+        namespaceUri:
+          type: string
+        relationships:
+          type: object
+          nullable: true
+          additionalProperties:
+            type: array
+            items:
+              type: string
+
+    GetObjectValueRequest:
       type: object
-      required:
-        - error
-        - message
       properties:
-        error:
+        elementId:
           type: string
-        message:
+        elementIds:
+          type: array
+          items:
+            type: string
+        maxDepth:
+          type: integer
+          default: 1
+
+    GetObjectHistoryRequest:
+      type: object
+      properties:
+        elementId:
           type: string
-        code:
+        elementIds:
+          type: array
+          items:
+            type: string
+        startTime:
           type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        maxDepth:
+          type: integer
+          default: 1
+
+    ValueResponse:
+      type: object
+      properties:
+        elementId:
+          type: string
+        value:
+          nullable: true
         timestamp:
           type: string
           format: date-time
-        path:
+          nullable: true
+        quality:
           type: string
-        details:
-          type: object
-  
+          nullable: true
+
+    CreateSubscriptionResponse:
+      type: object
+      properties:
+        subscriptionId:
+          type: string
+        message:
+          type: string
+
+    HTTPValidationError:
+      type: object
+      properties:
+        detail:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+
+    ValidationError:
+      type: object
+      properties:
+        loc:
+          type: array
+          items:
+            type: string
+        msg:
+          type: string
+        type:
+          type: string
+
   securitySchemes:
     bearerAuth:
       type: http
@@ -312,83 +521,81 @@ components:
 ### 1. Clear Descriptions
 
 ```python
-@api.route('/entities/<entity_id>/data')
-class EntityData(Resource):
-    @api.doc('get_entity_data', description='''
-        Retrieve time-series data for a specific entity.
-        
-        This endpoint returns historical data points within the specified time range.
-        The data can be aggregated using various methods (avg, min, max, sum, count).
-        
+@api.route('/objects/value')
+class ObjectValue(Resource):
+    @api.doc('get_object_value', description='''
+        Retrieve current values for one or more objects.
+
+        Use elementId for a single object or elementIds for multiple objects.
+        The maxDepth parameter controls recursion for compositional hierarchies:
+        - 0 = infinite recursion
+        - 1 = no child recursion (default)
+        - 2+ = limited depth
+
         Example:
-            GET /entities/123/data?startTime=2025-01-01T00:00:00Z&aggregation=avg&interval=3600
+            POST /objects/value
+            {"elementId": "urn:platform:object:12345", "maxDepth": 1}
     ''')
-    @api.param('startTime', 'Start of time range (ISO 8601)', required=True)
-    @api.param('endTime', 'End of time range (ISO 8601)')
-    @api.param('aggregation', 'Aggregation method', enum=['none', 'avg', 'min', 'max', 'sum', 'count'])
-    @api.param('interval', 'Aggregation interval in seconds', type='integer')
-    def get(self, entity_id):
-        """Get time-series data"""
+    def post(self):
+        """Get current values for object(s)"""
         pass
 ```
 
 ### 2. Request/Response Examples
 
 ```python
-entity_create_example = {
-    "type": "Equipment",
-    "displayName": "Packaging Line 1",
-    "namespace": "urn:platform:namespace:production",
-    "attributes": {
-        "manufacturer": "ACME Corp",
-        "model": "PL-5000",
-        "serialNumber": "SN-2023-001"
-    }
+value_request_example = {
+    "elementId": "urn:platform:object:12345",
+    "maxDepth": 1
 }
 
-entity_response_example = {
-    "id": "urn:platform:entity:12345",
-    **entity_create_example,
-    "metadata": {
-        "created": "2025-01-15T10:00:00Z",
-        "modified": "2025-01-15T10:00:00Z",
-        "version": "1.0"
-    }
+value_response_example = {
+    "elementId": "urn:platform:object:12345",
+    "value": 125.5,
+    "timestamp": "2025-01-15T12:00:00Z",
+    "quality": "Good"
 }
 
-@api.expect(entity_model, code=201, examples={
-    'application/json': entity_create_example
+history_request_example = {
+    "elementIds": ["urn:platform:object:12345", "urn:platform:object:12346"],
+    "startTime": "2025-01-15T00:00:00Z",
+    "endTime": "2025-01-15T23:59:59Z",
+    "maxDepth": 1
+}
+
+@api.expect(value_request_model, examples={
+    'application/json': value_request_example
 })
-@api.marshal_with(entity_model, code=201, examples={
-    'application/json': entity_response_example
+@api.marshal_with(value_response_model, examples={
+    'application/json': value_response_example
 })
 def post(self):
-    """Create entity"""
+    """Get object value"""
     pass
 ```
 
 ### 3. Error Documentation
 
 ```python
-@api.response(400, 'Bad Request', error_model, examples={
-    'application/json': {
-        'error': 'Validation failed',
-        'message': 'Invalid entity type',
-        'code': 'VALIDATION_ERROR',
-        'timestamp': '2025-01-15T12:00:00Z',
-        'path': '/objects',
-        'details': {
-            'type': 'Field is required'
-        }
-    }
-})
+@api.response(400, 'Bad Request', error_model)
 @api.response(401, 'Unauthorized', error_model)
 @api.response(403, 'Forbidden', error_model)
 @api.response(404, 'Not Found', error_model)
+@api.response(422, 'Validation Error', validation_error_model, examples={
+    'application/json': {
+        'detail': [
+            {
+                'loc': ['body', 'elementId'],
+                'msg': 'field required',
+                'type': 'value_error.missing'
+            }
+        ]
+    }
+})
 @api.response(429, 'Too Many Requests', error_model)
 @api.response(500, 'Internal Server Error', error_model)
-def get(self, entity_id):
-    """Get entity"""
+def post(self):
+    """Get object value"""
     pass
 ```
 
@@ -399,13 +606,14 @@ def get(self, entity_id):
 
 ## Overview
 
-This is a server implementation of the CESMII Contextualized Manufacturing Information API.
+This is a server implementation of the i3X Industrial Information Interface eXchange API.
 
 ## Features
 
-- RESTful API for manufacturing entities
-- Time-series data storage and retrieval
-- Data aggregation support
+- RESTful API for manufacturing objects
+- Namespace and ObjectType management
+- Time-series data storage and retrieval (current values and history)
+- Real-time subscriptions via Server-Sent Events
 - JWT authentication
 - Role-based access control
 - Smart Manufacturing Profile support
@@ -423,8 +631,8 @@ This is a server implementation of the CESMII Contextualized Manufacturing Infor
 
 \`\`\`bash
 # Clone repository
-git clone https://github.com/your-org/cm-api.git
-cd cm-api
+git clone https://github.com/your-org/i3x-api.git
+cd i3x-api
 
 # Install dependencies
 pip install -r requirements.txt
@@ -452,6 +660,15 @@ docker-compose up
 Interactive API documentation is available at:
 - Swagger UI: http://localhost:8000/docs
 - OpenAPI Spec: http://localhost:8000/openapi.json
+
+## Core Endpoints
+
+- `GET /namespaces` - List all namespaces
+- `GET /objecttypes` - List object type schemas
+- `GET /objects` - List all objects
+- `POST /objects/value` - Get current values
+- `POST /objects/history` - Get historical values
+- `POST /subscriptions` - Create real-time subscription
 
 ## Configuration
 
@@ -481,55 +698,6 @@ See [Contributing Guidelines](CONTRIBUTING.md)
 ## License
 
 BSD 3-Clause License
-```
-
-## CONTRIBUTING.md
-
-```markdown
-# Contributing Guidelines
-
-## Code of Conduct
-
-Be respectful and professional in all interactions.
-
-## Development Process
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Add tests
-5. Run tests (`pytest`)
-6. Commit changes (`git commit -m 'Add amazing feature'`)
-7. Push to branch (`git push origin feature/amazing-feature`)
-8. Open a Pull Request
-
-## Coding Standards
-
-- Follow PEP 8
-- Add docstrings to all functions and classes
-- Write tests for new features
-- Keep functions small and focused
-- Use type hints
-
-## Testing
-
-- Write unit tests for all new code
-- Maintain >80% code coverage
-- Run `pytest` before submitting PR
-
-## Documentation
-
-- Update API documentation for endpoint changes
-- Add examples for new features
-- Update README if needed
-
-## Pull Request Process
-
-1. Update documentation
-2. Add tests
-3. Ensure all tests pass
-4. Request review from maintainers
-5. Address review feedback
 ```
 
 ## Best Practices

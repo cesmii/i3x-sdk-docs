@@ -97,7 +97,7 @@ Each data point in the `dataPoints` array should include:
 
 ### Data Point Fields
 
-- **id** (string, required): Unique identifier within the entity
+- **id** (string, required): Unique identifier within the object
 - **displayName** (string, required): Human-readable name
 - **dataType** (string, required): Data type (see Supported Data Types)
 - **unit** (string, optional): Unit of measurement
