@@ -9,8 +9,7 @@ const FeatureList = [
     link: '/docs/Server-Developers/overview',
     description: (
       <>
-        Access the resources that connects you to custom APIs and technical documentation,
-        giving developers everything needed to integrate, configure, and build powerful server-side solutions with confidence.
+        Access the technical documentation for server implementations, providing everything needed to integrate, configure, and integrate I3X on your existing infrastructure or platforms.
       </>
     ),
   },
@@ -20,8 +19,8 @@ const FeatureList = [
     link: '/docs/Client-Developers/overview',
     description: (
       <>
-        Build responsive, user-facing experiences with ease. Connect with our client-side APIs and documentation,
-        enabling seamless integration, smooth interactions, and efficient data exchange directly within your applications.
+        Build responsive, user-facing experiences with ease. Connect with i3X via documentation, code samples and resources that
+        enable seamless integration, smooth interactions, and efficient data access directly within your applications.
       </>
     ),
   },
