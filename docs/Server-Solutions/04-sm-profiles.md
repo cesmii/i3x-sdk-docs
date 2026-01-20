@@ -2,7 +2,13 @@
 
 ## Overview
 
-Smart Manufacturing (SM) Profiles are OPC UA Information Model type definitions that provide standardized descriptions of manufacturing entities. This section explains how to support SM Profiles in your i3X implementation.
+Smart Manufacturing (SM) Profiles are OPC UA Information Model type definitions that provide standardized descriptions of manufacturing equipment and processes. In the i3X API, SM Profiles map to:
+
+- **Namespaces**: Each SM Profile or OPC UA Nodeset corresponds to a Namespace identified by its URI
+- **ObjectTypes**: Type definitions within a profile map to ObjectTypes with their schema definitions
+- **Objects**: Instances of SM Profile types become Objects with elementIds
+
+This section explains how to support SM Profiles in your i3X implementation.
 
 ## Mapping OPC UA Information Models
 
@@ -10,197 +16,193 @@ If your platform uses OPC UA Information Models or SM Profiles:
 
 ```python
 class ProfileMapper:
-    """Maps between your internal model and SM Profiles"""
-    
-    def map_to_api_entity(self, ua_node) -> Dict:
-        """Convert OPC UA node to API entity"""
+    """Maps between OPC UA nodes and i3X API models"""
+
+    def map_to_namespace(self, nodeset) -> Dict:
+        """Convert OPC UA Nodeset to i3X Namespace"""
         return {
-            'id': self._generate_entity_id(ua_node),
-            'type': ua_node.browse_name.Name,
-            'displayName': ua_node.display_name.Text,
-            'namespace': ua_node.browse_name.NamespaceUri,
-            'attributes': self._extract_attributes(ua_node),
-            'dataPoints': self._extract_data_points(ua_node)
+            'uri': nodeset.namespace_uri,
+            'displayName': nodeset.model_name or nodeset.namespace_uri.split(':')[-1]
         }
-    
-    def _generate_entity_id(self, ua_node) -> str:
-        """Generate unique entity ID from UA node"""
+
+    def map_to_object_type(self, ua_type_node) -> Dict:
+        """Convert OPC UA ObjectType to i3X ObjectType"""
+        return {
+            'elementId': self._generate_element_id(ua_type_node),
+            'displayName': ua_type_node.display_name.Text,
+            'namespaceUri': ua_type_node.browse_name.NamespaceUri,
+            'schema': self._build_json_schema(ua_type_node)
+        }
+
+    def map_to_object(self, ua_node) -> Dict:
+        """Convert OPC UA Object instance to i3X Object"""
+        return {
+            'elementId': self._generate_element_id(ua_node),
+            'displayName': ua_node.display_name.Text,
+            'typeId': self._get_type_element_id(ua_node),
+            'parentId': self._get_parent_element_id(ua_node),
+            'isComposition': len(list(ua_node.get_children())) > 0,
+            'namespaceUri': ua_node.browse_name.NamespaceUri,
+            'relationships': self._extract_relationships(ua_node)
+        }
+
+    def _generate_element_id(self, ua_node) -> str:
+        """Generate unique elementId from UA node"""
         return f"urn:ua:node:{ua_node.nodeid.to_string()}"
     
-    def _extract_attributes(self, ua_node) -> Dict:
-        """Extract static attributes from UA node"""
-        attributes = {}
-        
-        # Extract standard attributes
-        try:
-            # Manufacturer
-            manufacturer_node = ua_node.get_child(["0:Identification", "0:Manufacturer"])
-            if manufacturer_node:
-                attributes['manufacturer'] = manufacturer_node.get_value()
-        except:
-            pass
-        
-        try:
-            # Model
-            model_node = ua_node.get_child(["0:Identification", "0:Model"])
-            if model_node:
-                attributes['model'] = model_node.get_value()
-        except:
-            pass
-        
-        try:
-            # Serial Number
-            serial_node = ua_node.get_child(["0:Identification", "0:SerialNumber"])
-            if serial_node:
-                attributes['serialNumber'] = serial_node.get_value()
-        except:
-            pass
-        
-        return attributes
-    
-    def _extract_data_points(self, ua_node) -> List[Dict]:
-        """Extract variable nodes as data points"""
-        data_points = []
-        
-        # Iterate through child variable nodes
-        for child in ua_node.get_children():
+    def _build_json_schema(self, ua_type_node) -> Dict:
+        """Build JSON Schema from OPC UA type definition"""
+        schema = {
+            'type': 'object',
+            'properties': {}
+        }
+
+        # Extract properties from child variable nodes
+        for child in ua_type_node.get_children():
             if child.get_node_class() == NodeClass.Variable:
-                data_point = {
-                    'id': child.nodeid.to_string(),
-                    'displayName': child.get_display_name().Text,
-                    'dataType': self._map_datatype(child.get_data_type()),
-                    'accessLevel': self._map_access_level(child.get_access_level()),
+                prop_name = child.browse_name.Name
+                schema['properties'][prop_name] = {
+                    'type': self._map_datatype_to_json(child.get_data_type())
                 }
-                
+
                 # Add unit if available
                 try:
                     engineering_units = child.get_child(["0:EngineeringUnits"])
                     if engineering_units:
                         unit_info = engineering_units.get_value()
-                        data_point['unit'] = unit_info.DisplayName.Text
+                        schema['properties'][prop_name]['unit'] = unit_info.DisplayName.Text
                 except:
                     pass
-                
-                data_points.append(data_point)
-        
-        return data_points
+
+        return schema
+
+    def _extract_relationships(self, ua_node) -> Dict:
+        """Extract relationships from UA references"""
+        relationships = {}
+
+        for ref in ua_node.get_references():
+            ref_type = ref.ReferenceTypeId.to_string()
+            target_id = f"urn:ua:node:{ref.NodeId.to_string()}"
+
+            if ref_type not in relationships:
+                relationships[ref_type] = []
+            relationships[ref_type].append(target_id)
+
+        return relationships if relationships else None
+
+    def _get_type_element_id(self, ua_node) -> str:
+        """Get the type definition elementId for an instance"""
+        type_def = ua_node.get_type_definition()
+        return f"urn:ua:node:{type_def.to_string()}" if type_def else None
+
+    def _get_parent_element_id(self, ua_node) -> str:
+        """Get the parent elementId"""
+        parent = ua_node.get_parent()
+        return f"urn:ua:node:{parent.nodeid.to_string()}" if parent else None
     
-    def _map_datatype(self, ua_datatype) -> str:
-        """Map OPC UA data type to API data type"""
+    def _map_datatype_to_json(self, ua_datatype) -> str:
+        """Map OPC UA data type to JSON Schema type"""
         mapping = {
-            'Boolean': 'Boolean',
-            'SByte': 'Integer',
-            'Byte': 'Integer',
-            'Int16': 'Integer',
-            'UInt16': 'Integer',
-            'Int32': 'Integer',
-            'UInt32': 'Integer',
-            'Int64': 'Integer',
-            'UInt64': 'Integer',
-            'Float': 'Double',
-            'Double': 'Double',
-            'String': 'String',
-            'DateTime': 'DateTime',
-            'ByteString': 'ByteString'
+            'Boolean': 'boolean',
+            'SByte': 'integer',
+            'Byte': 'integer',
+            'Int16': 'integer',
+            'UInt16': 'integer',
+            'Int32': 'integer',
+            'UInt32': 'integer',
+            'Int64': 'integer',
+            'UInt64': 'integer',
+            'Float': 'number',
+            'Double': 'number',
+            'String': 'string',
+            'DateTime': 'string',
+            'ByteString': 'string'
         }
-        return mapping.get(str(ua_datatype), 'String')
-    
-    def _map_access_level(self, ua_access_level) -> str:
-        """Map OPC UA access level to API access level"""
-        if ua_access_level & 0x03 == 0x03:
-            return 'readwrite'
-        elif ua_access_level & 0x01:
-            return 'read'
-        elif ua_access_level & 0x02:
-            return 'write'
-        return 'read'
+        return mapping.get(str(ua_datatype), 'string')
 ```
 
-## Supporting Multiple Namespaces
+## Supporting Namespaces and ObjectTypes
 
 ```python
-@app.route('/api/v1/namespaces', methods=['GET'])
+@app.route('/namespaces', methods=['GET'])
 @require_auth
 def list_namespaces():
-    """List available namespaces"""
+    """List all available namespaces (GET /namespaces)"""
     namespaces = [
         {
             'uri': 'urn:platform:production',
-            'name': 'Production Equipment',
-            'description': 'Production line equipment and sensors',
-            'version': '1.0',
-            'publisher': 'Platform Vendor',
-            'publishDate': '2024-01-01T00:00:00Z'
+            'displayName': 'Production Equipment'
         },
         {
             'uri': 'urn:platform:quality',
-            'name': 'Quality Management',
-            'description': 'Quality control and inspection data',
-            'version': '1.0',
-            'publisher': 'Platform Vendor',
-            'publishDate': '2024-01-01T00:00:00Z'
-        }
-    ]
-    
-    return jsonify({'namespaces': namespaces}), 200
-
-@app.route('/api/v1/types', methods=['GET'])
-@require_auth
-def list_entity_types():
-    """List available entity types"""
-    namespace = request.args.get('namespace')
-    
-    types = [
-        {
-            'id': 'Equipment',
-            'namespace': 'urn:platform:production',
-            'displayName': 'Manufacturing Equipment',
-            'description': 'Physical manufacturing equipment',
-            'baseType': None,
-            'attributes': [
-                {'name': 'manufacturer', 'type': 'String', 'required': False},
-                {'name': 'model', 'type': 'String', 'required': False},
-                {'name': 'serialNumber', 'type': 'String', 'required': False}
-            ],
-            'dataPoints': [
-                {
-                    'name': 'status',
-                    'dataType': 'String',
-                    'enumValues': ['Running', 'Stopped', 'Maintenance']
-                }
-            ]
+            'displayName': 'Quality Management'
         },
         {
-            'id': 'PackagingLine',
-            'namespace': 'urn:platform:production',
-            'displayName': 'Packaging Line',
-            'description': 'High-speed packaging equipment',
-            'baseType': 'Equipment',
-            'attributes': [
-                {'name': 'lineSpeed', 'type': 'Double', 'required': False},
-                {'name': 'capacity', 'type': 'Integer', 'required': False}
-            ]
+            'uri': 'http://opcfoundation.org/UA/Machinery/',
+            'displayName': 'OPC UA Machinery'
         }
     ]
-    
-    if namespace:
-        types = [t for t in types if t['namespace'] == namespace]
-    
-    return jsonify({'types': types}), 200
 
-@app.route('/api/v1/types/<type_id>', methods=['GET'])
+    return jsonify(namespaces), 200
+
+@app.route('/objecttypes', methods=['GET'])
 @require_auth
-def get_entity_type(type_id: str):
-    """Get details of a specific entity type"""
-    namespace = request.args.get('namespace')
-    
-    # Find the type
-    type_def = type_repository.get_type(type_id, namespace)
-    
-    if not type_def:
-        return jsonify({'error': 'Type not found'}), 404
-    
-    return jsonify(type_def), 200
+def list_object_types():
+    """List all object type schemas (GET /objecttypes)"""
+    namespace_uri = request.args.get('namespaceUri')
+
+    types = [
+        {
+            'elementId': 'urn:platform:type:Equipment',
+            'displayName': 'Manufacturing Equipment',
+            'namespaceUri': 'urn:platform:production',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'manufacturer': {'type': 'string'},
+                    'model': {'type': 'string'},
+                    'serialNumber': {'type': 'string'},
+                    'status': {
+                        'type': 'string',
+                        'enum': ['Running', 'Stopped', 'Maintenance']
+                    }
+                }
+            }
+        },
+        {
+            'elementId': 'urn:platform:type:PackagingLine',
+            'displayName': 'Packaging Line',
+            'namespaceUri': 'urn:platform:production',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'lineSpeed': {'type': 'number'},
+                    'capacity': {'type': 'integer'}
+                }
+            }
+        }
+    ]
+
+    if namespace_uri:
+        types = [t for t in types if t['namespaceUri'] == namespace_uri]
+
+    return jsonify(types), 200
+
+@app.route('/objecttypes/query', methods=['POST'])
+@require_auth
+def query_object_types():
+    """Get object types by elementId (POST /objecttypes/query)"""
+    data = request.get_json()
+    element_id = data.get('elementId')
+    element_ids = data.get('elementIds', [])
+
+    if element_id:
+        element_ids = [element_id]
+
+    # Find matching types
+    results = type_repository.get_types_by_ids(element_ids)
+
+    return jsonify(results), 200
 ```
 
 ## SM Profile Cloud Library Integration
@@ -276,187 +278,205 @@ def import_sm_profile():
         return jsonify({'error': 'Import failed', 'message': str(e)}), 500
 ```
 
-## Type Inheritance
+## Type Registry and Inheritance
 
 Support type inheritance for SM Profiles:
 
 ```python
-class TypeRegistry:
-    """Registry for managing entity types with inheritance"""
-    
-    def __init__(self):
-        self.types = {}
-    
-    def register_type(self, type_def: Dict):
-        """Register a new type"""
-        type_id = type_def['id']
-        namespace = type_def.get('namespace')
-        
-        key = f"{namespace}:{type_id}" if namespace else type_id
-        self.types[key] = type_def
-    
-    def get_type(self, type_id: str, namespace: str = None) -> Optional[Dict]:
-        """Get a type definition"""
-        key = f"{namespace}:{type_id}" if namespace else type_id
-        return self.types.get(key)
-    
-    def get_effective_attributes(self, type_id: str, namespace: str = None) -> List[Dict]:
-        """Get all attributes including inherited ones"""
-        attributes = []
-        
-        type_def = self.get_type(type_id, namespace)
-        if not type_def:
-            return attributes
-        
-        # Get base type attributes first
-        base_type = type_def.get('baseType')
-        if base_type:
-            base_namespace = type_def.get('namespace')
-            attributes.extend(self.get_effective_attributes(base_type, base_namespace))
-        
-        # Add this type's attributes
-        attributes.extend(type_def.get('attributes', []))
-        
-        return attributes
-    
-    def is_type_of(self, instance_type: str, check_type: str, namespace: str = None) -> bool:
-        """Check if instance_type is a subtype of check_type"""
-        if instance_type == check_type:
-            return True
-        
-        type_def = self.get_type(instance_type, namespace)
-        if not type_def:
-            return False
-        
-        base_type = type_def.get('baseType')
-        if base_type:
-            return self.is_type_of(base_type, check_type, namespace)
-        
-        return False
+class ObjectTypeRegistry:
+    """Registry for managing ObjectTypes with inheritance"""
 
-type_registry = TypeRegistry()
+    def __init__(self):
+        self.types = {}  # elementId -> type definition
+
+    def register_type(self, type_def: Dict):
+        """Register a new ObjectType"""
+        element_id = type_def['elementId']
+        self.types[element_id] = type_def
+
+    def get_type(self, element_id: str) -> Optional[Dict]:
+        """Get an ObjectType by elementId"""
+        return self.types.get(element_id)
+
+    def get_types_by_namespace(self, namespace_uri: str) -> List[Dict]:
+        """Get all ObjectTypes in a namespace"""
+        return [t for t in self.types.values() if t.get('namespaceUri') == namespace_uri]
+
+    def get_types_by_ids(self, element_ids: List[str]) -> List[Dict]:
+        """Get ObjectTypes by elementIds"""
+        return [self.types[eid] for eid in element_ids if eid in self.types]
+
+    def get_merged_schema(self, element_id: str) -> Dict:
+        """Get merged JSON schema including inherited properties"""
+        type_def = self.get_type(element_id)
+        if not type_def:
+            return {}
+
+        schema = {'type': 'object', 'properties': {}}
+
+        # Get base type schema first (if type inheritance is supported)
+        base_type_id = type_def.get('baseTypeId')
+        if base_type_id:
+            base_schema = self.get_merged_schema(base_type_id)
+            schema['properties'].update(base_schema.get('properties', {}))
+
+        # Add this type's properties
+        schema['properties'].update(type_def.get('schema', {}).get('properties', {}))
+
+        return schema
+
+type_registry = ObjectTypeRegistry()
 ```
 
-## Instance Creation from Types
+## Creating Objects from ObjectTypes
 
-Create entity instances from SM Profile types:
+Create Object instances from SM Profile ObjectTypes:
 
 ```python
 @app.route('/objects/from-type', methods=['POST'])
 @require_auth
-@require_permission('entities', 'create')
-def create_entity_from_type():
-    """Create an entity instance from a type"""
+@require_permission('objects', 'create')
+def create_object_from_type():
+    """Create an Object instance from an ObjectType"""
     try:
         request_data = request.get_json()
-        
-        type_id = request_data.get('type')
-        namespace = request_data.get('namespace')
+
+        type_id = request_data.get('typeId')
         display_name = request_data.get('displayName')
-        
+        parent_id = request_data.get('parentId')
+
         if not type_id or not display_name:
-            return jsonify({'error': 'type and displayName required'}), 400
-        
-        # Get type definition
-        type_def = type_registry.get_type(type_id, namespace)
+            return jsonify({
+                'detail': [{'loc': ['body'], 'msg': 'typeId and displayName required', 'type': 'value_error'}]
+            }), 422
+
+        # Get ObjectType definition
+        type_def = type_registry.get_type(type_id)
         if not type_def:
-            return jsonify({'error': 'Type not found'}), 404
-        
-        # Create instance with all inherited attributes
-        attributes = {}
-        for attr in type_registry.get_effective_attributes(type_id, namespace):
-            if attr.get('required'):
-                if attr['name'] not in request_data:
-                    return jsonify({
-                        'error': 'Validation failed',
-                        'details': {attr['name']: 'Required attribute missing'}
-                    }), 422
-            
-            if attr['name'] in request_data:
-                attributes[attr['name']] = request_data[attr['name']]
-        
-        # Create entity
-        entity = {
-            'type': type_id,
-            'namespace': namespace,
+            return jsonify({
+                'detail': [{'loc': ['body', 'typeId'], 'msg': 'ObjectType not found', 'type': 'not_found'}]
+            }), 404
+
+        # Generate elementId for new object
+        element_id = f"urn:platform:object:{uuid.uuid4()}"
+
+        # Create Object instance
+        obj = {
+            'elementId': element_id,
             'displayName': display_name,
-            'attributes': attributes
+            'typeId': type_id,
+            'parentId': parent_id,
+            'isComposition': False,
+            'namespaceUri': type_def.get('namespaceUri'),
+            'relationships': None
         }
-        
-        created_entity = repo.create_entity(entity)
-        
-        return jsonify(created_entity), 201
-        
+
+        created_object = object_repository.create_object(obj)
+
+        return jsonify(created_object), 201
+
     except Exception as e:
-        return jsonify({'error': 'Failed to create entity', 'message': str(e)}), 500
+        return jsonify({
+            'detail': [{'msg': f'Failed to create object: {str(e)}', 'type': 'server_error'}]
+        }), 500
 ```
 
 ## Best Practices
 
-### 1. Namespace Versioning
+### 1. Namespace URI Conventions
 
-Support multiple versions of the same namespace:
+Follow OPC UA namespace URI conventions:
 
 ```python
+def validate_namespace_uri(uri: str) -> bool:
+    """Validate namespace URI format"""
+    # OPC UA namespaces typically use http:// or urn: schemes
+    valid_schemes = ['http://', 'https://', 'urn:']
+    return any(uri.startswith(scheme) for scheme in valid_schemes)
+
 def get_namespace_version(namespace_uri: str) -> str:
     """Extract version from namespace URI"""
-    # Example: urn:platform:production:v1.0 -> v1.0
-    parts = namespace_uri.split(':')
-    if len(parts) > 3 and parts[-1].startswith('v'):
-        return parts[-1]
-    return '1.0'  # Default version
+    # Example: http://opcfoundation.org/UA/Machinery/1.0.0 -> 1.0.0
+    import re
+    match = re.search(r'/(\d+\.\d+(\.\d+)?)', namespace_uri)
+    return match.group(1) if match else '1.0'
 ```
 
-### 2. Type Validation
+### 2. Schema Validation
 
-Validate entity instances against their types:
+Validate Object values against their ObjectType schema:
 
 ```python
-def validate_entity_against_type(entity: Dict, type_def: Dict) -> List[str]:
-    """Validate entity conforms to its type definition"""
+import jsonschema
+
+def validate_object_against_type(obj_value: any, type_def: Dict) -> List[str]:
+    """Validate object value conforms to its ObjectType schema"""
     errors = []
-    
-    # Check required attributes
-    for attr in type_def.get('attributes', []):
-        if attr.get('required') and attr['name'] not in entity.get('attributes', {}):
-            errors.append(f"Required attribute missing: {attr['name']}")
-    
-    # Check data types
-    for attr_name, attr_value in entity.get('attributes', {}).items():
-        attr_def = next((a for a in type_def.get('attributes', []) if a['name'] == attr_name), None)
-        if attr_def:
-            expected_type = attr_def['type']
-            if not isinstance(attr_value, get_python_type(expected_type)):
-                errors.append(f"Invalid type for {attr_name}: expected {expected_type}")
-    
+
+    schema = type_def.get('schema', {})
+    if not schema:
+        return errors
+
+    try:
+        jsonschema.validate(instance=obj_value, schema=schema)
+    except jsonschema.ValidationError as e:
+        errors.append(f"Schema validation failed: {e.message}")
+    except jsonschema.SchemaError as e:
+        errors.append(f"Invalid schema: {e.message}")
+
     return errors
 ```
 
-### 3. Profile Discovery
+### 3. RelationshipType Discovery
 
-Provide endpoints for discovering available profiles:
+Expose relationship types from OPC UA reference types:
 
 ```python
-@app.route('/api/v1/profiles', methods=['GET'])
+@app.route('/relationshiptypes', methods=['GET'])
 @require_auth
-def list_sm_profiles():
-    """List available SM Profiles"""
-    category = request.args.get('category')
-    
-    profiles = profile_repository.list_profiles(category=category)
-    
-    return jsonify({'profiles': profiles}), 200
+def list_relationship_types():
+    """List all relationship types (GET /relationshiptypes)"""
+    namespace_uri = request.args.get('namespaceUri')
 
-@app.route('/api/v1/profiles/<profile_id>', methods=['GET'])
+    rel_types = [
+        {
+            'elementId': 'urn:opcua:reftype:HasComponent',
+            'displayName': 'Has Component',
+            'namespaceUri': 'http://opcfoundation.org/UA/',
+            'reverseOf': 'ComponentOf'
+        },
+        {
+            'elementId': 'urn:opcua:reftype:HasProperty',
+            'displayName': 'Has Property',
+            'namespaceUri': 'http://opcfoundation.org/UA/',
+            'reverseOf': 'PropertyOf'
+        },
+        {
+            'elementId': 'urn:opcua:reftype:Organizes',
+            'displayName': 'Organizes',
+            'namespaceUri': 'http://opcfoundation.org/UA/',
+            'reverseOf': 'OrganizedBy'
+        }
+    ]
+
+    if namespace_uri:
+        rel_types = [r for r in rel_types if r['namespaceUri'] == namespace_uri]
+
+    return jsonify(rel_types), 200
+
+@app.route('/relationshiptypes/query', methods=['POST'])
 @require_auth
-def get_sm_profile(profile_id: str):
-    """Get details of a specific SM Profile"""
-    profile = profile_repository.get_profile(profile_id)
-    
-    if not profile:
-        return jsonify({'error': 'Profile not found'}), 404
-    
-    return jsonify(profile), 200
+def query_relationship_types():
+    """Query relationship types by elementId (POST /relationshiptypes/query)"""
+    data = request.get_json()
+    element_id = data.get('elementId')
+    element_ids = data.get('elementIds', [])
+
+    if element_id:
+        element_ids = [element_id]
+
+    results = relationship_type_repository.get_by_ids(element_ids)
+    return jsonify(results), 200
 ```
 
 ## Resources
