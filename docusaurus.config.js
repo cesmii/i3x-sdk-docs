@@ -93,9 +93,9 @@ const config = {
         items: [
           {
             type: 'docSidebar',
-            sidebarId: 'SolutionsSidebar',
+            sidebarId: 'DocsSidebar',
             position: 'left',
-            label: 'Solutions',
+            label: 'Docs',
           },
           {
             href: 'https://www.cesmii.org/about/',
@@ -118,7 +118,7 @@ const config = {
             title: 'Places',
             items: [
               {
-                label: 'Solutions',
+                label: 'Docs',
                 to: '/docs/introduction-to-cesmii-and-i3x',
               },
               {

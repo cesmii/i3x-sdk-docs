@@ -4,9 +4,9 @@ import styles from './styles.module.css';
 
 const FeatureList = [
   {
-    title: 'Server Solutions',
+    title: 'Server Developers',
     img: '/img/i3X_Server.png',
-    link: '/docs/Server-Solutions/overview',
+    link: '/docs/Server-Developers/overview',
     description: (
       <>
         Access the resources that connects you to custom APIs and technical documentation,
@@ -15,9 +15,9 @@ const FeatureList = [
     ),
   },
   {
-    title: 'Client Solutions',
+    title: 'Client Developers',
     img: '/img/i3X_Client.png',
-    link: '/docs/Client-Solutions/overview',
+    link: '/docs/Client-Developers/overview',
     description: (
       <>
         Build responsive, user-facing experiences with ease. Connect with our client-side APIs and documentation,
