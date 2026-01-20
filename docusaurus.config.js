@@ -83,7 +83,7 @@ const config = {
             label: 'Docs',
           },
           {
-            href: '',
+            href: 'https://github.com#tbd',
             label: 'Explorer',
             position: 'left',
           },
@@ -93,9 +93,14 @@ const config = {
             position: 'left',
           },
           {
-            href: 'https://www.cesmii.org/about/',
+            href: 'https://connect.cesmii.org/i3x',
             label: 'About',
-            position: 'right',
+            position: 'left',
+          },
+          {
+            href: 'https://www.cesmii.org/about/',
+            label: 'CESMII',
+            position: 'left',
           },
         ],
       },
