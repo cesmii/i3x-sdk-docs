@@ -77,15 +77,15 @@ const config = {
         },
         items: [
           {
+            href: 'https://connect.cesmii.org/i3x',
+            label: 'About',
+            position: 'left',
+          },
+          {
             type: 'docSidebar',
             sidebarId: 'DocsSidebar',
             position: 'left',
             label: 'Docs',
-          },
-          {
-            href: 'https://github.com#tbd',
-            label: 'Explorer',
-            position: 'left',
           },
           {
             href: 'https://github.com/cesmii/api',
@@ -93,14 +93,14 @@ const config = {
             position: 'left',
           },
           {
-            href: 'https://connect.cesmii.org/i3x',
-            label: 'About',
+            href: 'https://github.com#tbd',
+            label: 'Explorer',
             position: 'left',
           },
           {
             href: 'https://www.cesmii.org/about/',
             label: 'CESMII',
-            position: 'left',
+            position: 'right',
           },
         ],
       },
