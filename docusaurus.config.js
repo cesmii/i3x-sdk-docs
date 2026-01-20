@@ -21,7 +21,7 @@ const config = {
   },
 
   // Set the production url of your site here
-  url: 'http://docu-sandbox.eastus2.cloudapp.azure.com:3000/',
+  url: 'http://i3x.dev/',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
