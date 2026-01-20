@@ -250,7 +250,6 @@ Check https://www.cesmii.org/events for upcoming webinars on:
 
 This API specification was developed through collaboration between:
 - CESMII - The Smart Manufacturing Institute
-- VDMA (German Engineering Federation)
 - Industry partners and contributors
 
 Special thanks to all contributors and reviewers.
