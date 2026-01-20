@@ -153,12 +153,12 @@ The **i3X API** provides:
 - **Validate Concepts**: Prototype ideas before production deployment
 - **Learn Best Practices**: See how a compliant implementation works
 
-### i3X vs. Production Platforms
+#### CESMII Resources vs. Production Platforms
 
 Important distinctions:
 
-| Aspect | i3X | Production Platforms |
-|--------|-----|---------------------|
+| Aspect | CESMII | Production Platforms |
+|--------|--------|---------------------|
 | Purpose | Demo & testing | Real manufacturing operations |
 | Data | Sample/test data | Actual production data |
 | Availability | Best effort | High availability SLAs |
@@ -179,13 +179,14 @@ Important distinctions:
         │               │               │
         ▼               ▼               ▼
 ┌──────────────┐ ┌─────────────┐ ┌──────────────┐
-│ SM Profiles  │ │  CM Info    │ │     CMIP     │
-│              │ │    API      │ │   Platform   │
-│ Information  │ │             │ │              │
-│   Models     │ │ Standard    │ │ Reference    │
-│              │ │ Interface   │ │ Implementation│
+│ SM Profiles  │ │  I3x API    │ │     CMIP     │
+│              │ │             │ │   Platform   │
+│ Information  │ │ Standard    │ │              │
+│   Models     │ │ & Docs      │ │ Sample Data  │
+│              │ │             │ │ Sources      |     
 └──────────────┘ └─────────────┘ └──────────────┘
-        │               │               │
+        |               |               |
+        │          Interface            │
         │               ▼               │
         │        ┌─────────────┐        │
         │        │     i3X     │        │
@@ -205,10 +206,55 @@ Important distinctions:
 ### The Flow
 
 1. **SM Profiles** define what manufacturing data looks like
-2. **CM Information API** defines how to access that data
-3. **i3X** demonstrates the API with real SM Profile instances
+3. **i3X API** defines how to access that data
 4. **Applications** use the API to access contextualized manufacturing data
-5. **SMIP and other platforms** implement the API for production use
+5. **Commcerial platforms** implement the Profiles and API for production use
+
+## The Vision: An App Ecosystem for Manufacturing
+
+CESMII envisions a future where manufacturing applications work like smartphone apps:
+
+### The Analogy
+
+Just as iOS and Android provide common APIs that enable rich app ecosystems:
+- **Apple/Android** → Platform vendors (historians, MES, etc.)
+- **App Store** → CESMII Marketplace
+- **APIs** → CM Information API
+- **Apps** → Manufacturing applications (analytics, ML, visualization)
+- **Users** → Manufacturers benefiting from innovation
+
+### The Benefits
+
+- **Innovation**: Easier for developers to create manufacturing applications
+- **Choice**: Manufacturers can select from diverse applications
+- **Portability**: Applications work across different platforms
+- **Competition**: Drives better solutions and lower costs
+- **Accessibility**: Makes advanced technology available to all manufacturers
+
+## Current Status and Roadmap
+
+### Current State (2025)
+
+- **RFC Published**: CM Information API specification available for review
+- **i3X Operational**: Demo server available for testing
+- **Working Group Active**: CESMII/VDMA collaboration ongoing
+- **Community Engagement**: Public feedback and discussion period
+
+### Near-Term Goals
+
+- Finalize v1.0 API specification
+- Expand reference implementations
+- Grow developer community
+- Demonstrate production use cases
+- Increase SM Profile adoption
+
+### Long-Term Vision
+
+- Widespread API adoption across vendors
+- Vibrant marketplace of portable applications
+- Reduced integration costs industry-wide
+- Accelerated smart manufacturing transformation
+- Global standard for manufacturing information access
 
 ## Getting Started
 
@@ -265,52 +311,6 @@ Important distinctions:
 - **General Inquiries**: info@cesmii.org
 - **GitHub Discussions**: https://github.com/cesmii/API/discussions
 
-## The Vision: An App Ecosystem for Manufacturing
-
-CESMII envisions a future where manufacturing applications work like smartphone apps:
-
-### The Analogy
-
-Just as iOS and Android provide common APIs that enable rich app ecosystems:
-- **Apple/Android** → Platform vendors (historians, MES, etc.)
-- **App Store** → CESMII Marketplace
-- **APIs** → CM Information API
-- **Apps** → Manufacturing applications (analytics, ML, visualization)
-- **Users** → Manufacturers benefiting from innovation
-
-### The Benefits
-
-- **Innovation**: Easier for developers to create manufacturing applications
-- **Choice**: Manufacturers can select from diverse applications
-- **Portability**: Applications work across different platforms
-- **Competition**: Drives better solutions and lower costs
-- **Accessibility**: Makes advanced technology available to all manufacturers
-
-## Current Status and Roadmap
-
-### Current State (2025)
-
-- **RFC Published**: CM Information API specification available for review
-- **i3X Operational**: Demo server available for testing
-- **Working Group Active**: CESMII/VDMA collaboration ongoing
-- **Community Engagement**: Public feedback and discussion period
-
-### Near-Term Goals
-
-- Finalize v1.0 API specification
-- Expand reference implementations
-- Grow developer community
-- Demonstrate production use cases
-- Increase SM Profile adoption
-
-### Long-Term Vision
-
-- Widespread API adoption across vendors
-- Vibrant marketplace of portable applications
-- Reduced integration costs industry-wide
-- Accelerated smart manufacturing transformation
-- Global standard for manufacturing information access
-
 ## How to Get Involved
 
 ### Provide Feedback
@@ -351,4 +351,4 @@ Whether you're an application developer, platform vendor, or manufacturer, CESMI
 
 ---
 
-**Ready to get started?** Visit https://i3x.cesmii.net to explore the API, or head to https://www.cesmii.org to learn more about CESMII's mission and programs.
+**Ready to get started?** Visit https://i3x.dev to explore the API, or head to https://www.cesmii.org to learn more about CESMII's mission and programs.
