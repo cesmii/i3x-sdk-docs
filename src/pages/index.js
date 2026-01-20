@@ -22,7 +22,7 @@ function HomepageHeader() {
           <Link
             className="button button--secondary button--lg"
             to="/docs/introduction-to-cesmii-and-i3x">
-            CESMII & i3X Orientation
+            CESMII & i3X Overview
           </Link>
         </div>
       </div>
