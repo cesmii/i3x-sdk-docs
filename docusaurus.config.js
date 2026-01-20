@@ -83,13 +83,18 @@ const config = {
             label: 'Docs',
           },
           {
-            href: 'https://www.cesmii.org/about/',
-            label: 'About',
+            href: '',
+            label: 'Explorer',
             position: 'left',
           },
           {
             href: 'https://github.com/cesmii/api',
             label: 'GitHub',
+            position: 'left',
+          },
+          {
+            href: 'https://www.cesmii.org/about/',
+            label: 'About',
             position: 'right',
           },
         ],
