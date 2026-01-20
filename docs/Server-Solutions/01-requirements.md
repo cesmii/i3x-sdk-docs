@@ -124,8 +124,8 @@ Use this checklist to ensure your implementation meets all requirements:
 - [ ] Support time range filtering (startTime, endTime)
 - [ ] Include data quality and timestamp indicators
 - [ ] Support maxDepth for compositional hierarchies
-- [ ] Update current values (PUT /objects/{elementId}/value)
-- [ ] Update historical values (PUT /objects/{elementId}/history)
+- [ ] Update current values (PUT `/objects/{elementId}/value`)
+- [ ] Update historical values (PUT `/objects/{elementId}/history`)
 
 ### Authentication & Authorization
 - [ ] Implement user authentication
@@ -161,12 +161,12 @@ Use this checklist to ensure your implementation meets all requirements:
 ### Subscriptions
 - [ ] Create subscriptions (POST /subscriptions)
 - [ ] List subscriptions (GET /subscriptions)
-- [ ] Get subscription details (GET /subscriptions/{id})
-- [ ] Delete subscriptions (DELETE /subscriptions/{id})
-- [ ] Register objects to monitor (POST /subscriptions/{id}/register)
-- [ ] Unregister objects (POST /subscriptions/{id}/unregister)
-- [ ] SSE streaming (GET /subscriptions/{id}/stream)
-- [ ] Queue-based sync (POST /subscriptions/{id}/sync)
+- [ ] Get subscription details (GET `/subscriptions/{id}`)
+- [ ] Delete subscriptions (DELETE `/subscriptions/{id}`)
+- [ ] Register objects to monitor (POST `/subscriptions/{id}/register`)
+- [ ] Unregister objects (POST `/subscriptions/{id}/unregister`)
+- [ ] SSE streaming (GET `/subscriptions/{id}/stream`)
+- [ ] Queue-based sync (POST `/subscriptions/{id}/sync`)
 
 ## Optional Features
 
