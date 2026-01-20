@@ -88,13 +88,13 @@ Another name for a SM Profile is a Class or Type definition. Since the late 60s,
 
 Once data is contractually governed and made available as Objects, a Smart Platform should be able to persist relationships between these Objects.
 
-## Hierarchy
+#### Hierarchy
 
 Industrial standards like ISA-95 are often interpreted as requiring an Asset Hierarchy showing how Asset objects are organized within an Enterprise. While this may be the beginning of a contextual model, hierarchical asset relationships are not the only kind of relationships that are required for a Smart Platform. In fact, ISA-95 specifies multiple kinds of relationships that are often not leveraged in contemporary information platforms.
 
 Unified Namespace (UNS) approaches that use MQTT are often constrained by the hierarchical nature of a MQTT topic name. The / separation is frequently used to imply equipment relationships. Again, this is a *start* but must not be the *end* of capturing context. 
 
-## Knowledge Graphs
+#### Knowledge Graphs
 
 A popular term for capturing these additional relationships is a Knowledge Graph. It starts by providing a mechanism to declare and persist those connections. While many of the platforms available today organize objects hierarchically, very few solutions provide a way to describe non-hierarchical "edges" between objects ("nodes").
 
@@ -102,11 +102,17 @@ A Smart Platform is one that can currently, in the product or through its ecosys
 
 Graphs can capture other knowledge as well: expressing cause-and-effect relationships between events not directly upstream of a process unit, referencing known failure modes with other like equipment, or identify correlation between supply chain disruption and quality. Smart Platforms store, or provide access, to this information to enable both humans and AI systems to identify correlation, make predictions, and enact better decisions.
 
-## Open APIs
+## 3. Open APIs
+
+Modern software includes open, documented APIs for access to the data stored within the platform. While many industrial information platforms expose APIs, some require additional licensing or provide documentation only to active customers. In other industries, such practices would be considered absurd -- the application platforms in our everyday lives, like PC operating systems, Mobile Platforms (iOS and Android) and even the World Wide Web are built on published programmers interfaces, many of which governed by standards bodies.
+
+Smart Platform expose a modern API, like REST or GraphQL, and make the documentation readily available. But even when those best practices are followed, industrial information access is fractured by a multi-vendor ecosystem that was not designed for interoperability. The third SM Imperative is a call to all participants to work together to enable an ecosystem of application value that is not locked to a single vendor's platform.
+
+That call was documented in 2024 as a RFC-style proposal from CESMII. It was answered by multiple vendors, manufacturers, and end-users and became the I3X iniative.
 
 ### What is i3X?
 
-**i3X** (pronounced "i-three-X") is CESMII's demonstration server and reference implementation of the **Contextualized Manufacturing Information API** - a common, standardized API for accessing manufacturing data. It works against a Contextual Manufacturing Information Platform (CMIP) - a single, or a combination of, Type-safe, organized operational data systems.
+**i3X** (pronounced "i-three-X") is an open specification for a **Contextualized Manufacturing Information API** - a common API for accessing manufacturing data. It works against a Contextual Manufacturing Information Platform (CMIP) - a single, or a combination of, Type-safe, organized operational data systems.
 
 ### The Problem
 
@@ -133,15 +139,6 @@ The **Contextualized Manufacturing Information (CM Information) API** provides:
 4. **SM Profile Support**: Native support for Smart Manufacturing Profiles
 5. **Standard Authentication**: OAuth, JWT, and API key support
 6. **Comprehensive Documentation**: OpenAPI/Swagger specifications
-
-### Purpose of i3X
-
-i3X serves multiple purposes in the CESMII ecosystem:
-
-1. **Demonstration Platform**: Shows how the CM Information API works in practice
-2. **Developer Sandbox**: Provides a testing environment for application developers
-3. **Reference Implementation**: Demonstrates best practices for API implementation
-4. **Prototype Validation**: Tests new API features and specifications
 
 ### i3X Endpoints
 
