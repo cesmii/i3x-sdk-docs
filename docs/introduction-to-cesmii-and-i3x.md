@@ -20,9 +20,9 @@ CESMII's mission is to radically impact manufacturing performance through measur
 
 The institute works to democratize smart manufacturing, making advanced technologies accessible to manufacturers of all sizes across the United States manufacturing ecosystem.
 
-## CESMII's Four Strategic Pillars
+## CESMII's Strategic Pillars
 
-### 1. New and Emerging Technology Development
+### New and Emerging Technology Development
 
 CESMII drives innovation in enabling technologies for smart manufacturing:
 - Advanced sensors
@@ -31,7 +31,7 @@ CESMII drives innovation in enabling technologies for smart manufacturing:
 - Automation and controls
 - Artificial intelligence and machine learning
 
-### 3. Education & Workforce Development
+### Education & Workforce Development
 
 CESMII democratizes smart manufacturing knowledge through:
 - Training programs and certifications
@@ -40,43 +40,55 @@ CESMII democratizes smart manufacturing knowledge through:
 - Webinars and workshops
 - Industry partnerships
 
-### 4. Digital Transformation
+### Digital Transformation
 
 Supporting manufacturers in implementing smart manufacturing solutions:
 - Normalizes data across diverse protocols
 - Enforces reusable information models
 - Provides guaranteed API contracts for application development
-- Enables rapid, cost-effective deployment of smart manufacturing solutions
+- Enables rapid, cost-effective deployment of smart manufacturing 
 
-## Smart Manufacturing Profiles (SM Profiles)
+## CESMII's Technology Imperatives
 
-One of CESMII's key innovations is the **Smart Manufacturing Profile™** concept - standardized information models that describe manufacturing equipment and processes.
+In the pursuit of digital transformation, CESMII is vendor and technology agnostic, but defines three imperatives that must be applied to industrial data and information infrastructure in order for to be considered "smart":
 
-### What are SM Profiles?
+### 1. Smart Manufacturing Profiles (SM Profiles)
 
-SM Profiles are OPC UA Information Model type definitions that provide:
-- **Equipment Characteristics**: Standardized descriptions of manufacturing assets
-- **Identification Metadata**: Manufacturer, model, serial number information
+The **Smart Manufacturing Profile™** concept requires standardized information models that describe manufacturing data sources and processes and information transactions between systems.
+
+#### What are SM Profiles?
+
+SM Profiles are typically implemented as OPC UA Information Model type definitions that provide:
+- **Semantic Data Definitions**: Standardized descriptions of manufacturing assets
 - **Runtime Data Structure**: How operational data is organized
 - **Behavioral Contracts**: Expected interactions and capabilities
 
-### Benefits of SM Profiles
+#### Benefits of SM Profiles
 
-- **Interoperability**: Equipment from different vendors can be understood uniformly
+- **Interoperability**: Data from different vendors can be understood uniformly
 - **Portability**: Applications written once work across multiple platforms
 - **Semantic Understanding**: Data comes with meaning and context
 - **Reduced Integration Costs**: Standard interfaces eliminate custom integration work
 
-### SM Profile Ecosystem
+#### SM Profile Ecosystem
 
 - **100+ Companion Specifications**: Created in partnership with VDMA and OPC Foundation
 - **Cloud Library**: Free, open-source repository at uacloudlibrary.opcfoundation.org
 - **Profile Designer**: Tools for creating and publishing SM Profiles
 - **Marketplace**: Platform for discovering and sharing profiles at marketplace.cesmii.org
 
-## What is i3X?
+#### Other Approaches
 
-**i3X** (pronounced "i-three-X") is CESMII's demonstration server and reference implementation of the **Contextualized Manufacturing Information API** - a common, standardized API for accessing manufacturing data.
+- While OPC UA Information Models are typically delivered in a machine readable Nodeset format, conceptual implementations have also been successful using JSON Schema, JSON-LD or a combination.
+- Similarily, new innovations have demonstrated the ease of applying published Companion Specifications and member-contributed Nodesets in JSON for use in MQTT, or other event-based transports.
+
+## Knowledge Graphs
+
+## Open APIs
+
+### What is i3X?
+
+**i3X** (pronounced "i-three-X") is CESMII's demonstration server and reference implementation of the **Contextualized Manufacturing Information API** - a common, standardized API for accessing manufacturing data. It works against a Contextual Manufacturing Information Platform (CMIP) - a single, or a combination of, Type-safe, organized operational data systems.
 
 ### Purpose of i3X
 
@@ -153,7 +165,7 @@ The **Contextualized Manufacturing Information (CM Information) API** provides:
         │               │               │
         ▼               ▼               ▼
 ┌──────────────┐ ┌─────────────┐ ┌──────────────┐
-│ SM Profiles  │ │  CM Info    │ │     SMIP     │
+│ SM Profiles  │ │  CM Info    │ │     CMIP     │
 │              │ │    API      │ │   Platform   │
 │ Information  │ │             │ │              │
 │   Models     │ │ Standard    │ │ Reference    │
