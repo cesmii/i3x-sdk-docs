@@ -143,7 +143,7 @@ The **i3X API** provides:
 #### i3X Endpoints
 
 - **Base URL**: `https://i3x.cesmii.net`
-- **API Documentation**: `https://i3x.cesmii.net/docs`
+- **API Documentation**: [https://i3x.cesmii.net/docs](https://i3x.cesmii.net/docs)
 - **OpenAPI Specification**: Interactive Swagger UI for exploring endpoints
 
 #### What You Can Do with i3X
@@ -260,7 +260,7 @@ Just as iOS and Android provide common APIs that enable rich app ecosystems:
 
 ### For Application Developers
 
-1. **Explore i3X**: Visit https://i3x.cesmii.net/docs
+1. **Explore i3X**: Visit [https://i3x.cesmii.net/docs](https://i3x.cesmii.net/docs)
 2. **Read the API Documentation**: Review the CM i3X API specification
 3. **Try Sample Requests**: Use the Swagger UI to test endpoints
 4. **Build an Application**: Create a client using the standardized API
@@ -268,7 +268,7 @@ Just as iOS and Android provide common APIs that enable rich app ecosystems:
 
 ### For Platform Vendors
 
-1. **Review the RFC**: Read the specification at https://github.com/cesmii/API
+1. **Review the RFC**: Read the specification at [https://github.com/cesmii/API](https://github.com/cesmii/API)
 2. **Study i3X**: Examine the reference implementation
 3. **Implement the API**: Build server endpoints following the specification
 4. **Test Compliance**: Validate against the API requirements
@@ -286,23 +286,22 @@ Just as iOS and Android provide common APIs that enable rich app ecosystems:
 
 ### CESMII Resources
 
-- **Main Website**: https://www.cesmii.org
-- **Marketplace**: https://marketplace.cesmii.org
-- **Profile Designer**: https://profiles.cesmii.org
-- **YouTube Channel**: https://www.youtube.com/@CESMII_SM
+- **Main Website**: [https://www.cesmii.org](https://www.cesmii.org)
+- **Marketplace**: [https://marketplace.cesmii.org](https://marketplace.cesmii.org)
+- **Profile Designer**: [https://profiles.cesmii.org](https://profiles.cesmii.org)
+- **YouTube Channel**: [https://www.youtube.com/@CESMII_SM](https://www.youtube.com/@CESMII_SM)
 
 ### API & Technical Resources
 
-- **i3X Demo Server**: https://i3x.cesmii.net
-- **API RFC**: https://github.com/cesmii/API
-- **SM Profiles**: https://github.com/cesmii/SMProfiles
-- **GraphQL API (Legacy)**: https://github.com/cesmii/GraphQL-API
+- **i3X Demo Server**: `https://i3x.cesmii.net`
+- **API RFC**: [https://github.com/cesmii/API](https://github.com/cesmii/API)
+- **SM Profiles**: [https://github.com/cesmii/SMProfiles](https://github.com/cesmii/SMProfiles)
 
 ### Standards & Specifications
 
-- **OPC UA Cloud Library**: https://uacloudlibrary.opcfoundation.org
-- **OPC Foundation**: https://opcfoundation.org
-- **VDMA**: https://www.vdma.org
+- **OPC UA Cloud Library**: [https://uacloudlibrary.opcfoundation.org](https://uacloudlibrary.opcfoundation.org)
+- **OPC Foundation**: [https://opcfoundation.org](https://opcfoundation.org)
+- **VDMA**: [https://www.vdma.org](https://www.vdma.org)
 
 ### Community & Support
 
@@ -315,7 +314,7 @@ Just as iOS and Android provide common APIs that enable rich app ecosystems:
 
 ### Provide Feedback
 
-- Review the RFC at https://github.com/cesmii/API
+- Review the RFC at [https://github.com/cesmii/API](https://github.com/cesmii/API)
 - Submit issues and suggestions on GitHub
 - Participate in discussions
 - Email feedback to rfc@cesmii.org
@@ -351,4 +350,4 @@ Whether you're an application developer, platform vendor, or manufacturer, CESMI
 
 ---
 
-**Ready to get started?** Visit https://i3x.dev to explore the API, or head to https://www.cesmii.org to learn more about CESMII's mission and programs.
+**Ready to get started?** Visit [https://i3x.dev](https://i3x.dev) to explore the API, or head to [https://www.cesmii.org](https://www.cesmii.org) to learn more about CESMII's mission and programs.
