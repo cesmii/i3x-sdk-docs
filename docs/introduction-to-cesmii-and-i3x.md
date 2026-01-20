@@ -102,7 +102,7 @@ A Smart Platform is one that can currently, in the product or through its ecosys
 
 Graphs can capture other knowledge as well: expressing cause-and-effect relationships between events not directly upstream of a process unit, referencing known failure modes with other like equipment, or identify correlation between supply chain disruption and quality. Smart Platforms store, or provide access, to this information to enable both humans and AI systems to identify correlation, make predictions, and enact better decisions.
 
-## 3. Open APIs
+### 3. Open APIs
 
 Modern software includes open, documented APIs for access to the data stored within the platform. While many industrial information platforms expose APIs, some require additional licensing or provide documentation only to active customers. In other industries, such practices would be considered absurd -- the application platforms in our everyday lives, like PC operating systems, Mobile Platforms (iOS and Android) and even the World Wide Web are built on published programmers interfaces, many of which governed by standards bodies.
 
@@ -110,11 +110,11 @@ Smart Platform expose a modern API, like REST or GraphQL, and make the documenta
 
 That call was documented in 2024 as a RFC-style proposal from CESMII. It was answered by multiple vendors, manufacturers, and end-users and became the I3X iniative.
 
-### What is i3X?
+#### What is i3X?
 
 **i3X** (pronounced "i-three-X") is an open specification for a **Contextualized Manufacturing Information API** - a common API for accessing manufacturing data. It works against a Contextual Manufacturing Information Platform (CMIP) - a single, or a combination of, Type-safe, organized operational data systems.
 
-### The Problem
+#### The Problem
 
 The manufacturing industry suffers from API fragmentation:
 - Multiple proprietary APIs from different vendors
@@ -123,15 +123,15 @@ The manufacturing industry suffers from API fragmentation:
 - High integration costs
 - Limited application portability
 
-### The Solution
+#### The Solution
 
-The **Contextualized Manufacturing Information (CM Information) API** provides:
+The **i3X API** provides:
 - **Common Interface**: Standard set of server primitives
 - **Platform Independence**: Works across diverse manufacturing systems
 - **Application Portability**: Write once, deploy anywhere
 - **Reduced Complexity**: Standardized contracts simplify development
 
-### Key Features
+#### Key Features
 
 1. **RESTful Design**: Modern, web-standard API architecture
 2. **Object Orientation**: Flexible representation of manufacturing assets
@@ -140,13 +140,13 @@ The **Contextualized Manufacturing Information (CM Information) API** provides:
 5. **Standard Authentication**: OAuth, JWT, and API key support
 6. **Comprehensive Documentation**: OpenAPI/Swagger specifications
 
-### i3X Endpoints
+#### i3X Endpoints
 
 - **Base URL**: `https://i3x.cesmii.net`
 - **API Documentation**: `https://i3x.cesmii.net/docs`
 - **OpenAPI Specification**: Interactive Swagger UI for exploring endpoints
 
-### What You Can Do with i3X
+#### What You Can Do with i3X
 
 - **Explore the API**: Test endpoints and understand request/response formats
 - **Develop Applications**: Build and test client applications against real data
