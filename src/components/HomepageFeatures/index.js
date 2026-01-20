@@ -5,7 +5,7 @@ import styles from './styles.module.css';
 const FeatureList = [
   {
     title: 'Server Solutions',
-    Svg: require('@site/static/img/Server_logo_noBG.svg').default,
+    img: '/img/i3X_Server.png',
     link: '/docs/Server-Solutions/overview',
     description: (
       <>
@@ -16,11 +16,11 @@ const FeatureList = [
   },
   {
     title: 'Client Solutions',
-    Svg: require('@site/static/img/Client_logo_noBG.svg').default,
+    img: '/img/i3X_Client.png',
     link: '/docs/Client-Solutions/overview',
     description: (
       <>
-        Build responsive, user-facing experiences with ease. Connect with our client-side APIs and documentation, 
+        Build responsive, user-facing experiences with ease. Connect with our client-side APIs and documentation,
         enabling seamless integration, smooth interactions, and efficient data exchange directly within your applications.
       </>
     ),
@@ -28,16 +28,16 @@ const FeatureList = [
 
 ];
 
-function Feature({Svg, title, description, link}) {
+function Feature({img, title, description, link}) {
   return (
     <div className={clsx('col col-4')}>
       <div className="text--center">
         {link ? (
           <a href={link}>
-            <Svg className={styles.featureSvg} role="img" />
+            <img src={img} className={styles.featureSvg} alt={title} />
           </a>
         ) : (
-          <Svg className={styles.featureSvg} role="img" />
+          <img src={img} className={styles.featureSvg} alt={title} />
         )}
       </div>
       <div className="text--center padding-horiz--md">
