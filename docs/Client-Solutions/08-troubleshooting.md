@@ -60,31 +60,58 @@ const fetchWithBackoff = async (url, options, maxRetries = 3) => {
 
 ### Issue: Large Data Set Handling
 
-**Solution**: Use streaming or pagination
+**Solution**: Use time-bounded queries and subscriptions for streaming
 
 ```javascript
-async function* streamEntityData(token, entityId) {
-  let offset = 0;
-  const pageSize = 100;
-  
-  while (true) {
-    const response = await fetch(
-      `https://i3x.cesmii.net/api/entities/${entityId}/data?limit=${pageSize}&offset=${offset}`,
-      { headers: { 'Authorization': `Bearer ${token}` } }
-    );
-    
-    const data = await response.json();
-    
-    if (data.dataPoints.length === 0) break;
-    
-    yield* data.dataPoints;
-    offset += pageSize;
-  }
-}
+// For historical data, use time-bounded queries
+const getHistoryInChunks = async (token, elementId, startTime, endTime) => {
+  const response = await fetch('https://i3x.cesmii.net/objects/history', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      elementId: elementId,
+      startTime: startTime,
+      endTime: endTime,
+      maxDepth: 1
+    })
+  });
 
-// Usage
-for await (const dataPoint of streamEntityData(token, entityId)) {
-  processDataPoint(dataPoint);
-}
+  return await response.json();
+};
+
+// For real-time streaming, use subscriptions
+const streamObjectData = async (token, elementIds, callback) => {
+  // Create subscription
+  const createRes = await fetch('https://i3x.cesmii.net/subscriptions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({})
+  });
+  const { subscriptionId } = await createRes.json();
+
+  // Register objects to monitor
+  await fetch(`https://i3x.cesmii.net/subscriptions/${subscriptionId}/register`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ elementIds, maxDepth: 1 })
+  });
+
+  // Stream via SSE
+  const eventSource = new EventSource(
+    `https://i3x.cesmii.net/subscriptions/${subscriptionId}/stream`
+  );
+  eventSource.onmessage = (event) => callback(JSON.parse(event.data));
+
+  return { subscriptionId, eventSource };
+};
 ```
 

@@ -2,49 +2,54 @@
 
 ## Data Model Understanding
 
-### Entity Structure
+### Object Instance Structure
 
-Entities in the i3X API typically follow this structure:
+Objects in the i3X API follow this structure:
 
 ```json
 {
-  "id": "unique-entity-identifier",
-  "type": "EntityType",
+  "elementId": "unique-object-identifier",
   "displayName": "Human Readable Name",
-  "namespace": "urn:namespace:identifier",
-  "attributes": {
-    "attribute1": "value1",
-    "attribute2": "value2"
-  },
-  "children": [],
-  "metadata": {
-    "created": "2025-01-15T00:00:00Z",
-    "modified": "2025-01-15T00:00:00Z",
-    "version": "1.0"
+  "typeId": "object-type-element-id",
+  "parentId": "parent-object-id-or-null",
+  "isComposition": true,
+  "namespaceUri": "urn:namespace:identifier",
+  "relationships": {
+    "HasComponent": ["child-element-id-1", "child-element-id-2"],
+    "References": ["related-element-id"]
   }
 }
 ```
 
-### Time-Series Data Structure
+### ObjectType Structure
 
-Historical and real-time data follows a standard time-series format:
+ObjectTypes define the schema for objects:
 
 ```json
 {
-  "entityId": "entity-identifier",
-  "dataPoints": [
-    {
-      "timestamp": "2025-01-15T12:00:00Z",
-      "value": 75.5,
-      "quality": "Good",
-      "source": "sensor-123"
+  "elementId": "type-element-id",
+  "displayName": "Type Name",
+  "namespaceUri": "urn:namespace:identifier",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "attribute1": { "type": "string" },
+      "attribute2": { "type": "number" }
     }
-  ],
-  "aggregation": "raw",
-  "timeRange": {
-    "start": "2025-01-15T00:00:00Z",
-    "end": "2025-01-15T23:59:59Z"
   }
+}
+```
+
+### Value Response Structure
+
+Current and historical values follow this format:
+
+```json
+{
+  "elementId": "object-identifier",
+  "value": 75.5,
+  "timestamp": "2025-01-15T12:00:00Z",
+  "quality": "Good"
 }
 ```
 

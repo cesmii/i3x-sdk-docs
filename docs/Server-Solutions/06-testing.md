@@ -36,7 +36,7 @@ class TestEntityAPI:
         mock_repo.get_entity.return_value = mock_entity
         
         response = client.get(
-            '/api/v1/entities/test-entity-1',
+            '/objects/test-entity-1',
             headers=auth_headers
         )
         
@@ -48,7 +48,7 @@ class TestEntityAPI:
         mock_repo.get_entity.return_value = None
         
         response = client.get(
-            '/api/v1/entities/nonexistent',
+            '/objects/nonexistent',
             headers=auth_headers
         )
         
@@ -64,7 +64,7 @@ class TestEntityAPI:
         mock_repo.list_entities.return_value = mock_entities
         
         response = client.get(
-            '/api/v1/entities?limit=10&offset=0',
+            '/objects?limit=10&offset=0',
             headers=auth_headers
         )
         
@@ -85,7 +85,7 @@ class TestEntityAPI:
         }
         
         response = client.post(
-            '/api/v1/entities',
+            '/objects',
             json=new_entity,
             headers=auth_headers
         )
@@ -101,7 +101,7 @@ class TestEntityAPI:
         }
         
         response = client.post(
-            '/api/v1/entities',
+            '/objects',
             json=invalid_entity,
             headers=auth_headers
         )
@@ -205,7 +205,7 @@ class TestEntityAPIIntegration:
         }
         
         create_response = client.post(
-            '/api/v1/entities',
+            '/objects',
             json=new_entity,
             headers=headers
         )
@@ -214,7 +214,7 @@ class TestEntityAPIIntegration:
         
         # Retrieve entity
         get_response = client.get(
-            f'/api/v1/entities/{entity_id}',
+            f'/objects/{entity_id}',
             headers=headers
         )
         assert get_response.status_code == 200
@@ -223,7 +223,7 @@ class TestEntityAPIIntegration:
         # Update entity
         update_data = {'displayName': 'Updated Equipment'}
         update_response = client.put(
-            f'/api/v1/entities/{entity_id}',
+            f'/objects/{entity_id}',
             json=update_data,
             headers=headers
         )
@@ -232,14 +232,14 @@ class TestEntityAPIIntegration:
         
         # Delete entity
         delete_response = client.delete(
-            f'/api/v1/entities/{entity_id}',
+            f'/objects/{entity_id}',
             headers=headers
         )
         assert delete_response.status_code == 204
         
         # Verify deletion
         verify_response = client.get(
-            f'/api/v1/entities/{entity_id}',
+            f'/objects/{entity_id}',
             headers=headers
         )
         assert verify_response.status_code == 404
@@ -267,7 +267,7 @@ class TestEntityAPIIntegration:
         }
         
         write_response = client.post(
-            f'/api/v1/entities/{entity_id}/data',
+            f'/objects/{entity_id}/data',
             json=write_data,
             headers=headers
         )
@@ -275,7 +275,7 @@ class TestEntityAPIIntegration:
         
         # Read data
         read_response = client.get(
-            f'/api/v1/entities/{entity_id}/data?dataPoint=temperature&startTime=2025-01-15T00:00:00Z',
+            f'/objects/{entity_id}/data?dataPoint=temperature&startTime=2025-01-15T00:00:00Z',
             headers=headers
         )
         assert read_response.status_code == 200
@@ -305,7 +305,7 @@ class APIUser(HttpUser):
     def list_entities(self):
         """Test entity listing (most common operation)"""
         self.client.get(
-            '/api/v1/entities?limit=100',
+            '/objects?limit=100',
             headers=self.headers
         )
     
@@ -313,7 +313,7 @@ class APIUser(HttpUser):
     def get_entity(self):
         """Test single entity retrieval"""
         self.client.get(
-            '/api/v1/entities/test-entity-1',
+            '/objects/test-entity-1',
             headers=self.headers
         )
     
@@ -321,7 +321,7 @@ class APIUser(HttpUser):
     def get_entity_data(self):
         """Test time-series data retrieval"""
         self.client.get(
-            '/api/v1/entities/test-entity-1/data?startTime=2025-01-15T00:00:00Z',
+            '/objects/test-entity-1/data?startTime=2025-01-15T00:00:00Z',
             headers=self.headers
         )
     
@@ -329,7 +329,7 @@ class APIUser(HttpUser):
     def create_entity(self):
         """Test entity creation"""
         self.client.post(
-            '/api/v1/entities',
+            '/objects',
             json={
                 'type': 'Equipment',
                 'displayName': f'Load Test Entity {self.environment.runner.user_count}'
@@ -396,7 +396,7 @@ def stress_test(endpoint: str, num_requests: int, concurrency: int):
     print(f"Max duration: {max_duration*1000:.2f}ms")
 
 # Run stress test
-stress_test('/api/v1/entities', num_requests=1000, concurrency=100)
+stress_test('/objects', num_requests=1000, concurrency=100)
 ```
 
 ## Test Coverage

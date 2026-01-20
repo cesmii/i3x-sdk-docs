@@ -90,32 +90,38 @@ class RateLimiter {
 }
 ```
 
-### 4. Efficient Data Pagination
+### 4. Efficient Batch Data Retrieval
 
-When retrieving large datasets, use pagination:
+When retrieving data for multiple objects, use batch endpoints:
 
 ```javascript
-const getAllEntitiesWithPagination = async (token, pageSize = 50) => {
-  const allEntities = [];
-  let offset = 0;
-  let hasMore = true;
-  
-  while (hasMore) {
-    const response = await fetch(
-      `https://i3x.cesmii.net/api/entities?limit=${pageSize}&offset=${offset}`,
-      {
-        headers: { 'Authorization': `Bearer ${token}` }
-      }
-    );
-    
-    const data = await response.json();
-    allEntities.push(...data.items);
-    
-    hasMore = data.hasMore;
-    offset += pageSize;
-  }
-  
-  return allEntities;
+// Batch retrieve values for multiple objects
+const batchGetObjectValues = async (token, elementIds) => {
+  const response = await fetch('https://i3x.cesmii.net/objects/value', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      elementIds: elementIds,
+      maxDepth: 1
+    })
+  });
+
+  return await response.json();
+};
+
+// Get objects filtered by type
+const getObjectsByType = async (token, typeId) => {
+  const response = await fetch(
+    `https://i3x.cesmii.net/objects?typeId=${encodeURIComponent(typeId)}`,
+    {
+      headers: { 'Authorization': `Bearer ${token}` }
+    }
+  );
+
+  return await response.json();
 };
 ```
 

@@ -31,7 +31,7 @@ i3X follows semantic versioning. When integrating with the API:
 
 ```javascript
 // Example: Specifying API version
-const response = await fetch('https://i3x.cesmii.net/api/v1/entities', {
+const response = await fetch('https://i3x.cesmii.net/objects', {
   headers: {
     'Authorization': `Bearer ${token}`,
     'Accept': 'application/vnd.cesmii.v1+json'

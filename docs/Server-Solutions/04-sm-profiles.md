@@ -342,7 +342,7 @@ type_registry = TypeRegistry()
 Create entity instances from SM Profile types:
 
 ```python
-@app.route('/api/v1/entities/from-type', methods=['POST'])
+@app.route('/objects/from-type', methods=['POST'])
 @require_auth
 @require_permission('entities', 'create')
 def create_entity_from_type():

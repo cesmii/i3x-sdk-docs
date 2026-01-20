@@ -179,7 +179,7 @@ def track_cache_access(cache_type: str, hit: bool):
         cache_misses.labels(cache_type=cache_type).inc()
 
 # Usage in endpoints
-@app.route('/api/v1/entities/<entity_id>', methods=['GET'])
+@app.route('/objects/list', methods=['GET'])
 def get_entity(entity_id: str):
     try:
         entity = repo.get_entity_cached(entity_id)

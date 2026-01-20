@@ -376,7 +376,7 @@ def post(self):
         'message': 'Invalid entity type',
         'code': 'VALIDATION_ERROR',
         'timestamp': '2025-01-15T12:00:00Z',
-        'path': '/api/v1/entities',
+        'path': '/objects',
         'details': {
             'type': 'Field is required'
         }

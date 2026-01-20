@@ -112,7 +112,7 @@ def get_entities_optimized(filters: Dict, limit: int, offset: int) -> List[Dict]
 ### Offset-Based Pagination
 
 ```python
-@app.route('/api/v1/entities', methods=['GET'])
+@app.route('/objects', methods=['GET'])
 def list_entities_offset():
     """Standard offset-based pagination"""
     limit = min(int(request.args.get('limit', 100)), 1000)
@@ -137,7 +137,7 @@ def list_entities_offset():
 import base64
 import json
 
-@app.route('/api/v1/entities', methods=['GET'])
+@app.route('/objects', methods=['GET'])
 def list_entities_cursor():
     """Cursor-based pagination for better performance"""
     limit = min(int(request.args.get('limit', 100)), 1000)
@@ -385,7 +385,7 @@ def process_bulk_data_import(file_path: str, entity_id: str):
     
     return {'status': 'complete', 'imported': len(data_points)}
 
-@app.route('/api/v1/entities/<entity_id>/import', methods=['POST'])
+@app.route('/objects/<entity_id>/import', methods=['POST'])
 @require_auth
 def import_entity_data(entity_id: str):
     """Start asynchronous data import"""
@@ -496,7 +496,7 @@ def timing_decorator(f):
         return result
     return wrapper
 
-@app.route('/api/v1/entities', methods=['GET'])
+@app.route('/objects', methods=['GET'])
 @timing_decorator
 def list_entities():
     # Implementation

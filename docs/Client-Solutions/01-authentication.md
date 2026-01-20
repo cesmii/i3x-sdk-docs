@@ -28,7 +28,7 @@ const getAuthToken = async (credentials) => {
 // Using the token in subsequent requests
 const token = await getAuthToken({ username, password });
 
-const apiResponse = await fetch('https://i3x.cesmii.net/api/entities', {
+const apiResponse = await fetch('https://i3x.cesmii.net/objects', {
   headers: {
     'Authorization': `Bearer ${token}`,
     'Content-Type': 'application/json'

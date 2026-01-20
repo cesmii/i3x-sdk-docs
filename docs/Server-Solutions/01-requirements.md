@@ -6,12 +6,12 @@
 
 Your implementation MUST support:
 
-#### 1. Entity Management
+#### 1. Object Management
 
-- **Entity Discovery**: Expose available manufacturing entities (equipment, processes, etc.)
-- **Entity Metadata**: Provide comprehensive metadata about each entity
-- **Hierarchical Relationships**: Support parent-child relationships between entities
-- **Entity Attributes**: Expose both static and dynamic attributes
+- **Object Discovery**: Expose available manufacturing objects (equipment, processes, etc.)
+- **Object Types**: Provide schemas for object types based on OPC UA Information Models
+- **Hierarchical Relationships**: Support parent-child and compositional relationships
+- **Relationship Types**: Define and expose relationship types between objects
 
 #### 2. Data Access
 
@@ -38,29 +38,38 @@ Your implementation MUST support:
 
 ### RESTful Endpoint Structure
 
-Your implementation should follow RESTful design principles:
+Your implementation should follow the i3X API specification:
 
 ```
-Base URL: https://your-platform.example.com/api/v1
+Base URL: https://your-platform.example.com
 
-Endpoints:
-  GET    /entities                    # List all entities
-  GET    /entities/{id}               # Get specific entity
-  POST   /entities                    # Create new entity
-  PUT    /entities/{id}               # Update entity
-  DELETE /entities/{id}               # Delete entity
-  
-  GET    /entities/{id}/data          # Get entity data
-  POST   /entities/{id}/data          # Write entity data
-  
-  GET    /entities/{id}/children      # Get child entities
-  GET    /entities/{id}/metadata      # Get entity metadata
-  
-  POST   /query                       # Complex queries
-  POST   /batch                       # Batch operations
-  
-  GET    /namespaces                  # List available namespaces
-  GET    /types                       # List entity types
+Explore Endpoints:
+  GET    /namespaces                  # List all namespaces
+  GET    /objecttypes                 # List object type schemas
+  POST   /objecttypes/query           # Query types by elementId(s)
+  GET    /relationshiptypes           # List relationship types
+  POST   /relationshiptypes/query     # Query relationship types by elementId(s)
+  GET    /objects                     # List all objects
+  POST   /objects/list                # Get objects by elementId(s)
+  POST   /objects/related             # Get related objects
+
+Query Endpoints:
+  POST   /objects/value               # Get current values for object(s)
+  POST   /objects/history             # Get historical values with time range
+
+Update Endpoints:
+  PUT    /objects/{elementId}/value   # Update object's current value
+  PUT    /objects/{elementId}/history # Update historical values
+
+Subscription Endpoints:
+  GET    /subscriptions               # List all subscriptions
+  POST   /subscriptions               # Create new subscription
+  GET    /subscriptions/{id}          # Get subscription details
+  DELETE /subscriptions/{id}          # Delete subscription
+  POST   /subscriptions/{id}/register # Register objects to monitor
+  POST   /subscriptions/{id}/unregister # Unregister objects
+  GET    /subscriptions/{id}/stream   # SSE stream for real-time updates
+  POST   /subscriptions/{id}/sync     # Poll queued updates
 ```
 
 ### HTTP Methods and Semantics
@@ -99,24 +108,24 @@ Your implementation should return appropriate status codes:
 
 Use this checklist to ensure your implementation meets all requirements:
 
-### Entity Management
-- [ ] List all entities with pagination
-- [ ] Retrieve specific entity by ID
-- [ ] Create new entities
-- [ ] Update existing entities
-- [ ] Delete entities
-- [ ] Support hierarchical relationships
-- [ ] Expose entity metadata
-- [ ] List child entities
+### Object Management
+- [ ] List all objects (GET /objects)
+- [ ] Retrieve objects by elementId (POST /objects/list)
+- [ ] List object types (GET /objecttypes)
+- [ ] Query object types by elementId (POST /objecttypes/query)
+- [ ] Get related objects (POST /objects/related)
+- [ ] Support hierarchical relationships via parentId
+- [ ] List namespaces (GET /namespaces)
+- [ ] List relationship types (GET /relationshiptypes)
 
 ### Data Access
-- [ ] Get current values for entity data points
-- [ ] Query historical time-series data
-- [ ] Support time range filtering
-- [ ] Include data quality indicators
-- [ ] Support data aggregations (min, max, avg, sum, count)
-- [ ] Implement pagination for large datasets
-- [ ] Write time-series data
+- [ ] Get current values (POST /objects/value)
+- [ ] Query historical time-series data (POST /objects/history)
+- [ ] Support time range filtering (startTime, endTime)
+- [ ] Include data quality and timestamp indicators
+- [ ] Support maxDepth for compositional hierarchies
+- [ ] Update current values (PUT /objects/{elementId}/value)
+- [ ] Update historical values (PUT /objects/{elementId}/history)
 
 ### Authentication & Authorization
 - [ ] Implement user authentication
@@ -149,19 +158,22 @@ Use this checklist to ensure your implementation meets all requirements:
 - [ ] Support standard data types
 - [ ] Include quality indicators with data
 
+### Subscriptions
+- [ ] Create subscriptions (POST /subscriptions)
+- [ ] List subscriptions (GET /subscriptions)
+- [ ] Get subscription details (GET /subscriptions/{id})
+- [ ] Delete subscriptions (DELETE /subscriptions/{id})
+- [ ] Register objects to monitor (POST /subscriptions/{id}/register)
+- [ ] Unregister objects (POST /subscriptions/{id}/unregister)
+- [ ] SSE streaming (GET /subscriptions/{id}/stream)
+- [ ] Queue-based sync (POST /subscriptions/{id}/sync)
+
 ## Optional Features
 
 These features are recommended but not required:
 
-- **WebSocket Support**: Real-time data streaming
-- **GraphQL Endpoint**: Alternative query interface
-- **Batch Operations**: Process multiple operations in single request
-- **Advanced Filtering**: Complex query expressions
-- **Data Subscriptions**: Push-based data updates
 - **Compression**: Response compression (gzip, brotli)
-- **Partial Updates**: PATCH method support
 - **ETags**: Caching support with ETags
-- **API Versioning**: Multiple API versions
 - **Rate Limit Headers**: Include rate limit information in responses
 
 ## Versioning Strategy
@@ -170,13 +182,13 @@ Your API should support versioning to allow evolution without breaking clients:
 
 ### URL Versioning (Recommended)
 ```
-https://your-platform.example.com/api/v1/entities
-https://your-platform.example.com/api/v2/entities
+https://your-platform.example.com/v1/objects
+https://your-platform.example.com/v2/objects
 ```
 
 ### Header Versioning (Alternative)
 ```
-GET /entities
+GET /objects
 Accept: application/vnd.cesmii.v1+json
 ```
 

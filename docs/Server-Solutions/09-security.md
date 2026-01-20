@@ -173,9 +173,9 @@ def sanitize_input(text: str) -> str:
     return escape(text)
 
 # Use in API responses
-@app.route('/api/v1/entities/<entity_id>', methods=['GET'])
-def get_entity(entity_id: str):
-    entity = repo.get_entity(entity_id)
+@app.route('/objects/list', methods=['POST'])
+def get_object(element_id: str):
+    obj = repo.get_object(element_id)
     
     # Sanitize display values
     if entity:
@@ -228,12 +228,12 @@ limiter = Limiter(
 )
 
 # Per-endpoint rate limits
-@app.route('/api/v1/entities', methods=['GET'])
+@app.route('/objects', methods=['GET'])
 @limiter.limit("200 per minute")
 def list_entities():
     pass
 
-@app.route('/api/v1/entities', methods=['POST'])
+@app.route('/objects', methods=['POST'])
 @limiter.limit("50 per minute")
 def create_entity():
     pass
@@ -245,9 +245,9 @@ def get_user_id():
         return user.get('id')
     return get_remote_address()
 
-@app.route('/api/v1/entities/<entity_id>/data', methods=['POST'])
+@app.route('/objects/<element_id>/value', methods=['PUT'])
 @limiter.limit("1000 per hour", key_func=get_user_id)
-def write_entity_data(entity_id: str):
+def update_object_value(element_id: str):
     pass
 ```
 

@@ -1,76 +1,81 @@
 # Data Models
 
-## Entity Representation
+## Object Instance Representation
 
-Entities should be serialized in JSON format following this structure:
+Objects should be serialized in JSON format following the i3X API structure:
 
 ```json
 {
-  "id": "urn:platform:entity:12345",
-  "type": "Equipment",
+  "elementId": "urn:platform:object:12345",
   "displayName": "Packaging Line 1",
-  "namespace": "urn:platform:namespace:production",
-  "description": "High-speed packaging line for consumer goods",
-  "attributes": {
-    "manufacturer": "ACME Corp",
-    "model": "PL-5000",
-    "serialNumber": "SN-2023-001",
-    "installDate": "2023-01-15T00:00:00Z",
-    "location": "Building A, Floor 2"
-  },
-  "dataPoints": [
-    {
-      "id": "speed",
-      "displayName": "Line Speed",
-      "dataType": "Double",
-      "unit": "items/min",
-      "accessLevel": "read"
-    },
-    {
-      "id": "status",
-      "displayName": "Operational Status",
-      "dataType": "String",
-      "enumValues": ["Running", "Stopped", "Maintenance"],
-      "accessLevel": "read"
-    }
-  ],
-  "parentId": "urn:platform:entity:building-a",
-  "children": [
-    "urn:platform:entity:conveyor-1",
-    "urn:platform:entity:sealer-1"
-  ],
-  "metadata": {
-    "created": "2023-01-15T00:00:00Z",
-    "modified": "2025-01-15T10:30:00Z",
-    "version": "2.1",
-    "tags": ["production", "packaging", "critical"]
-  },
-  "links": {
-    "self": "/api/v1/entities/urn:platform:entity:12345",
-    "data": "/api/v1/entities/urn:platform:entity:12345/data",
-    "children": "/api/v1/entities/urn:platform:entity:12345/children"
+  "typeId": "urn:platform:type:Equipment",
+  "parentId": "urn:platform:object:building-a",
+  "isComposition": true,
+  "namespaceUri": "urn:platform:namespace:production",
+  "relationships": {
+    "HasComponent": ["urn:platform:object:conveyor-1", "urn:platform:object:sealer-1"],
+    "References": ["urn:platform:object:operator-station-1"]
   }
 }
 ```
 
-## Entity Field Descriptions
+## Object Field Descriptions
 
 ### Required Fields
 
-- **id** (string): Unique identifier for the entity. Should be a URN or UUID.
-- **type** (string): Entity type (e.g., "Equipment", "Process", "Line", "Machine")
-- **displayName** (string): Human-readable name for the entity
+- **elementId** (string): Unique identifier for the object
+- **displayName** (string): Human-readable name for the object
 
 ### Optional Fields
 
-- **namespace** (string): URN identifying the namespace/information model
-- **description** (string): Detailed description of the entity
-- **attributes** (object): Static attributes as key-value pairs
-- **dataPoints** (array): Available data points/variables for time-series data
-- **parentId** (string): ID of parent entity in hierarchy
-- **children** (array): IDs of child entities
-- **metadata** (object): System metadata (created, modified, version, tags)
-- **links** (object): HATEOAS links to related resources
+- **typeId** (string): ElementId of the ObjectType this object is an instance of
+- **parentId** (string | null): ElementId of parent object in hierarchy
+- **isComposition** (boolean): Whether this object has child objects
+- **namespaceUri** (string): URI of the namespace this object belongs to
+- **relationships** (object | null): Map of relationship type names to arrays of related elementIds
+
+## ObjectType Representation
+
+ObjectTypes define the schema for objects:
+
+```json
+{
+  "elementId": "urn:platform:type:Equipment",
+  "displayName": "Manufacturing Equipment",
+  "namespaceUri": "urn:platform:namespace:production",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "manufacturer": { "type": "string" },
+      "model": { "type": "string" },
+      "status": {
+        "type": "string",
+        "enum": ["Running", "Stopped", "Maintenance"]
+      }
+    }
+  }
+}
+```
+
+## Namespace Representation
+
+```json
+{
+  "uri": "urn:platform:namespace:production",
+  "displayName": "Production Equipment"
+}
+```
+
+## RelationshipType Representation
+
+```json
+{
+  "elementId": "urn:platform:reltype:HasComponent",
+  "displayName": "Has Component",
+  "namespaceUri": "urn:platform:namespace:core",
+  "reverseOf": "ComponentOf"
+}
+```
 
 ## Data Point Definition
 
@@ -116,73 +121,68 @@ Each data point in the `dataPoints` array should include:
 - **Float**: Single-precision floating point
 - **ByteString**: Binary data as base64
 
-## Time-Series Data Representation
+## Value Request/Response
+
+### GetObjectValueRequest (POST /objects/value)
 
 ```json
 {
-  "entityId": "urn:platform:entity:12345",
-  "dataPointId": "speed",
-  "timeRange": {
-    "start": "2025-01-15T00:00:00Z",
-    "end": "2025-01-15T23:59:59Z"
-  },
-  "aggregation": {
-    "method": "none",
-    "interval": null
-  },
-  "dataPoints": [
-    {
-      "timestamp": "2025-01-15T12:00:00.000Z",
-      "value": 125.5,
-      "quality": "Good",
-      "source": "PLC-01"
-    },
-    {
-      "timestamp": "2025-01-15T12:01:00.000Z",
-      "value": 127.2,
-      "quality": "Good",
-      "source": "PLC-01"
-    }
-  ],
-  "statistics": {
-    "count": 1440,
-    "min": 100.0,
-    "max": 150.0,
-    "avg": 125.8,
-    "stdDev": 12.3
-  },
-  "pagination": {
-    "limit": 100,
-    "offset": 0,
-    "total": 1440,
-    "hasMore": true
-  }
+  "elementId": "urn:platform:object:12345",
+  "maxDepth": 1
 }
 ```
 
-## Time-Series Data Fields
+Or for multiple objects:
 
-### Request Parameters
+```json
+{
+  "elementIds": [
+    "urn:platform:object:12345",
+    "urn:platform:object:12346"
+  ],
+  "maxDepth": 1
+}
+```
 
-When querying time-series data, support these parameters:
+**Parameters:**
+- **elementId** (string | null): Single object to query
+- **elementIds** (string[] | null): Multiple objects to query
+- **maxDepth** (integer, default: 1): Recursion depth for compositional hierarchies (0 = infinite)
 
-- **startTime** (ISO 8601): Beginning of time range
-- **endTime** (ISO 8601): End of time range
-- **dataPoint** (string): Specific data point ID (optional, omit for all)
-- **aggregation** (string): Aggregation method ("none", "avg", "min", "max", "sum", "count")
-- **interval** (integer): Aggregation interval in seconds
-- **limit** (integer): Maximum number of data points to return
-- **offset** (integer): Offset for pagination
+### GetObjectHistoryRequest (POST /objects/history)
 
-### Response Fields
+```json
+{
+  "elementId": "urn:platform:object:12345",
+  "startTime": "2025-01-15T00:00:00Z",
+  "endTime": "2025-01-15T23:59:59Z",
+  "maxDepth": 1
+}
+```
 
-- **entityId** (string): Entity identifier
-- **dataPointId** (string): Data point identifier
-- **timeRange** (object): Actual time range of returned data
-- **aggregation** (object): Aggregation settings used
-- **dataPoints** (array): Array of time-series data points
-- **statistics** (object): Statistical summary of the data
-- **pagination** (object): Pagination information
+**Parameters:**
+- **elementId** (string | null): Single object to query
+- **elementIds** (string[] | null): Multiple objects to query
+- **startTime** (string | null): ISO 8601 start of time range
+- **endTime** (string | null): ISO 8601 end of time range
+- **maxDepth** (integer, default: 1): Recursion depth
+
+### Value Response
+
+```json
+{
+  "elementId": "urn:platform:object:12345",
+  "value": 125.5,
+  "timestamp": "2025-01-15T12:00:00.000Z",
+  "quality": "Good"
+}
+```
+
+**Response Fields:**
+- **elementId** (string): Object identifier
+- **value** (any): The current or historical value
+- **timestamp** (string | null): When the value was recorded (ISO 8601)
+- **quality** (string | null): Quality indicator
 
 ### Data Point Structure
 
@@ -247,34 +247,30 @@ Support these aggregation methods:
 
 ## Error Response Format
 
-All error responses should follow this structure:
+All error responses should follow the HTTPValidationError structure:
 
 ```json
 {
-  "error": "Entity not found",
-  "message": "No entity exists with ID: urn:platform:entity:99999",
-  "code": "ENTITY_NOT_FOUND",
-  "timestamp": "2025-01-15T12:00:00Z",
-  "path": "/api/v1/entities/urn:platform:entity:99999",
-  "details": {
-    "requestedId": "urn:platform:entity:99999"
-  }
+  "detail": [
+    {
+      "loc": ["body", "elementId"],
+      "msg": "field required",
+      "type": "value_error.missing"
+    }
+  ]
 }
 ```
 
-### Error Response Fields
+### ValidationError Fields
 
-- **error** (string, required): Short error description
-- **message** (string, required): Detailed error message
-- **code** (string, optional): Error code for programmatic handling
-- **timestamp** (ISO 8601, required): When the error occurred
-- **path** (string, required): Request path that caused the error
-- **details** (object, optional): Additional error context
+- **loc** (array): Location of the error (path to the field)
+- **msg** (string): Human-readable error message
+- **type** (string): Error type for programmatic handling
 
 ### Standard Error Codes
 
 ```
-ENTITY_NOT_FOUND        - Requested entity doesn't exist
+OBJECT_NOT_FOUND        - Requested object doesn't exist
 INVALID_PARAMETER       - Parameter validation failed
 UNAUTHORIZED            - Authentication required
 FORBIDDEN               - Insufficient permissions
@@ -286,127 +282,66 @@ DATA_NOT_AVAILABLE      - No data in requested range
 VALIDATION_ERROR        - Request validation failed
 ```
 
-## Pagination Metadata
+## Related Objects Request
 
-Include pagination information in list responses:
+### GetRelatedObjectsRequest (POST /objects/related)
 
 ```json
 {
-  "items": [...],
-  "pagination": {
-    "limit": 100,
-    "offset": 0,
-    "total": 1440,
-    "hasMore": true,
-    "nextOffset": 100,
-    "prevOffset": null
-  },
-  "links": {
-    "first": "/api/v1/entities?limit=100&offset=0",
-    "next": "/api/v1/entities?limit=100&offset=100",
-    "prev": null,
-    "last": "/api/v1/entities?limit=100&offset=1400"
-  }
+  "elementId": "urn:platform:object:12345",
+  "relationshiptype": "HasComponent",
+  "includeMetadata": true
 }
 ```
 
-## Namespace Definition
+**Parameters:**
+- **elementId** (string | null): Single object to query
+- **elementIds** (string[] | null): Multiple objects to query
+- **relationshiptype** (string | null): Filter by relationship type
+- **includeMetadata** (boolean, default: false): Include full metadata
+
+## Subscription Models
+
+### CreateSubscriptionRequest
+
+```json
+{}
+```
+
+### CreateSubscriptionResponse
 
 ```json
 {
-  "uri": "urn:platform:namespace:production",
-  "name": "Production Equipment",
-  "description": "Production line equipment and sensors",
-  "version": "1.0",
-  "publisher": "ACME Manufacturing",
-  "publishDate": "2024-01-15T00:00:00Z",
-  "types": [
-    {
-      "name": "PackagingLine",
-      "baseType": "Equipment",
-      "description": "High-speed packaging equipment"
-    }
-  ]
+  "subscriptionId": "sub-12345",
+  "message": "Subscription created successfully"
 }
 ```
 
-## Entity Type Definition
+### RegisterMonitoredItemsRequest
 
 ```json
 {
-  "id": "Equipment",
-  "namespace": "urn:platform:namespace:production",
-  "displayName": "Manufacturing Equipment",
-  "description": "Physical manufacturing equipment",
-  "baseType": null,
-  "attributes": [
-    {
-      "name": "manufacturer",
-      "dataType": "String",
-      "required": false
-    },
-    {
-      "name": "model",
-      "dataType": "String",
-      "required": false
-    }
-  ],
-  "dataPoints": [
-    {
-      "name": "status",
-      "dataType": "String",
-      "enumValues": ["Running", "Stopped", "Maintenance"]
-    }
-  ]
+  "elementIds": ["urn:platform:object:12345", "urn:platform:object:12346"],
+  "maxDepth": 1
 }
 ```
 
-## Batch Operation Format
-
-For batch operations (creating/updating multiple entities):
+### SyncResponseItem
 
 ```json
 {
-  "operations": [
-    {
-      "method": "POST",
-      "path": "/entities",
-      "body": {
-        "type": "Equipment",
-        "displayName": "New Equipment 1"
-      }
-    },
-    {
-      "method": "PUT",
-      "path": "/entities/urn:platform:entity:12345",
-      "body": {
-        "displayName": "Updated Name"
-      }
-    }
-  ]
+  "elementId": "urn:platform:object:12345",
+  "value": 125.5,
+  "timestamp": "2025-01-15T12:00:00.000Z",
+  "quality": "Good"
 }
 ```
 
-Response:
+### SubscriptionSummary
 
 ```json
 {
-  "results": [
-    {
-      "status": 201,
-      "body": {
-        "id": "urn:platform:entity:new-1",
-        "type": "Equipment",
-        "displayName": "New Equipment 1"
-      }
-    },
-    {
-      "status": 200,
-      "body": {
-        "id": "urn:platform:entity:12345",
-        "displayName": "Updated Name"
-      }
-    }
-  ]
+  "subscriptionId": 1,
+  "created": "2025-01-15T10:00:00.000Z"
 }
 ```
