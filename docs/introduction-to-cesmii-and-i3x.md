@@ -219,7 +219,7 @@ CESMII envisions a future where manufacturing applications work like smartphone 
 Just as iOS and Android provide common APIs that enable rich app ecosystems:
 - **Apple/Android** → Platform vendors (historians, MES, etc.)
 - **App Store** → CESMII Marketplace
-- **APIs** → CM Information API
+- **APIs** → i3X API
 - **Apps** → Manufacturing applications (analytics, ML, visualization)
 - **Users** → Manufacturers benefiting from innovation
 
@@ -235,7 +235,7 @@ Just as iOS and Android provide common APIs that enable rich app ecosystems:
 
 ### Current State (2025)
 
-- **RFC Published**: CM Information API specification available for review
+- **RFC Published**: i3X API specification available for review
 - **i3X Operational**: Demo server available for testing
 - **Working Group Active**: CESMII/VDMA collaboration ongoing
 - **Community Engagement**: Public feedback and discussion period
@@ -261,7 +261,7 @@ Just as iOS and Android provide common APIs that enable rich app ecosystems:
 ### For Application Developers
 
 1. **Explore i3X**: Visit https://i3x.cesmii.net/docs
-2. **Read the API Documentation**: Review the CM Information API specification
+2. **Read the API Documentation**: Review the CM i3X API specification
 3. **Try Sample Requests**: Use the Swagger UI to test endpoints
 4. **Build an Application**: Create a client using the standardized API
 5. **Join the Community**: Provide feedback via GitHub issues
@@ -347,7 +347,7 @@ CESMII and i3X represent a collaborative effort to solve one of manufacturing's 
 
 The i3X demonstration server provides a hands-on way to explore this vision, test the API, and understand how standardized manufacturing information access can transform the industry.
 
-Whether you're an application developer, platform vendor, or manufacturer, CESMII's work on SM Profiles and the CM Information API offers a path toward greater interoperability, reduced costs, and accelerated digital transformation in manufacturing.
+Whether you're an application developer, platform vendor, or manufacturer, CESMII's work on SM Profiles and the i3X API offers a path toward greater interoperability, reduced costs, and accelerated digital transformation in manufacturing.
 
 ---
 
