@@ -79,16 +79,60 @@ SM Profiles are typically implemented as OPC UA Information Model type definitio
 
 #### Other Approaches
 
-- While OPC UA Information Models are typically delivered in a machine readable Nodeset format, conceptual implementations have also been successful using JSON Schema, JSON-LD or a combination.
+- While OPC UA Information Models are typically delivered in a machine readable Nodeset format, other implementations have also been successful using JSON Schema, JSON-LD or a combination.
 - Similarily, new innovations have demonstrated the ease of applying published Companion Specifications and member-contributed Nodesets in JSON for use in MQTT, or other event-based transports.
 
+### 2. Smart Manufacturing Platforms
+
+Another name for a SM Profile is a Class or Type definition. Since the late 60s, Information Technology systems have used Object Orientation to create reliable data structures. In most programming environments, these Objects are derived from a Type or Class definition. In relational database systems, pre-established structures have a different name: Schemas. Modern Operational Technology platforms can use any word for these concepts that they like, but must follow this pattern of establishing contracts for data (SM Profiles) and using those contracts to govern instances of the data (Objects).
+
+Once data is contractually governed and made available as Objects, a Smart Platform should be able to persist relationships between these Objects.
+
+## Hierarchy
+
+Industrial standards like ISA-95 are often interpreted as requiring an Asset Hierarchy showing how Asset objects are organized within an Enterprise. While this may be the beginning of a contextual model, hierarchical asset relationships are not the only kind of relationships that are required for a Smart Platform. In fact, ISA-95 specifies multiple kinds of relationships that are often not leveraged in contemporary information platforms.
+
+Unified Namespace (UNS) approaches that use MQTT are often constrained by the hierarchical nature of a MQTT topic name. The / separation is frequently used to imply equipment relationships. Again, this is a *start* but must not be the *end* of capturing context. 
+
 ## Knowledge Graphs
+
+A popular term for capturing these additional relationships is a Knowledge Graph. It starts by providing a mechanism to declare and persist those connections. While many of the platforms available today organize objects hierarchically, very few solutions provide a way to describe non-hierarchical "edges" between objects ("nodes").
+
+A Smart Platform is one that can currently, in the product or through its ecosystem, or has a roadmap to, provide a user experience that allows these relationships to be expressed. While a machine may "belong" to a line, it also has a relationship to an material provider that does not "belong" to the line. While a machine may send material to another machine, it also has a relationship with a human operator that is not a "child" of that machine.
+
+Graphs can capture other knowledge as well: expressing cause-and-effect relationships between events not directly upstream of a process unit, referencing known failure modes with other like equipment, or identify correlation between supply chain disruption and quality. Smart Platforms store, or provide access, to this information to enable both humans and AI systems to identify correlation, make predictions, and enact better decisions.
 
 ## Open APIs
 
 ### What is i3X?
 
 **i3X** (pronounced "i-three-X") is CESMII's demonstration server and reference implementation of the **Contextualized Manufacturing Information API** - a common, standardized API for accessing manufacturing data. It works against a Contextual Manufacturing Information Platform (CMIP) - a single, or a combination of, Type-safe, organized operational data systems.
+
+### The Problem
+
+The manufacturing industry suffers from API fragmentation:
+- Multiple proprietary APIs from different vendors
+- No standardization across platforms
+- Applications locked to specific platforms
+- High integration costs
+- Limited application portability
+
+### The Solution
+
+The **Contextualized Manufacturing Information (CM Information) API** provides:
+- **Common Interface**: Standard set of server primitives
+- **Platform Independence**: Works across diverse manufacturing systems
+- **Application Portability**: Write once, deploy anywhere
+- **Reduced Complexity**: Standardized contracts simplify development
+
+### Key Features
+
+1. **RESTful Design**: Modern, web-standard API architecture
+2. **Object Orientation**: Flexible representation of manufacturing assets
+3. **Time-Series Data**: Efficient access to historical and real-time data
+4. **SM Profile Support**: Native support for Smart Manufacturing Profiles
+5. **Standard Authentication**: OAuth, JWT, and API key support
+6. **Comprehensive Documentation**: OpenAPI/Swagger specifications
 
 ### Purpose of i3X
 
@@ -125,33 +169,6 @@ Important distinctions:
 | Performance | Shared resources | Dedicated resources |
 | Support | Community support | Commercial support |
 
-## The CM Information API
-
-### The Problem
-
-The manufacturing industry suffers from API fragmentation:
-- Multiple proprietary APIs from different vendors
-- No standardization across platforms
-- Applications locked to specific platforms
-- High integration costs
-- Limited application portability
-
-### The Solution
-
-The **Contextualized Manufacturing Information (CM Information) API** provides:
-- **Common Interface**: Standard set of server primitives
-- **Platform Independence**: Works across diverse manufacturing systems
-- **Application Portability**: Write once, deploy anywhere
-- **Reduced Complexity**: Standardized contracts simplify development
-
-### Key Features
-
-1. **RESTful Design**: Modern, web-standard API architecture
-2. **Object Orientation**: Flexible representation of manufacturing assets
-3. **Time-Series Data**: Efficient access to historical and real-time data
-4. **SM Profile Support**: Native support for Smart Manufacturing Profiles
-5. **Standard Authentication**: OAuth, JWT, and API key support
-6. **Comprehensive Documentation**: OpenAPI/Swagger specifications
 
 ## How CESMII, SM Profiles, i3X, and the API Work Together
 
