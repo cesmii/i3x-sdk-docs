@@ -352,7 +352,7 @@ groups:
 ```json
 {
   "dashboard": {
-    "title": "CM Information API",
+    "title": "i3X API",
     "panels": [
       {
         "title": "Request Rate",

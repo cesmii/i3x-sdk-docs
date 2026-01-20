@@ -1,6 +1,6 @@
 # Implementation Patterns
 
-This document provides concrete code examples for implementing the CM Information API server endpoints.
+This document provides concrete code examples for implementing i3X server endpoints.
 
 ## Pattern 1: Basic Entity Endpoint Implementation
 

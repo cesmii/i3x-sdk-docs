@@ -11,7 +11,7 @@ from flask_restx import Api, Resource, fields, Namespace
 api = Api(
     app,
     version='1.0.0',
-    title='CM Information API',
+    title='i3X API',
     description='Contextualized Manufacturing Information API',
     doc='/docs',
     prefix='/api/v1'
@@ -81,11 +81,11 @@ from apispec_webframeworks.flask import FlaskPlugin
 
 # Create API spec
 spec = APISpec(
-    title="CM Information API",
+    title="i3X API",
     version="1.0.0",
     openapi_version="3.0.2",
     info=dict(
-        description="Contextualized Manufacturing Information API",
+        description="Industrial Information Interface eXchange API",
         contact=dict(
             email="rfc@cesmii.org"
         ),
@@ -142,7 +142,7 @@ swaggerui_blueprint = get_swaggerui_blueprint(
     SWAGGER_URL,
     API_URL,
     config={
-        'app_name': "CM Information API",
+        'app_name': "i3X API",
         'deepLinking': True,
         'displayRequestDuration': True
     }
@@ -157,9 +157,9 @@ app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
 # openapi.yaml
 openapi: 3.0.2
 info:
-  title: CM Information API
+  title: i3X API
   version: 1.0.0
-  description: Contextualized Manufacturing Information API
+  description: Industrial Information Interface eXchange
   contact:
     email: rfc@cesmii.org
   license:
@@ -395,7 +395,7 @@ def get(self, entity_id):
 ## README Documentation
 
 ```markdown
-# CM Information API Implementation
+# i3X API Implementation
 
 ## Overview
 

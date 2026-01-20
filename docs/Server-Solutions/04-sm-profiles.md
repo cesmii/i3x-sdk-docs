@@ -2,7 +2,7 @@
 
 ## Overview
 
-Smart Manufacturing (SM) Profiles are OPC UA Information Model type definitions that provide standardized descriptions of manufacturing entities. This section explains how to support SM Profiles in your CM Information API implementation.
+Smart Manufacturing (SM) Profiles are OPC UA Information Model type definitions that provide standardized descriptions of manufacturing entities. This section explains how to support SM Profiles in your i3X implementation.
 
 ## Mapping OPC UA Information Models
 

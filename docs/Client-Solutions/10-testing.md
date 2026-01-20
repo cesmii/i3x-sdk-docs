@@ -34,7 +34,7 @@ test('should fetch entities successfully', async () => {
 ### Integration Testing
 
 ```javascript
-describe('CM Information API Integration', () => {
+describe('i3X API Integration', () => {
   let client;
   let testEntityId;
   

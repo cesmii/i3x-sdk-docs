@@ -2,11 +2,11 @@
 
 ## Introduction
 
-This guide is designed for platform vendors and server implementers who want to expose their manufacturing information systems through the CESMII Contextualized Manufacturing Information (CM Information) API. By implementing this standardized interface, you enable application developers to build portable applications that work across multiple platforms.
+This guide is designed for platform vendors and server implementers who want to expose their manufacturing information systems through the i3X API. By implementing this standardized interface, you enable application developers to build portable applications that work across multiple platforms.
 
 ## Purpose and Goals
 
-The CM Information API specification provides a common set of server primitives that manufacturing information platforms can implement to:
+i3X defines a common set of server primitives that manufacturing information platforms can implement to:
 
 - **Commoditize data access**: Standardize how applications access manufacturing data
 - **Enable application portability**: Allow applications to run on any compliant platform
@@ -36,7 +36,7 @@ This API is designed for implementation by:
 │    Visualization, ML, etc.)              │
 └──────────────────────────────────────────┘
                 ↓ ↑
-        [CM Information API]
+             [i3x API]
                 ↓ ↑
 ┌──────────────────────────────────────────┐
 │   Your Platform Implementation           │

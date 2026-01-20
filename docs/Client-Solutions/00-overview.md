@@ -2,11 +2,11 @@
 
 ## Overview
 
-The CESMII Contextualized Manufacturing Information (CM Information) API provides a standardized interface for accessing and manipulating manufacturing data across diverse platforms. This guide is designed for application developers building clients that consume the API to create analytics, visualizations, notifications, and machine learning applications.
+The i3X API provides a standardized interface for accessing and manipulating manufacturing data across diverse platforms. This guide is designed for application developers building clients that consume the API to create analytics, visualizations, notifications, and machine learning applications.
 
 ## Purpose and Scope
 
-The CM Information API aims to solve the fragmentation problem in manufacturing information systems by providing a common set of server primitives that enable application portability across different platform implementations. This means you can write your application once and deploy it against any platform that implements this API specification.
+i3x aims to solve the fragmentation problem in manufacturing information systems by providing a common set of server primitives that enable application portability across different platform implementations. This means you can write your application once and deploy it against any platform that implements this API specification.
 
 ### Key Benefits for Client Developers
 
@@ -17,28 +17,28 @@ The CM Information API aims to solve the fragmentation problem in manufacturing 
 
 ## Architecture Context
 
-The CM Information API operates within the application layer of the manufacturing technology stack:
+i3X operates within the application layer of the manufacturing technology stack:
 
 ```
 ┌─────────────────────────────────────┐
 │   Applications (Your Client)        │
-│   - Analytics                        │
-│   - Visualization                    │
+│   - Analytics                       │
+│   - Visualization                   │
 │   - ML/AI                           │
-│   - Notifications                    │
+│   - Notifications                   │
 └─────────────────────────────────────┘
               ↓ ↑
 ┌─────────────────────────────────────┐
-│   CM Information API                 │
+│   i3X API                           │
 └─────────────────────────────────────┘
               ↓ ↑
 ┌─────────────────────────────────────┐
-│   Platform Layer                     │
+│   Platform Layer                    │
 │   (Historian/MES/MOM/EMI/Broker)    │
 └─────────────────────────────────────┘
 ```
 
-The API assumes that data has already been contextualized by underlying platform functions, making it ready for consumption by applications.
+The API assumes that data has already been contextualized by underlying platform functions, making it ready for consumption by applications. If a combination of platforms is used, the API assumes those packages are using a Unified Namespace.
 
 ## Getting Started
 
@@ -51,7 +51,7 @@ A public prototype endpoint is available for testing and development:
 
 ### Prerequisites
 
-Before you begin developing against the CM Information API, ensure you have:
+Before you begin developing against the i3X, ensure you have:
 
 1. Understanding of RESTful API principles
 2. Familiarity with manufacturing data concepts

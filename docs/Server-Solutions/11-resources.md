@@ -134,14 +134,14 @@
 
 ### Tutorials
 
-- [Getting Started with CM Information API](docs/tutorials/getting-started.md)
+- [Getting Started with i3X](docs/tutorials/getting-started.md)
 - [Building Your First Server Implementation](docs/tutorials/first-implementation.md)
 - [Working with Smart Manufacturing Profiles](docs/tutorials/sm-profiles.md)
 - [Implementing Authentication](docs/tutorials/authentication.md)
 
 ### Blog Posts
 
-- [Introduction to CM Information API](https://www.cesmii.org/blog/cm-api-intro)
+- [Introduction to the i3X API](https://www.cesmii.org/blog/cm-api-intro)
 - [Why We Need a Common Manufacturing API](https://www.cesmii.org/blog/why-common-api)
 
 ### Videos
@@ -257,6 +257,6 @@ Special thanks to all contributors and reviewers.
 
 ## License
 
-The CM Information API specification is licensed under the BSD 3-Clause License.
+The i3X API specification is licensed under the BSD 3-Clause License.
 
 See [LICENSE](LICENSE) for details.

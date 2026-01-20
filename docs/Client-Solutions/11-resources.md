@@ -23,7 +23,7 @@
 
 ## Versioning and Compatibility
 
-The CM Information API follows semantic versioning. When integrating with the API:
+i3X follows semantic versioning. When integrating with the API:
 
 1. Specify the API version in your requests (if supported)
 2. Monitor deprecation notices in API responses

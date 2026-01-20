@@ -4,7 +4,7 @@
 
 ### Entity Structure
 
-Entities in the CM Information API typically follow this structure:
+Entities in the i3X API typically follow this structure:
 
 ```json
 {
