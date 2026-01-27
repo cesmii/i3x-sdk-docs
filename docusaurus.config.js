@@ -146,7 +146,7 @@ const config = {
               },
               {
                 label: 'GitHub',
-                href: 'https://github.com/cesmii',
+                href: 'https://github.com/cesmii/api',
               },
             ],
           },
