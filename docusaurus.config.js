@@ -77,7 +77,7 @@ const config = {
         },
         items: [
           {
-            href: 'https://connect.cesmii.org/i3x',
+            href: 'https://connect.cesmii.org/i3X',
             label: 'About',
             position: 'left',
           },
@@ -88,13 +88,13 @@ const config = {
             label: 'Docs',
           },
           {
-            href: 'https://github.com/cesmii/api',
+            href: 'https://github.com/cesmii/i3X',
             label: 'GitHub',
             position: 'left',
           },
           {
-            href: 'https://github.com#tbd',
-            label: 'Explorer',
+            href: 'https://acetechnologies.net/i3X',
+            label: 'i3X Explorer',
             position: 'left',
           },
           {
@@ -146,7 +146,7 @@ const config = {
               },
               {
                 label: 'GitHub',
-                href: 'https://github.com/cesmii/api',
+                href: 'https://github.com/cesmii/i3X',
               },
             ],
           },
