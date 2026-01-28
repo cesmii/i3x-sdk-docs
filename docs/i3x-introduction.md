@@ -6,7 +6,7 @@ sidebar_position: 1
 
 ## What is i3X?
 
-i3X is the Industrial Information Interface eXchange API, a **vendor-agnostic REST API specification** for accessing contextualized manufacturing data. Developed by CESMII, it provides a standardized interface that enables applications to work across different manufacturing information platforms—Historians, MES, MOM, EMI systems, and MQTT/Sparkplug-B brokers—without vendor lock-in.
+i3X is the **Industrial Information Interface eXchange** API, a vendor-agnostic REST API specification for accessing contextualized manufacturing data. Developed by CESMII, it provides a standardized interface that enables applications to work across different manufacturing information platforms—Historians, MES, MOM, EMI systems, and MQTT/Sparkplug-B brokers—without vendor lock-in.
 
 **The Core Problem:** Manufacturing data exists across fragmented, vendor-specific systems. Building applications requires custom integrations for each platform, preventing portability and ecosystem growth.
 
