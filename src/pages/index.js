@@ -22,7 +22,7 @@ function HomepageHeader() {
           <Link
             className="button button--secondary button--lg"
             to="/docs/i3x-introduction">
-            i3X Intro
+            i3X Introduction
           </Link>
         </div>
       </div>

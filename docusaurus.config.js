@@ -95,12 +95,6 @@ const config = {
           },
           {
             type: 'docSidebar',
-            sidebarId: 'Server-Developers',
-            position: 'left',
-            label: 'Server Developers',
-          },
-          {
-            type: 'docSidebar',
             sidebarId: 'Client-Developers',
             position: 'left',
             label: 'Client Developers',
