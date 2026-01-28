@@ -18,13 +18,6 @@ function HomepageHeader() {
           className={styles.heroLogo}
         />
         <p className="hero__subtitle">{siteConfig.tagline}</p>
-        <div className={styles.buttons}>
-          <Link
-            className="button button--secondary button--lg"
-            to="/docs/introduction-to-cesmii-and-i3x">
-            CESMII & i3X Overview
-          </Link>
-        </div>
       </div>
     </header>
   );

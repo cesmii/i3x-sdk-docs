@@ -70,7 +70,7 @@ const config = {
         // respectPrefersColorScheme: true,
       },
       navbar: {
-        title: 'i3X',
+        //title: 'i3X',
         logo: {
           alt: 'i3X Logo',
           src: 'img/i3X_circle.png',
@@ -78,14 +78,25 @@ const config = {
         items: [
           {
             href: 'https://connect.cesmii.org/i3X',
-            label: 'About',
+            label: 'i3X Overview',
             position: 'left',
           },
           {
             type: 'docSidebar',
-            sidebarId: 'DocsSidebar',
+            sidebarId: 'Server-Developers',
             position: 'left',
-            label: 'Docs',
+            label: 'Server Developers',
+          },
+          {
+            type: 'docSidebar',
+            sidebarId: 'Client-Developers',
+            position: 'left',
+            label: 'Client Developers',
+          },          
+          {
+            href: 'https://acetechnologies.net/i3X',
+            label: 'i3X Explorer',
+            position: 'left',
           },
           {
             href: 'https://github.com/cesmii/i3X',
@@ -93,12 +104,12 @@ const config = {
             position: 'left',
           },
           {
-            href: 'https://acetechnologies.net/i3X',
-            label: 'i3X Explorer',
+            href: 'https://connect.cesmii.org/i3x#sm-imperatives',
+            label: 'SM Imperatives',
             position: 'left',
           },
           {
-            href: 'https://www.cesmii.org/about/',
+            href: 'https://www.cesmii.org/',
             label: 'CESMII',
             position: 'right',
           },
@@ -111,12 +122,16 @@ const config = {
             title: 'Places',
             items: [
               {
-                label: 'Docs',
-                to: '/docs/introduction-to-cesmii-and-i3x',
+                label: 'Server Developers',
+                to: '/docs/Server-Developers/overview',
               },
               {
-                href: 'https://www.cesmii.org/about/',
-                label: 'About',
+                label: 'Client Developers',
+                to: '/docs/Client-Developers/overview',
+              },              
+              {
+                href: 'https://connect.cesmii.org/i3X',
+                label: 'i3X Overview',
               },
             ],
           },
