@@ -83,7 +83,7 @@ const config = {
           },
           {
             type: 'docSidebar',
-            sidebarId: 'Dev-Intro',
+            sidebarId: 'docs',
             position: 'left',
             label: 'Introduction',
           },
