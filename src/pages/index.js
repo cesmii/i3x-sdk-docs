@@ -18,6 +18,13 @@ function HomepageHeader() {
           className={styles.heroLogo}
         />
         <p className="hero__subtitle">{siteConfig.tagline}</p>
+        <div className={styles.buttons}>
+          <Link
+            className="button button--secondary button--lg"
+            to="/docs/i3x-introduction">
+            i3X Overview
+          </Link>
+        </div>
       </div>
     </header>
   );
