@@ -78,12 +78,12 @@ Relationships enable flexible connections: organizational hierarchy (HasParent/H
 | **Client Developers** | Build applications consuming i3X APIs | Authentication, core concepts, usage patterns, best practices |
 | **Server Developers** | Implement i3X on your platform | Requirements, data models, implementation patterns, compliance testing |
 
-## Resources
+## RFC
 
-- **RFC Specification:** [github.com/cesmii/i3X](https://github.com/cesmii/i3X)
-- **SDK Documentation:** [i3x-sdk-docs](https://github.com/cesmii/i3x-sdk-docs)
-- **Community:** rfc@cesmii.org
-- **CESMII:** [cesmii.org](https://cesmii.org)
+This API is being built by the community following an Internet RFC-style process. For more background, please review the RFC on GitHub.
+
+**RFC Document:** [github.com/cesmii/i3X](https://github.com/cesmii/i3X)
+
 
 ## Design Principles
 
