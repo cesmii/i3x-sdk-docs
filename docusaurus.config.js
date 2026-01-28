@@ -78,8 +78,20 @@ const config = {
         items: [
           {
             href: 'https://connect.cesmii.org/i3X',
-            label: 'i3X Overview',
+            label: 'About i3X',
             position: 'left',
+          },
+          {
+            type: 'docSidebar',
+            sidebarId: 'Dev-Intro',
+            position: 'left',
+            label: 'Introduction',
+          },
+          {
+            type: 'docSidebar',
+            sidebarId: 'Server-Developers',
+            position: 'left',
+            label: 'Server Developers',
           },
           {
             type: 'docSidebar',
