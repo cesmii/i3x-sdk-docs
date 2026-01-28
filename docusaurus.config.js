@@ -122,6 +122,9 @@ const config = {
             title: 'Places',
             items: [
               {
+                label: 'Overview',
+                to: '/docs/Overview',
+              },              {
                 label: 'Server Developers',
                 to: '/docs/Server-Developers/overview',
               },
