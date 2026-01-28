@@ -122,9 +122,10 @@ const config = {
             title: 'Places',
             items: [
               {
-                label: 'Overview',
-                to: '/docs/Overview',
-              },              {
+                label: 'i3X Introduction',
+                to: '/docs/i3X-introduction',
+              },              
+              {
                 label: 'Server Developers',
                 to: '/docs/Server-Developers/overview',
               },
