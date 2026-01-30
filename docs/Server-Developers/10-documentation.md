@@ -12,7 +12,7 @@ api = Api(
     app,
     version='1.0.0',
     title='i3X API',
-    description='Industrial Information Interface eXchange API',
+    description='Industrial Information Interoperability eXchange API',
     doc='/docs'
 )
 
@@ -131,7 +131,7 @@ spec = APISpec(
     version="1.0.0",
     openapi_version="3.0.2",
     info=dict(
-        description="Industrial Information Interface eXchange API",
+        description="Industrial Information Interoperability eXchange API",
         contact=dict(
             email="rfc@cesmii.org"
         ),
@@ -209,7 +209,7 @@ openapi: 3.0.2
 info:
   title: i3X API
   version: 1.0.0
-  description: Industrial Information Interface eXchange
+  description: Industrial Information Interoperability eXchange
   contact:
     email: rfc@cesmii.org
   license:
@@ -606,7 +606,7 @@ def post(self):
 
 ## Overview
 
-This is a server implementation of the i3X Industrial Information Interface eXchange API.
+This is a server implementation of the i3X Industrial Information Interoperability eXchange API.
 
 ## Features
 
