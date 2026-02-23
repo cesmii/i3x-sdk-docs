@@ -78,28 +78,16 @@ const config = {
         },
         items: [
           {
-            href: 'https://connect.cesmii.org/i3X',
-            label: 'About i3X',
+            href: '/',
+            label: 'Home',
             position: 'left',
           },
           {
             type: 'docSidebar',
             sidebarId: 'DocsSidebar',
             position: 'left',
-            label: 'Introduction',
+            label: 'Software Development Kit',
           },
-          {
-            type: 'docSidebar',
-            sidebarId: 'Server-Developers',
-            position: 'left',
-            label: 'Server Developers',
-          },
-          {
-            type: 'docSidebar',
-            sidebarId: 'Client-Developers',
-            position: 'left',
-            label: 'Client Developers',
-          },          
           {
             href: 'https://acetechnologies.net/i3X',
             label: 'i3X Explorer',
@@ -107,19 +95,9 @@ const config = {
           },
           {
             href: 'https://github.com/cesmii/i3X',
-            label: 'GitHub',
+            label: 'i3X GitHub',
             position: 'left',
-          },
-          {
-            href: 'https://connect.cesmii.org/i3x#sm-imperatives',
-            label: 'SM Imperatives',
-            position: 'left',
-          },
-          {
-            href: 'https://www.cesmii.org/',
-            label: 'CESMII',
-            position: 'right',
-          },
+          }
         ],
       },
       footer: {
