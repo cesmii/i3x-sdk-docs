@@ -78,8 +78,8 @@ const config = {
         },
         items: [
           {
-            href: '/',
-            label: 'Home',
+            href: 'https://www.i3x.dev/',
+            label: 'Overview',
             position: 'left',
           },
           {
