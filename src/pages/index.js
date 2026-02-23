@@ -23,7 +23,7 @@ function HomepageHeader() {
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"
-            to="/docs/i3x-introduction">
+            to="/i3x-introduction">
             i3X Introduction
           </Link>
         </div>
