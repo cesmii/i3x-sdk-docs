@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import Heading from '@theme/Heading';
+import useBaseUrl from '@docusaurus/useBaseUrl';
 import styles from './styles.module.css';
 
 const FeatureList = [
@@ -28,15 +29,16 @@ const FeatureList = [
 ];
 
 function Feature({img, title, description, link}) {
+  const imgUrl = useBaseUrl(img);
   return (
     <div className={clsx('col col-4')}>
       <div className="text--center">
         {link ? (
           <a href={link}>
-            <img src={img} className={styles.featureSvg} alt={title} />
+            <img src={imgUrl} className={styles.featureSvg} alt={title} />
           </a>
         ) : (
-          <img src={img} className={styles.featureSvg} alt={title} />
+          <img src={imgUrl} className={styles.featureSvg} alt={title} />
         )}
       </div>
       <div className="text--center padding-horiz--md">
@@ -54,8 +56,9 @@ function Feature({img, title, description, link}) {
 }
 
 export default function HomepageFeatures() {
+  const bgUrl = useBaseUrl('/img/i3X_Background-100.jpg');
   return (
-    <section className={styles.features}>
+    <section className={styles.features} style={{backgroundImage: `url(${bgUrl})`}}>
       <div className="container">
         <div className="row">
           {FeatureList.map((props, idx) => (

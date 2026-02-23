@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import useBaseUrl from '@docusaurus/useBaseUrl';
 import Layout from '@theme/Layout';
 import HomepageFeatures from '@site/src/components/HomepageFeatures';
 
@@ -9,11 +10,12 @@ import styles from './index.module.css';
 
 function HomepageHeader() {
   const {siteConfig} = useDocusaurusContext();
+  const logoUrl = useBaseUrl('/img/i3X_logo_2.svg');
   return (
     <header className={clsx('hero hero--primary', styles.heroBanner)}>
       <div className="container">
         <img
-          src="/img/i3X_logo_2.svg"
+          src={logoUrl}
           alt="i3X Logo"
           className={styles.heroLogo}
         />
