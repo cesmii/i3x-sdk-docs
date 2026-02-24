@@ -107,8 +107,8 @@ const config = {
             title: 'Places',
             items: [
               {
-                label: 'i3X Introduction',
-                to: '/i3x-introduction',
+                label: 'Quick Start',
+                to: '/i3x-quickstart',
               },
               {
                 label: 'Server Developers',

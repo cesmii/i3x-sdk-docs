@@ -23,8 +23,8 @@ function HomepageHeader() {
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"
-            to="/i3x-introduction">
-            i3X Introduction
+            to="/i3x-quickstart">
+            i3X Quick Start
           </Link>
         </div>
       </div>
