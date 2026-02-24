@@ -108,7 +108,7 @@ const config = {
             items: [
               {
                 label: 'Quick Start',
-                to: '/i3x-quickstart',
+                to: '/quickstart',
               },
               {
                 label: 'Server Developers',
