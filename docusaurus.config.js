@@ -83,12 +83,6 @@ const config = {
             position: 'left',
           },
           {
-            type: 'docSidebar',
-            sidebarId: 'DocsSidebar',
-            position: 'left',
-            label: 'Software Development Kit',
-          },
-          {
             href: 'https://acetechnologies.net/i3X',
             label: 'i3X Explorer',
             position: 'left',
