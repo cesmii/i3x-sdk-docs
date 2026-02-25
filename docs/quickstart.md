@@ -68,7 +68,7 @@ You can see the API in action with Demo data at the public endpoint:
 
 [https://i3x.cesmii.net/docs](https://i3x.cesmii.net/docs)
 
-![Open API Page](img/APIDocsPage.png "Open API Docs Page")
+![Open API Page](../static/img/APIDocsPage.png "Open API Docs Page")
 
 For example: try using the Namespaces endpoint to discover what Namespace are present.
 
