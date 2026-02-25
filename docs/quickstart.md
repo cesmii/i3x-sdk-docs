@@ -88,15 +88,19 @@ i3X Explorer is a free client that works with any compliant i3X implementation, 
 - Open i3X Explorer from your Start Menu, Dock or Launcher
 - Connect to the Demo endpoint at https://i3x.cesmii.net
 
-Try exploring the Namespaces, Types, and Hierarchy in the left panel
+![i3X Explorer Steps Animated Gif](../static/img/i3XExplorer.gif "i3X Explorer")
 
-Select an Object and view Relationships, and History (if available) in the right panel
+### Explore the Address Space
 
-Create a subscription, and start one of the two Subscription mechanisms (Stream or Poll) to see live data flowing
+- Expand the Namespaces tree in the left panel. Expand a Namespace and note the Types that are present. Expand a Type and note the Instance Objects.
+- Expand the Objects tree in the left panel. Note the simple Objects. Expand a complex Object, such as **pump-101** to see its Component Types.
+- Expand the Hierarchy in the left panel. Note how the objects are organized.
+- Select **TempSensor-101**, note the current value.
+- Click the **Subscribe** button at the top right. Click **Start Stream** to see the values updating in real-time.
 
 ## Step 3: Create a Server
 
-This step requires Python 3, and will use the sample MQTT adapter included in the Demo. You can use your own MQTT broker, or the sample Broker provided by CESMII
+This step requires Python 3, and will use the sample MQTT adapter included in the Demo. You can use your own MQTT broker, or the sample Broker provided by CESMII.
 
 ### Download the Repo
 
@@ -105,8 +109,8 @@ This step requires Python 3, and will use the sample MQTT adapter included in th
 ### Configure the Server
 
 - Change directory to the Demo server project: `cd i3x/demo/server`
-- Copy `config-mqtt.json` to `config.json`: `cp config.mqtt.json config.json`
-- Edit `config.json` to point to your own MQTT broker if you prefer
+- Copy the MQTT config file into place as the default config: `cp config.mqtt.json config.json`
+- *Optional: edit `config.json` to point to your own MQTT broker if you prefer*
 
 ### Start the Server
 
@@ -115,6 +119,7 @@ The startup script creates a virtual environment and installs pre-requisites on 
 - Mac/Linux/WSL: `./setup.sh`
 - Windows PowerShell: `./setup.ps1`
 
+![Command Line Steps to Start Server](../static/img/StartServer.png "Start Your Own Server")
 ### Connect with i3X Explorer
 
 - Disconnect i3X Explorer from the public endpoint
@@ -123,7 +128,7 @@ The startup script creates a virtual environment and installs pre-requisites on 
 
 ## Step 4: Create Your Own Client
 
-This setup requires Python 3, and will use the `i3x-client` library available in pip. Modern best practices require using a virtual environment, but we'll bypass that for simplicity.
+This setup requires Python 3, and will use the `i3x-client` <a href="https://pypi.org/project/i3x-client/" target="_blank">library available in pip</a>. Modern best practices require using a virtual environment, but we'll bypass that for simplicity.
 
 Examples shown should work on Mac, Linux, WSL and Windows PowerShell. Windows command line users will need to modify paths.
 
@@ -156,12 +161,12 @@ print(value.data[0].value, value.data[0].quality)
 client.disconnect()
 ```
 
-### Learning More
+## Learning More
 
 [Server](Server-Developers/00-overview.md) and [Client](Client-Developers/00-overview.md) Developers can find specific documentation in the appropriate sections on this site.
 
 All of the projects used in this Quick Start are open and open source. For example:
 
-- i3X Explorer has a Developer Tools button that allows you to observe all network request and responses between the client and the server. You can view the source of the client itself at [https://github.com/ace-technologies-inc/i3X-Explorer](https://github.com/ace-technologies-inc/i3X-Explorer)
+- i3X Explorer has a Developer Tools button that allows you to observe all network request and responses between the client and the server. You can view the source of the client itself at [https://github.com/ace-technologies-inc/i3X-Explorer](https://github.com/ace-technologies-inc/i3X-Explorer).
 - The i3x-client Python library has more guidance on the [PyPi project page](https://pypi.org/project/i3x-client/), or you can view the source code at [https://github.com/cesmii/python-i3x-client](https://github.com/cesmii/python-i3x-client).
-- The Demo server and MQTT adapter are a part of the i3X Working Group project, the source code, documents and project details are at [https://github.com/cesmii/i3x](https://github.com/cesmii/i3x)
+- The Demo server and MQTT adapter are a part of the i3X Working Group project. The source code, documents and project details are at [https://github.com/cesmii/i3x](https://github.com/cesmii/i3x).

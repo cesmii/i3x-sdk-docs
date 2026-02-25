@@ -78,8 +78,8 @@ const config = {
         },
         items: [
           {
-            href: 'https://www.i3x.dev/',
-            label: 'Overview',
+            href: '/quickstart',
+            label: 'Quick Start',
             position: 'left',
           },
           {
