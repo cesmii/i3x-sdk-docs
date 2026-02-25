@@ -66,6 +66,14 @@ const config = {
     ({
       // Replace with your project's social card
       image: 'img/i3X_circle.png',
+      metadata: [
+        {name: 'og:type', content: 'website'},
+        {name: 'og:site_name', content: 'i3X Developer Docs'},
+        {name: 'og:description', content: 'Developer documentation for i3X, a common API for contextualized manufacturing information platforms'},
+        {name: 'twitter:card', content: 'summary_large_image'},
+        {name: 'twitter:description', content: 'i3X is a common API for contextualized manufacturing information platforms'},
+        {name: 'twitter:image', content: 'https://i3x.dev/docs/img/i3X_circle.png'},
+      ],
       colorMode: {
         disableSwitch: true,
         // respectPrefersColorScheme: true,
