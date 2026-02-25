@@ -45,6 +45,23 @@
   color: #4084ef;
 }
 
+/* Standard blue/purple link colors for content */
+.markdown a {
+  color: #0000EE;
+}
+
+.markdown a:visited {
+  color: #551A8B;
+}
+
+[data-theme='dark'] .markdown a {
+  color: #6699FF;
+}
+
+[data-theme='dark'] .markdown a:visited {
+  color: #CC99FF;
+}
+
 /* Background image for docs pages */
 .docs-wrapper {
 /*  background-image: url('/img/i3X_Background-100.jpg'); */
