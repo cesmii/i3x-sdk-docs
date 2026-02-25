@@ -72,7 +72,7 @@ const config = {
         {property: 'og:description', content: 'Developer documentation for i3X, a common API for contextualized manufacturing information platforms'},
         {name: 'twitter:card', content: 'summary_large_image'},
         {name: 'twitter:description', content: 'i3X is a common API for contextualized manufacturing information platforms'},
-        {name: 'twitter:image', content: 'https://i3x.dev/docs/img/i3X_circle.png'},
+        {name: 'twitter:image', content: 'https://i3x.dev/docs/img/SDKPreview.png'},
       ],
       colorMode: {
         disableSwitch: true,
