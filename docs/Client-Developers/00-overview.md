@@ -72,7 +72,6 @@ This client developer guide is organized into the following categories:
 8. **[Troubleshooting](08-troubleshooting.md)** - Common issues and solutions
 9. **[Security](09-security.md)** - Security best practices
 10. **[Testing](10-testing.md)** - Testing strategies
-11. **[Resources](11-resources.md)** - Community support and references
 
 ## Quick Links
 

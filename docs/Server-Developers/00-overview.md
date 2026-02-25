@@ -80,7 +80,6 @@ This server implementation guide is organized into the following categories:
 8. **[Monitoring](08-monitoring.md)** - Logging, metrics, and observability
 9. **[Security](09-security.md)** - Authentication, validation, and best practices
 10. **[Documentation](10-documentation.md)** - OpenAPI specification generation
-11. **[Resources](11-resources.md)** - Community support and references
 
 ## Getting Started
 
