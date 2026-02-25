@@ -37,6 +37,21 @@
   background: linear-gradient(90deg, #2b47da 0%, #00aeef 100%);
 }
 
+/* Fix mobile navbar menu link colors on blue background */
+.navbar-sidebar {
+  --ifm-navbar-link-color: #ffffff;
+}
+
+.navbar-sidebar .navbar__link,
+.navbar-sidebar__item .menu__link {
+  color: #ffffff;
+}
+
+.navbar-sidebar .navbar__link:hover,
+.navbar-sidebar__item .menu__link:hover {
+  color: #C2D0F7;
+}
+
 .footer {
   background: #231f20;
 }
