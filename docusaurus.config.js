@@ -70,8 +70,9 @@ const config = {
         {property: 'og:type', content: 'website'},
         {property: 'og:site_name', content: 'i3X Developer Docs'},
         {property: 'og:description', content: 'Developer documentation for i3X, a common API for contextualized manufacturing information platforms'},
+        {property: 'og:image', content: 'https://i3x.dev/docs/img/SDKPreview.png'},
         {name: 'twitter:card', content: 'summary_large_image'},
-        {name: 'twitter:description', content: 'i3X is a common API for contextualized manufacturing information platforms'},
+        {name: 'twitter:description', content: 'Developer documentation for i3X, a common API for contextualized manufacturing information platforms'},
         {name: 'twitter:image', content: 'https://i3x.dev/docs/img/SDKPreview.png'},
       ],
       colorMode: {
