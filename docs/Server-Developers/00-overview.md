@@ -83,9 +83,6 @@ This server implementation guide is organized into the following categories:
 1. Review the [Requirements](01-requirements.md) to understand what your implementation must support
 2. Study the [Data Models](02-data-models.md) to understand the API's object model and time-series structures
 3. Explore the [Implementation Patterns](03-implementation-patterns.md) for code examples
-4. Implement security following the [Security](09-security.md) guidelines
-5. Set up monitoring using the [Monitoring](08-monitoring.md) recommendations
-6. Deploy using the [Deployment](07-deployment.md) strategies
 
 ## Quick Links
 
