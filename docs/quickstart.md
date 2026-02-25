@@ -64,13 +64,14 @@ For further exploration of relationships, please see the [Demo data Read Me](htt
 
 ## Step 1: View the API
 
-You can see the API in action with Demo data at the public endpoint:
+Explore the API in action with Demo data at the public endpoint: [https://i3x.cesmii.net/docs](https://i3x.cesmii.net/docs)
 
-[https://i3x.cesmii.net/docs](https://i3x.cesmii.net/docs)
+[![Open API Page](../static/img/APIDocsPage.png "Open API Docs Page")](https://i3x.cesmii.net/docs)
+For example: 
 
-![Open API Page](../static/img/APIDocsPage.png "Open API Docs Page")
-
-For example: try using the Namespaces endpoint to discover what Namespace are present.
+- Try using the `namespaces` endpoint to discover what Namespaces are present in the server.
+- Use the `objects` endpoint to discover what Objects are present.
+- Pick an object, by elementId, and use the `related` endpoint to find relationships with other objects.
 
 ## Step 2: Visualize the Model
 
