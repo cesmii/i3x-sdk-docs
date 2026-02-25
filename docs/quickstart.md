@@ -8,7 +8,7 @@ i3X is the **Industrial Information Interoperability eXchange** API, a vendor-ag
 
 ## The Basics
 
-i3X does not provide a data platform or wire protocol -- rather its functions are bound to (wrapped around) one or more existing platforms. Multiple back-end data sources can be coordinated, provided their data model is unified, to fulfill the interface.
+i3X is an API, it does not provide a data platform or wire protocol. Rather, its functions are bound to (wrapped around) one or more existing platforms, normalizing the interface across heterogeneous architectures. Multiple back-end data sources can be coordinated, provided their data model is unified, to fulfill the interface.
 
 ### Key Concepts
 
