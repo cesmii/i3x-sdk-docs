@@ -56,11 +56,9 @@ Review the contributing guidelines in `Contributing.md` in the [GitHub repo](htt
 
 The RFC specification document is a work in progress, developed publicly in the [cesmii/api GitHub repository](https://github.com/cesmii/api). The live OpenAPI specification with interactive docs is at [https://i3x.cesmii.net/docs](https://i3x.cesmii.net/docs).
 
-### Where can I find more documentation?
+### Where can I find more information?
 
 - **Quick Start**: [quickstart.md](quickstart.md)
-- **Client Developer Guide**: [Client-Developers/00-overview.md](Client-Developers/00-overview.md)
-- **Server Developer Guide**: [Server-Developers/00-overview.md](Server-Developers/00-overview.md)
-- **Demo Server**: [https://i3x.cesmii.net](https://i3x.cesmii.net)
+- **i3X Home**: [https://www.i3x.dev](https://www.i3x.dev)
 - **GitHub**: [https://github.com/cesmii/api](https://github.com/cesmii/api)
-- **i3X Explorer**: [https://acetechnologies.net/i3X/](https://acetechnologies.net/i3X/)
+- **CESMII**: [https://www.cesmii.org](https://www.cesmii.org)
