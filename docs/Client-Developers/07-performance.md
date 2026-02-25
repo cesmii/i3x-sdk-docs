@@ -75,7 +75,7 @@ const getHistoricalData = async (token, elementIds, startTime, endTime) => {
     },
     body: JSON.stringify({
       elementIds: elementIds,
-      startTime: startTime,  // ISO 8601 format
+      startTime: startTime,  // RFC 3339 format
       endTime: endTime,
       maxDepth: 1
     })

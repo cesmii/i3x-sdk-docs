@@ -57,7 +57,7 @@ const readObjectValue = async (token, elementId, maxDepth = 1) => {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      elementId: elementId,
+      elementIds: elementIds
       maxDepth: maxDepth  // 0 = infinite recursion, 1 = no child recursion
     })
   });
@@ -74,7 +74,7 @@ const readObjectHistory = async (token, elementId, options = {}) => {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      elementId: elementId,
+      elementIds: elementIds
       startTime: options.startTime || new Date(Date.now() - 3600000).toISOString(),
       endTime: options.endTime || new Date().toISOString(),
       maxDepth: options.maxDepth || 1
@@ -114,7 +114,7 @@ const getRelatedObjects = async (token, elementId, relationshipType = null) => {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      elementId: elementId,
+      elementIds: elementIds
       relationshiptype: relationshipType,
       includeMetadata: true
     })

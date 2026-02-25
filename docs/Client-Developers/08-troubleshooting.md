@@ -2,39 +2,6 @@
 
 ## Troubleshooting Common Issues
 
-### Issue: Authentication Token Expiry
-
-**Solution**: Implement automatic token refresh
-
-```javascript
-class TokenManager {
-  constructor() {
-    this.token = null;
-    this.refreshToken = null;
-    this.expiresAt = null;
-  }
-  
-  async ensureValidToken() {
-    if (!this.token || Date.now() >= this.expiresAt) {
-      await this.refreshAccessToken();
-    }
-    return this.token;
-  }
-  
-  async refreshAccessToken() {
-    const response = await fetch('https://i3x.cesmii.net/auth/refresh', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ refreshToken: this.refreshToken })
-    });
-    
-    const data = await response.json();
-    this.token = data.access_token;
-    this.expiresAt = Date.now() + (data.expires_in * 1000);
-  }
-}
-```
-
 ### Issue: Rate Limiting
 
 **Symptoms**: 429 Too Many Requests responses

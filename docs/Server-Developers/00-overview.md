@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This guide is designed for platform vendors and server implementers who want to expose their manufacturing information systems through the i3X API. By implementing this standardized interface, you enable application developers to build portable applications that work across multiple platforms.
+This draft guide is proposed for platform vendors and server implementers who want to expose their manufacturing information systems through the i3X API. By implementing this standardized interface, you enable application developers to build portable applications that work across multiple platforms.
 
 ## Purpose and Goals
 
@@ -15,14 +15,15 @@ i3X defines a common set of server primitives that manufacturing information pla
 
 ## Target Platforms
 
-This API is designed for implementation by:
+This API is designed for implementation by both individual platforms, or combinations of platforms that work together against a unified information model, to provide the required capabilities. Examples include:
 
 - Historians (e.g., OSI Pi, Rockwell Automation platforms)
+- SCADA System (e.g., Inductive Automation Ignition)
 - Manufacturing Execution Systems (MES)
 - Manufacturing Operations Management (MOM) systems
 - Enterprise Manufacturing Intelligence (EMI) platforms
-- Data brokers and MQTT/Sparkplug-B servers
-- Smart Manufacturing Innovation Platforms (SMIP)
+- Data brokers and MQTT/Sparkplug-B servers, when augmented with other capabilities
+- Data Ops Manufacturing Integration Platforms (e.g. HighByte Intelligence Hub, ThinkIQ)
 - Custom manufacturing information systems
 
 ## Architecture Overview
@@ -58,13 +59,15 @@ This API is designed for implementation by:
 
 ### Key Assumptions
 
-The API assumes that your platform:
+The API assumes that your platform (or combination of platforms):
 
 1. Has already contextualized raw manufacturing data
-2. Can map internal data structures to the API's object model
-3. Supports time-series data storage and retrieval
-4. Implements appropriate security and access control
-5. Can handle concurrent client connections
+2. Has unified the information model and Namespaces across data stores
+3. Can map internal data structures to the API's object model in a Type-safe fashion
+4. Supports time-series data storage and retrieval
+5. Support at least hierarchical relationships between well Typed objects
+5. Implements appropriate security and access control
+6. Can handle concurrent client connections
 
 ## Documentation Structure
 
@@ -73,13 +76,7 @@ This server implementation guide is organized into the following categories:
 1. **[Requirements](01-requirements.md)** - Core capabilities and compliance requirements
 2. **[Data Models](02-data-models.md)** - Object model and time-series data structures
 3. **[Implementation Patterns](03-implementation-patterns.md)** - Code examples and best practices
-4. **[Smart Manufacturing Profiles](04-sm-profiles.md)** - OPC UA and SM Profile support
-5. **[Performance Optimization](05-performance.md)** - Caching, aggregation, and scaling
-6. **[Testing](06-testing.md)** - Unit, integration, and performance testing
-7. **[Deployment](07-deployment.md)** - Docker, Kubernetes, and health checks
-8. **[Monitoring](08-monitoring.md)** - Logging, metrics, and observability
-9. **[Security](09-security.md)** - Authentication, validation, and best practices
-10. **[Documentation](10-documentation.md)** - OpenAPI specification generation
+4. **[Documentation](10-documentation.md)** - OpenAPI specification generation
 
 ## Getting Started
 

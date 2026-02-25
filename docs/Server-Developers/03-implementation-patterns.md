@@ -407,8 +407,8 @@ class GetObjectHistorySchema(Schema):
     """Schema for getting object history"""
     elementId = fields.Str()
     elementIds = fields.List(fields.Str())
-    startTime = fields.Str()  # ISO 8601
-    endTime = fields.Str()    # ISO 8601
+    startTime = fields.Str()  # RFC 3339
+    endTime = fields.Str()    # RFC 3339
     maxDepth = fields.Int(validate=validate.Range(min=0), load_default=1)
 
 get_value_schema = GetObjectValueSchema()

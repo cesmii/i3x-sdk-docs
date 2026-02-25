@@ -8,11 +8,11 @@
 // mockApiClient.js
 export const createMockClient = () => ({
   getObjects: jest.fn().mockResolvedValue([
-    { elementId: '1', typeId: 'Machine', displayName: 'Machine A' }
+    { elementIds: ['1'], typeId: 'Machine', displayName: 'Machine A' }
   ]),
 
   getObjectValue: jest.fn().mockResolvedValue({
-    elementId: '1',
+    elementIds: ['1'],
     value: 100,
     timestamp: '2025-01-15T12:00:00Z',
     quality: 'Good'

@@ -8,31 +8,34 @@ Your implementation MUST support:
 
 #### 1. Object Management
 
-- **Object Discovery**: Expose available manufacturing objects (equipment, processes, etc.)
 - **Object Types**: Provide schemas for object types based on OPC UA Information Models
-- **Hierarchical Relationships**: Support parent-child and compositional relationships
-- **Relationship Types**: Define and expose relationship types between objects
+- **Object Discovery**: Expose available manufacturing objects (equipment, processes, etc.)
+- **Relationships**: Support parent-child and compositional relationships at the instance object.
 
 #### 2. Data Access
 
 - **Current Values**: Retrieve the latest values for object attributes
-- **Historical Data**: Query time-series data with time range filters
 - **Data Quality**: Include quality indicators with data points
-- **Aggregations**: Support data aggregation (min, max, avg, count, etc.)
 
 #### 3. Authentication & Authorization
 
 - **User Authentication**: Secure API access with standard authentication mechanisms
-- **Role-Based Access Control**: Enforce permissions based on user roles
-- **Token Management**: Support token-based authentication (Bearer tokens, OAuth)
-- **Audit Logging**: Track API access and operations
+- **Encryption**: Encrypted (HTTPS) access *only* in production scenarios
+- **Audit Logging**: Optional: track API access and operations
 
 #### 4. Performance & Scalability
 
-- **Pagination**: Support pagination for large result sets
-- **Rate Limiting**: Implement rate limiting to protect platform resources
-- **Caching**: Utilize caching where appropriate
+- **Performance**: Maintain performant responses to API calls, implementing strategies like paging or truncation only where necessary on the server-side
 - **Concurrent Connections**: Handle multiple simultaneous client connections
+
+### Core Capabilities
+
+Your implementation MAY support:
+
+- **Relationships**: Graph relationships, typically bi-directional, between instance objects
+- **Historical Data**: Optional: Query time-series data with time range filters
+- **Aggregations**: Support data aggregation (min, max, avg, count, etc.)
+- **Caching**: Utilize caching where appropriate
 
 ## API Specification Compliance
 
@@ -41,7 +44,7 @@ Your implementation MUST support:
 Your implementation should follow the i3X API specification:
 
 ```
-Base URL: https://your-platform.example.com
+Base URL: https://your-platform.example.com/i3x/v0/
 
 Explore Endpoints:
   GET    /namespaces                  # List all namespaces
@@ -74,11 +77,9 @@ Subscription Endpoints:
 
 ### HTTP Methods and Semantics
 
-- **GET**: Retrieve resources (read-only, idempotent)
+- **GET**: Retrieve resources (read-only)
 - **POST**: Create resources or execute non-idempotent operations
 - **PUT**: Update entire resource (idempotent)
-- **PATCH**: Partial resource update (if supported)
-- **DELETE**: Remove resources (idempotent)
 
 ### Standard HTTP Status Codes
 
@@ -106,7 +107,7 @@ Your implementation should return appropriate status codes:
 
 ## Compliance Checklist
 
-Use this checklist to ensure your implementation meets all requirements:
+Use this checklist to ensure your implementation meets minimum requirements:
 
 ### Object Management
 - [ ] List all objects (GET /objects)
@@ -120,45 +121,38 @@ Use this checklist to ensure your implementation meets all requirements:
 
 ### Data Access
 - [ ] Get current values (POST /objects/value)
-- [ ] Query historical time-series data (POST /objects/history)
-- [ ] Support time range filtering (startTime, endTime)
 - [ ] Include data quality and timestamp indicators
 - [ ] Support maxDepth for compositional hierarchies
 - [ ] Update current values (PUT `/objects/{elementId}/value`)
+
+### Historical Data Access (Optional)
+- [ ] Query historical time-series data (POST /objects/history)
 - [ ] Update historical values (PUT `/objects/{elementId}/history`)
 
 ### Authentication & Authorization
-- [ ] Implement user authentication
-- [ ] Support Bearer token authentication
-- [ ] Implement role-based access control
-- [ ] Validate tokens on every request
-- [ ] Support token refresh
-- [ ] Implement audit logging
+- [ ] Implement authentication
+- [ ] Require encrypted connections
 - [ ] Return appropriate 401/403 errors
 
 ### Performance & Scalability
-- [ ] Support pagination with limit/offset
-- [ ] Implement rate limiting
-- [ ] Use caching for frequently accessed data
+- [ ] Use strategies for maintain performance
 - [ ] Handle concurrent connections
-- [ ] Return appropriate pagination metadata
-- [ ] Support cursor-based pagination (optional)
 
 ### HTTP Compliance
 - [ ] Use correct HTTP methods
 - [ ] Return appropriate status codes
 - [ ] Include proper headers (Content-Type, etc.)
-- [ ] Support CORS if needed
+- [ ] Support CORS
 - [ ] Implement proper error responses
 
 ### Data Format
 - [ ] Return JSON responses
-- [ ] Use ISO 8601 for timestamps
+- [ ] Use RFC 3339 for timestamps
 - [ ] Include links in object responses
 - [ ] Support standard data types
 - [ ] Include quality indicators with data
 
-### Subscriptions
+### Subscriptions (Optional)
 - [ ] Create subscriptions (POST /subscriptions)
 - [ ] List subscriptions (GET /subscriptions)
 - [ ] Get subscription details (GET `/subscriptions/{id}`)
@@ -168,28 +162,14 @@ Use this checklist to ensure your implementation meets all requirements:
 - [ ] SSE streaming (GET `/subscriptions/{id}/stream`)
 - [ ] Queue-based sync (POST `/subscriptions/{id}/sync`)
 
-## Optional Features
-
-These features are recommended but not required:
-
-- **Compression**: Response compression (gzip, brotli)
-- **ETags**: Caching support with ETags
-- **Rate Limit Headers**: Include rate limit information in responses
-
 ## Versioning Strategy
 
 Your API should support versioning to allow evolution without breaking clients:
 
 ### URL Versioning (Recommended)
 ```
-https://your-platform.example.com/v1/objects
-https://your-platform.example.com/v2/objects
-```
-
-### Header Versioning (Alternative)
-```
-GET /objects
-Accept: application/vnd.cesmii.v1+json
+https://your-platform.example.com/i3x/v0/objects
+https://your-platform.example.com/i3x/v0/objects
 ```
 
 ### Best Practices

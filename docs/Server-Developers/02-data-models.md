@@ -2,7 +2,7 @@
 
 ## Object Instance Representation
 
-Objects should be serialized in JSON format following the i3X API structure:
+Objects are serialized in JSON format following the i3X API structure. The `ObjectInstance` schema includes the full object with relationship metadata:
 
 ```json
 {
@@ -23,20 +23,35 @@ Objects should be serialized in JSON format following the i3X API structure:
 
 ### Required Fields
 
-- **elementId** (string): Unique identifier for the object
-- **displayName** (string): Human-readable name for the object
+- **elementId** (string): Unique string identifier for the element
+- **displayName** (string): Object name
+- **typeId** (string): ElementId of the object type
+- **isComposition** (boolean): Whether this element has child objects
+- **namespaceUri** (string): Namespace URI
 
 ### Optional Fields
 
-- **typeId** (string): ElementId of the ObjectType this object is an instance of
-- **parentId** (string | null): ElementId of parent object in hierarchy
-- **isComposition** (boolean): Whether this object has child objects
-- **namespaceUri** (string): URI of the namespace this object belongs to
-- **relationships** (object | null): Map of relationship type names to arrays of related elementIds
+- **parentId** (string | null): ElementId of the parent object
+- **relationships** (object | null): Relationships to other objects
+
+## ObjectInstanceMinimal
+
+A lightweight variant of `ObjectInstance` that excludes the `relationships` field. Returned by `GET /objects` and `GET /objects?includeMetadata=false`. Has the same required and optional fields as `ObjectInstance`, minus `relationships`.
+
+```json
+{
+  "elementId": "urn:platform:object:12345",
+  "displayName": "Packaging Line 1",
+  "typeId": "urn:platform:type:Equipment",
+  "parentId": "urn:platform:object:building-a",
+  "isComposition": true,
+  "namespaceUri": "urn:platform:namespace:production"
+}
+```
 
 ## ObjectType Representation
 
-ObjectTypes define the schema for objects:
+ObjectTypes define the schema for objects. All fields are required:
 
 ```json
 {
@@ -57,7 +72,15 @@ ObjectTypes define the schema for objects:
 }
 ```
 
+**Fields** (all required):
+- **elementId** (string): Unique string identifier for the type
+- **displayName** (string): Type name
+- **namespaceUri** (string): Namespace URI
+- **schema** (object): JSON Schema definition for this object type
+
 ## Namespace Representation
+
+All fields are required:
 
 ```json
 {
@@ -66,7 +89,13 @@ ObjectTypes define the schema for objects:
 }
 ```
 
+**Fields** (all required):
+- **uri** (string): Namespace URI
+- **displayName** (string): Namespace name
+
 ## RelationshipType Representation
+
+All fields are required:
 
 ```json
 {
@@ -77,62 +106,23 @@ ObjectTypes define the schema for objects:
 }
 ```
 
-## Data Point Definition
-
-Each data point in the `dataPoints` array should include:
-
-```json
-{
-  "id": "speed",
-  "displayName": "Line Speed",
-  "dataType": "Double",
-  "unit": "items/min",
-  "accessLevel": "read",
-  "minValue": 0,
-  "maxValue": 200,
-  "enumValues": null,
-  "description": "Current operating speed of the packaging line"
-}
-```
-
-### Data Point Fields
-
-- **id** (string, required): Unique identifier within the object
-- **displayName** (string, required): Human-readable name
-- **dataType** (string, required): Data type (see Supported Data Types)
-- **unit** (string, optional): Unit of measurement
-- **accessLevel** (string, required): Access level ("read", "write", "readwrite")
-- **minValue** (number, optional): Minimum valid value
-- **maxValue** (number, optional): Maximum valid value
-- **enumValues** (array, optional): Valid values for enumerated types
-- **description** (string, optional): Detailed description
+**Fields** (all required):
+- **elementId** (string): Unique string identifier for the relationship type
+- **displayName** (string): Relationship type name
+- **namespaceUri** (string): Namespace URI
+- **reverseOf** (string): Type name of the reverse relationship
 
 ### Supported Data Types
 
 - **Boolean**: true/false values
-- **Integer**: Whole numbers
-- **Double**: Floating-point numbers
+- **Number**: numeric values
 - **String**: Text values
-- **DateTime**: ISO 8601 timestamps
-- **Byte**: 8-bit unsigned integer
-- **Int16**: 16-bit signed integer
-- **Int32**: 32-bit signed integer
-- **Int64**: 64-bit signed integer
-- **Float**: Single-precision floating point
-- **ByteString**: Binary data as base64
+
+Other data types remain under consideration, with constraints including what is supported by JSON Schema.
 
 ## Value Request/Response
 
 ### GetObjectValueRequest (POST /objects/value)
-
-```json
-{
-  "elementId": "urn:platform:object:12345",
-  "maxDepth": 1
-}
-```
-
-Or for multiple objects:
 
 ```json
 {
@@ -145,15 +135,16 @@ Or for multiple objects:
 ```
 
 **Parameters:**
-- **elementId** (string | null): Single object to query
-- **elementIds** (string[] | null): Multiple objects to query
-- **maxDepth** (integer, default: 1): Recursion depth for compositional hierarchies (0 = infinite)
+- **elementIds** (string[], required): Array of element IDs to query
+- **maxDepth** (integer, default: 1, min: 0): Controls recursion depth. `0` = infinite (includes all HasComponent children recursively); `1` = no recursion (just the specified element)
 
 ### GetObjectHistoryRequest (POST /objects/history)
 
 ```json
 {
-  "elementId": "urn:platform:object:12345",
+  "elementIds": [
+    "urn:platform:object:12345"
+  ],
   "startTime": "2025-01-15T00:00:00Z",
   "endTime": "2025-01-15T23:59:59Z",
   "maxDepth": 1
@@ -161,13 +152,14 @@ Or for multiple objects:
 ```
 
 **Parameters:**
-- **elementId** (string | null): Single object to query
-- **elementIds** (string[] | null): Multiple objects to query
-- **startTime** (string | null): ISO 8601 start of time range
-- **endTime** (string | null): ISO 8601 end of time range
-- **maxDepth** (integer, default: 1): Recursion depth
+- **elementIds** (string[], required): Array of element IDs to query
+- **startTime** (string | null): RFC 3339 start time for filtering
+- **endTime** (string | null): RFC 3339 end time for filtering
+- **maxDepth** (integer, default: 1, min: 0): Controls recursion depth. `0` = infinite; `1` = no recursion
 
 ### Value Response
+
+The value endpoints return an array of value objects in this shape:
 
 ```json
 {
@@ -181,28 +173,8 @@ Or for multiple objects:
 **Response Fields:**
 - **elementId** (string): Object identifier
 - **value** (any): The current or historical value
-- **timestamp** (string | null): When the value was recorded (ISO 8601)
+- **timestamp** (string | null): When the value was recorded (RFC 3339)
 - **quality** (string | null): Quality indicator
-
-### Data Point Structure
-
-Each item in the `dataPoints` array:
-
-```json
-{
-  "timestamp": "2025-01-15T12:00:00.000Z",
-  "value": 125.5,
-  "quality": "Good",
-  "source": "PLC-01",
-  "statusCode": null
-}
-```
-
-- **timestamp** (ISO 8601, required): When the value was recorded
-- **value** (any, required): The actual value
-- **quality** (string, required): Quality indicator (see Data Quality)
-- **source** (string, optional): Source of the data (e.g., device ID)
-- **statusCode** (integer, optional): Additional status information
 
 ## Data Quality Indicators
 
@@ -222,65 +194,50 @@ const DataQuality = {
 
 ### Quality Code Meanings
 
-- **Good**: The value is accurate and from a reliable source
-- **Bad**: The value should not be trusted (sensor failure, communication error)
-- **Uncertain**: The value may be inaccurate (out-of-range, sensor degradation)
-- **NotConnected**: The data source is not connected
-- **Stale**: The value hasn't been updated within expected timeframe
-- **Calculated**: Value was computed from other values
-- **ManuallyEntered**: Value was entered by a user, not measured
+For a full list of Quality Codes and Meanings, refer to [https://reference.opcfoundation.org/Core/Part8/v104/docs/A.4.3.3](https://reference.opcfoundation.org/Core/Part8/v104/docs/A.4.3.3)
 
-## Aggregation Methods
+## Object List/Query Requests
 
-Support these aggregation methods:
+### GetObjectsRequest (POST /objects/list)
 
-- **none**: Raw data points (no aggregation)
-- **avg**: Average value over interval
-- **min**: Minimum value over interval
-- **max**: Maximum value over interval
-- **sum**: Sum of values over interval
-- **count**: Number of data points in interval
-- **first**: First value in interval
-- **last**: Last value in interval
-- **range**: Difference between min and max
-- **stddev**: Standard deviation over interval
-
-## Error Response Format
-
-All error responses should follow the HTTPValidationError structure:
+Return one or more objects by elementId. Returns full `ObjectInstance` with metadata.
 
 ```json
 {
-  "detail": [
-    {
-      "loc": ["body", "elementId"],
-      "msg": "field required",
-      "type": "value_error.missing"
-    }
-  ]
+  "elementIds": ["urn:platform:object:12345", "urn:platform:object:12346"],
+  "includeMetadata": false
 }
 ```
 
-### ValidationError Fields
+**Parameters:**
+- **elementIds** (string[], required): Array of element IDs to query
+- **includeMetadata** (boolean, default: false): Include full metadata in response
 
-- **loc** (array): Location of the error (path to the field)
-- **msg** (string): Human-readable error message
-- **type** (string): Error type for programmatic handling
+### GetObjectTypesRequest (POST /objecttypes/query)
 
-### Standard Error Codes
+Get the schema for one or more ObjectTypes by elementId.
 
+```json
+{
+  "elementIds": ["urn:platform:type:Equipment"]
+}
 ```
-OBJECT_NOT_FOUND        - Requested object doesn't exist
-INVALID_PARAMETER       - Parameter validation failed
-UNAUTHORIZED            - Authentication required
-FORBIDDEN               - Insufficient permissions
-RATE_LIMIT_EXCEEDED     - Too many requests
-INTERNAL_ERROR          - Unexpected server error
-SERVICE_UNAVAILABLE     - Service temporarily unavailable
-INVALID_TIME_RANGE      - Invalid start/end time
-DATA_NOT_AVAILABLE      - No data in requested range
-VALIDATION_ERROR        - Request validation failed
+
+**Parameters:**
+- **elementIds** (string[], required): Array of element IDs to query
+
+### GetRelationshipTypesRequest (POST /relationshiptypes/query)
+
+Get one or more RelationshipTypes by elementId.
+
+```json
+{
+  "elementIds": ["urn:platform:reltype:HasComponent"]
+}
 ```
+
+**Parameters:**
+- **elementIds** (string[], required): Array of element IDs to query
 
 ## Related Objects Request
 
@@ -288,21 +245,22 @@ VALIDATION_ERROR        - Request validation failed
 
 ```json
 {
-  "elementId": "urn:platform:object:12345",
+  "elementIds": ["urn:platform:object:12345"],
   "relationshiptype": "HasComponent",
   "includeMetadata": true
 }
 ```
 
 **Parameters:**
-- **elementId** (string | null): Single object to query
-- **elementIds** (string[] | null): Multiple objects to query
+- **elementIds** (string[], required): Array of element IDs to query
 - **relationshiptype** (string | null): Filter by relationship type
-- **includeMetadata** (boolean, default: false): Include full metadata
+- **includeMetadata** (boolean, default: false): Include full metadata in response
 
 ## Subscription Models
 
 ### CreateSubscriptionRequest
+
+Empty request body — no parameters required:
 
 ```json
 {}
@@ -317,6 +275,24 @@ VALIDATION_ERROR        - Request validation failed
 }
 ```
 
+**Fields** (all required):
+- **subscriptionId** (string): The new subscription ID
+- **message** (string): Confirmation message
+
+### GetSubscriptionsResponse
+
+```json
+{
+  "subscriptionIds": [
+    { "subscriptionId": 1, "created": "2025-01-15T10:00:00.000Z" },
+    { "subscriptionId": 2, "created": "2025-01-15T11:00:00.000Z" }
+  ]
+}
+```
+
+**Fields** (all required):
+- **subscriptionIds** (SubscriptionSummary[]): Array of active subscription summaries
+
 ### RegisterMonitoredItemsRequest
 
 ```json
@@ -326,16 +302,9 @@ VALIDATION_ERROR        - Request validation failed
 }
 ```
 
-### SyncResponseItem
-
-```json
-{
-  "elementId": "urn:platform:object:12345",
-  "value": 125.5,
-  "timestamp": "2025-01-15T12:00:00.000Z",
-  "quality": "Good"
-}
-```
+**Parameters:**
+- **elementIds** (string[], required): Array of element IDs to monitor
+- **maxDepth** (integer | null, default: 1): Recursion depth for compositional hierarchies
 
 ### SubscriptionSummary
 
@@ -345,3 +314,7 @@ VALIDATION_ERROR        - Request validation failed
   "created": "2025-01-15T10:00:00.000Z"
 }
 ```
+
+**Fields** (all required):
+- **subscriptionId** (integer): Numeric subscription identifier
+- **created** (string): RFC 3339 timestamp when the subscription was created

@@ -38,7 +38,7 @@ i3X operates within the application layer of the manufacturing technology stack:
 └─────────────────────────────────────┘
 ```
 
-The API assumes that data has already been contextualized by underlying platform functions, making it ready for consumption by applications. If a combination of platforms is used, the API assumes those packages are using a Unified Namespace.
+The API assumes that data has already been contextualized by underlying platform functions, making it ready for consumption by applications. If a combination of platforms is used, the API assumes those packages are using a unified information model (Namespaces).
 
 ## Getting Started
 
@@ -55,8 +55,9 @@ Before you begin developing against the i3X, ensure you have:
 
 1. Understanding of RESTful API principles
 2. Familiarity with manufacturing data concepts
-3. Knowledge of OPC UA Information Models (recommended)
-4. Understanding of Smart Manufacturing Profiles (SM Profiles)
+3. Understanding of Object Oriented Programming (OOP) principles
+4. Knowledge of OPC UA Information Models (recommended)
+5. Understanding of Smart Manufacturing Profiles (recommended)
 
 ## Documentation Structure
 

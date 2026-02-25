@@ -34,21 +34,12 @@ RelationshipTypes define how objects can be connected to each other:
 - `displayName`: Human-readable name
 - `reverseOf`: The name of the inverse relationship
 
-### Smart Manufacturing Profiles (SM Profiles)
-
-SM Profiles are OPC UA Information Model type definitions that describe:
-- Equipment characteristics
-- Identification metadata
-- Runtime data structure
-- Behavioral contracts
-
-Applications interact with instances of these profiles (Objects) through the API, enabling semantic understanding of manufacturing data.
-
 ### Contextualized Data
 
 The API provides access to data that has been:
 - Properly structured according to information models
 - Tagged with appropriate metadata
 - Organized within hierarchical relationships
+- (Optionally) related with graph relationships
 - Timestamped and quality-assured
 
