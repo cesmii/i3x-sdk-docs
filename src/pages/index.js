@@ -24,7 +24,12 @@ function HomepageHeader() {
           <Link
             className="button button--secondary button--lg"
             to="/quickstart">
-            Developer Quick Start
+            Quick Start
+          </Link>
+          <Link
+            className="button button--secondary button--lg"
+            to="/docs/faq">
+            FAQ
           </Link>
         </div>
       </div>

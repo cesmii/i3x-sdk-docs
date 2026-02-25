@@ -94,6 +94,11 @@ const config = {
             position: 'left',
           },
           {
+            href: '/faq',
+            label: 'FAQ',
+            position: 'left',
+          },
+          {
             href: 'https://acetechnologies.net/i3X',
             label: 'i3X Explorer',
             position: 'left',
@@ -112,8 +117,17 @@ const config = {
             title: 'Places',
             items: [
               {
+                href: 'https://www.i3x.dev',
+                label: 'i3X Home',
+                target: '_self'
+              },
+              {
                 label: 'Quick Start',
                 to: '/quickstart',
+              },
+              {
+                label: 'FAQ',
+                to: '/faq',
               },
               {
                 label: 'Server Developers',
@@ -122,11 +136,7 @@ const config = {
               {
                 label: 'Client Developers',
                 to: '/Client-Developers/overview',
-              },              
-              {
-                href: 'https://connect.cesmii.org/i3X',
-                label: 'i3X Overview',
-              },
+              }
             ],
           },
           {
