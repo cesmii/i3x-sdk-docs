@@ -85,6 +85,7 @@ const config = {
           alt: 'i3X Logo',
           src: 'img/i3X_circle.png',
           href: 'https://www.i3x.dev',
+          target: '_self',
         },
         items: [
           {
