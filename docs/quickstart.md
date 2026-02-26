@@ -57,9 +57,7 @@ Understanding relationships is key to understanding i3X. The API requires two ki
 and offers a third, optional kind if supported by the underlying platform.
 
 - **Hierarchical** — An organizational parent/child relationship of objects (eg: Plant > Area > Line)
-
 - **Composition** — How a complex object is constructed of component parts, each part having its own ObjectType (indicated with `isComposition`)
-
 - **Graph** — Any relationship other than the previous two (eg: CanFeed, MonitoredBy)
 
 For further exploration of relationships, please see the [Demo data Read Me](https://github.com/cesmii/i3X/tree/main/demo).
