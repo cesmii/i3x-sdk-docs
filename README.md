@@ -1,41 +1,22 @@
-# Website
+# i3X SDK Docs
 
-This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
-
-## Installation
-
-```bash
-yarn
-```
-
-## Local Development
-
-```bash
-yarn start
-```
-
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
-
-## Build
-
-```bash
-yarn build
-```
-
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
+The website for these documents is available online at [https://www.i3x.dev/docs](i3x.dev/docs).
+This content is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
 
 ## Deployment
 
-Using SSH:
+Clone this repo.
 
-```bash
-USE_SSH=true yarn deploy
-```
+`git clone https://github.com/cesmii/i3x-sdk-docs.git`
 
-Not using SSH:
+Install the Node dependencies:
 
-```bash
-GIT_USER=<Your GitHub username> yarn deploy
-```
+`npm install`
 
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+Build the docs:
+
+`npm run build`
+
+Start the server with the built docs:
+
+`npm run start`
