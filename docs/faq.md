@@ -42,7 +42,7 @@ i3X aims to provide a simplified interface that can be bound to an OPC UA server
 
 ### What is the current status of i3X?
 
-i3X is in **pre-release Alpha** (as of early 2026). API signatures are largely stable, but response structures may change through Q1 2026. It is suitable for prototyping, development, and evaluation. The public demo server at [https://i3x.cesmii.net](https://i3x.cesmii.net) is available for testing.
+i3X is in **pre-release Alpha** (as of early 2026). API signatures are largely stable, but response structures may change through Q1 2026. It is suitable for prototyping, development, and evaluation. The public demo server at [https://api.i3x.dev/v0](https://api.i3x.dev/v0) is available for testing.
 
 ### How do I report a bug or request a feature?
 
@@ -54,7 +54,7 @@ Review the contributing guidelines in `Contributing.md` in the [GitHub repo](htt
 
 ### Where can I find the formal specification?
 
-The RFC specification document is a work in progress, developed publicly in the [cesmii/api GitHub repository](https://github.com/cesmii/api). The live OpenAPI specification with interactive docs is at [https://i3x.cesmii.net/docs](https://i3x.cesmii.net/docs).
+The RFC specification document is a work in progress, developed publicly in the [cesmii/api GitHub repository](https://github.com/cesmii/api). The live OpenAPI specification with interactive docs is at [https://api.i3x.dev/v0/docs](https://api.i3x.dev/v0/docs).
 
 ### Where can I find more information?
 

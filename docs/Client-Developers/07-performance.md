@@ -9,7 +9,7 @@ When possible, batch multiple operations using array parameters:
 ```javascript
 // Batch read current values for multiple objects
 const batchReadObjects = async (token, elementIds) => {
-  const response = await fetch('https://i3x.cesmii.net/objects/value', {
+  const response = await fetch('https://api.i3x.dev/v0/objects/value', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -26,7 +26,7 @@ const batchReadObjects = async (token, elementIds) => {
 
 // Batch read object metadata
 const batchGetObjects = async (token, elementIds) => {
-  const response = await fetch('https://i3x.cesmii.net/objects/list', {
+  const response = await fetch('https://api.i3x.dev/v0/objects/list', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -45,7 +45,7 @@ Use the `maxDepth` parameter to limit data retrieval for compositional hierarchi
 
 ```javascript
 const getObjectWithChildren = async (token, elementId, depth = 1) => {
-  const response = await fetch('https://i3x.cesmii.net/objects/value', {
+  const response = await fetch('https://api.i3x.dev/v0/objects/value', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -67,7 +67,7 @@ When querying historical data, always specify time bounds to limit result size:
 
 ```javascript
 const getHistoricalData = async (token, elementIds, startTime, endTime) => {
-  const response = await fetch('https://i3x.cesmii.net/objects/history', {
+  const response = await fetch('https://api.i3x.dev/v0/objects/history', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,

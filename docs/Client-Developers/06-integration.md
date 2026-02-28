@@ -109,7 +109,7 @@ class I3XAPIClient:
 
 # Usage example
 client = I3XAPIClient(
-    'https://i3x.cesmii.net',
+    'https://api.i3x.dev/v0',
     {'username': 'user', 'password': 'pass'}
 )
 

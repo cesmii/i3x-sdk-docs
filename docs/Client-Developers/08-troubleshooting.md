@@ -32,7 +32,7 @@ const fetchWithBackoff = async (url, options, maxRetries = 3) => {
 ```javascript
 // For historical data, use time-bounded queries
 const getHistoryInChunks = async (token, elementId, startTime, endTime) => {
-  const response = await fetch('https://i3x.cesmii.net/objects/history', {
+  const response = await fetch('https://api.i3x.dev/v0/objects/history', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -52,7 +52,7 @@ const getHistoryInChunks = async (token, elementId, startTime, endTime) => {
 // For real-time streaming, use subscriptions
 const streamObjectData = async (token, elementIds, callback) => {
   // Create subscription
-  const createRes = await fetch('https://i3x.cesmii.net/subscriptions', {
+  const createRes = await fetch('https://api.i3x.dev/v0/subscriptions', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -63,7 +63,7 @@ const streamObjectData = async (token, elementIds, callback) => {
   const { subscriptionId } = await createRes.json();
 
   // Register objects to monitor
-  await fetch(`https://i3x.cesmii.net/subscriptions/${subscriptionId}/register`, {
+  await fetch(`https://api.i3x.dev/v0/subscriptions/${subscriptionId}/register`, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -74,7 +74,7 @@ const streamObjectData = async (token, elementIds, callback) => {
 
   // Stream via SSE
   const eventSource = new EventSource(
-    `https://i3x.cesmii.net/subscriptions/${subscriptionId}/stream`
+    `https://api.i3x.dev/v0/subscriptions/${subscriptionId}/stream`
   );
   eventSource.onmessage = (event) => callback(JSON.parse(event.data));
 
