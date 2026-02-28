@@ -64,9 +64,9 @@ For further exploration of relationships, please see the [Demo data Read Me](htt
 
 ## Step 1: View the API
 
-Explore the API in action with Demo data at the public endpoint: [https://i3x.cesmii.net/docs](https://i3x.cesmii.net/docs)
+Explore the API in action with Demo data at the public endpoint: [https://api.i3x.dev/v0/docs](https://api.i3x.dev/v0/docs)
 
-[![Open API Page](../static/img/APIDocsPage.png "Open API Docs Page")](https://i3x.cesmii.net/docs)
+[![Open API Page](../static/img/APIDocsPage.png "Open API Docs Page")](https://api.i3x.dev/v0/docs)
 For example: 
 
 - Try using the `namespaces` endpoint to discover what Namespaces are present in the server.
@@ -86,7 +86,7 @@ i3X Explorer is a free client that works with any compliant i3X implementation, 
 ### Launch i3X Explorer
 
 - Open i3X Explorer from your Start Menu, Dock or Launcher
-- Connect to the Demo endpoint at https://i3x.cesmii.net
+- Connect to the Demo endpoint at https://api.i3x.dev/v0
 
 ![i3X Explorer Steps Animated Gif](../static/img/i3XExplorer.gif "i3X Explorer")
 

@@ -10,7 +10,7 @@ Query the API to discover what manufacturing objects are available:
 
 ```javascript
 const discoverObjects = async (token) => {
-  const response = await fetch('https://i3x.cesmii.net/objects', {
+  const response = await fetch('https://api.i3x.dev/v0/objects', {
     headers: {
       'Authorization': `Bearer ${token}`,
       'Accept': 'application/json'
@@ -26,7 +26,7 @@ You can also explore available namespaces and object types:
 ```javascript
 // Get all namespaces
 const getNamespaces = async (token) => {
-  const response = await fetch('https://i3x.cesmii.net/namespaces', {
+  const response = await fetch('https://api.i3x.dev/v0/namespaces', {
     headers: { 'Authorization': `Bearer ${token}` }
   });
   return await response.json();
@@ -35,8 +35,8 @@ const getNamespaces = async (token) => {
 // Get all object types (optionally filtered by namespace)
 const getObjectTypes = async (token, namespaceUri = null) => {
   const url = namespaceUri
-    ? `https://i3x.cesmii.net/objecttypes?namespaceUri=${encodeURIComponent(namespaceUri)}`
-    : 'https://i3x.cesmii.net/objecttypes';
+    ? `https://api.i3x.dev/v0/objecttypes?namespaceUri=${encodeURIComponent(namespaceUri)}`
+    : 'https://api.i3x.dev/v0/objecttypes';
   const response = await fetch(url, {
     headers: { 'Authorization': `Bearer ${token}` }
   });
@@ -50,7 +50,7 @@ Retrieve current values from manufacturing objects using POST:
 
 ```javascript
 const readObjectValue = async (token, elementId, maxDepth = 1) => {
-  const response = await fetch('https://i3x.cesmii.net/objects/value', {
+  const response = await fetch('https://api.i3x.dev/v0/objects/value', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -67,7 +67,7 @@ const readObjectValue = async (token, elementId, maxDepth = 1) => {
 
 // Retrieve historical data
 const readObjectHistory = async (token, elementId, options = {}) => {
-  const response = await fetch('https://i3x.cesmii.net/objects/history', {
+  const response = await fetch('https://api.i3x.dev/v0/objects/history', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -91,7 +91,7 @@ Retrieve multiple objects by their element IDs:
 
 ```javascript
 const getObjectsByIds = async (token, elementIds) => {
-  const response = await fetch('https://i3x.cesmii.net/objects/list', {
+  const response = await fetch('https://api.i3x.dev/v0/objects/list', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -107,7 +107,7 @@ const getObjectsByIds = async (token, elementIds) => {
 
 // Get related objects
 const getRelatedObjects = async (token, elementId, relationshipType = null) => {
-  const response = await fetch('https://i3x.cesmii.net/objects/related', {
+  const response = await fetch('https://api.i3x.dev/v0/objects/related', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -132,7 +132,7 @@ For applications requiring real-time data, use Server-Sent Events (SSE) subscrip
 // Create a subscription and stream updates
 const subscribeToObjects = async (token, elementIds, callback) => {
   // Step 1: Create a subscription
-  const createResponse = await fetch('https://i3x.cesmii.net/subscriptions', {
+  const createResponse = await fetch('https://api.i3x.dev/v0/subscriptions', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -144,7 +144,7 @@ const subscribeToObjects = async (token, elementIds, callback) => {
   const { subscriptionId } = await createResponse.json();
 
   // Step 2: Register objects to monitor
-  await fetch(`https://i3x.cesmii.net/subscriptions/${subscriptionId}/register`, {
+  await fetch(`https://api.i3x.dev/v0/subscriptions/${subscriptionId}/register`, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -158,7 +158,7 @@ const subscribeToObjects = async (token, elementIds, callback) => {
 
   // Step 3: Open SSE stream for real-time updates
   const eventSource = new EventSource(
-    `https://i3x.cesmii.net/subscriptions/${subscriptionId}/stream`,
+    `https://api.i3x.dev/v0/subscriptions/${subscriptionId}/stream`,
     { headers: { 'Authorization': `Bearer ${token}` } }
   );
 
@@ -173,7 +173,7 @@ const subscribeToObjects = async (token, elementIds, callback) => {
 // Alternative: Use sync endpoint for polling instead of streaming
 const syncSubscription = async (token, subscriptionId) => {
   const response = await fetch(
-    `https://i3x.cesmii.net/subscriptions/${subscriptionId}/sync`,
+    `https://api.i3x.dev/v0/subscriptions/${subscriptionId}/sync`,
     {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${token}` }

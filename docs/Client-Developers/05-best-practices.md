@@ -97,7 +97,7 @@ When retrieving data for multiple objects, use batch endpoints:
 ```javascript
 // Batch retrieve values for multiple objects
 const batchGetObjectValues = async (token, elementIds) => {
-  const response = await fetch('https://i3x.cesmii.net/objects/value', {
+  const response = await fetch('https://api.i3x.dev/v0/objects/value', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -115,7 +115,7 @@ const batchGetObjectValues = async (token, elementIds) => {
 // Get objects filtered by type
 const getObjectsByType = async (token, typeId) => {
   const response = await fetch(
-    `https://i3x.cesmii.net/objects?typeId=${encodeURIComponent(typeId)}`,
+    `https://api.i3x.dev/v0/objects?typeId=${encodeURIComponent(typeId)}`,
     {
       headers: { 'Authorization': `Bearer ${token}` }
     }
