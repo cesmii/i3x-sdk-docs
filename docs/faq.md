@@ -20,11 +20,19 @@ i3X is coordinated by [CESMII](https://www.cesmii.org), a U.S. Department of Ene
 
 Yes. The specification is open source under the MIT license. The GitHub repository, OpenAPI specification, demo server, i3X Explorer tool, and Python client library are all freely available.
 
+### What is the current status of i3X?
+
+i3X is in **pre-release Alpha** (as of early 2026). API signatures are largely stable, but response structures may change through Q1 2026. It is suitable for prototyping, development, and evaluation. The public demo server at [https://i3x.i3x.dev/v0](https://i3x.i3x.dev/v0) is available for testing.
+
 ### What problem does i3X solve?
 
 Manufacturing software stacks are fragmented. A typical facility runs historians, MES systems, quality platforms, and maintenance tools from different vendors — each with its own proprietary API. This forces application developers to write custom integrations for every platform combination, making apps non-portable and driving up integration costs for everyone.
 
 i3X defines a single, stable API surface so an application written against it can run on any compliant platform without modification.
+
+### Is i3X only for Python?
+
+No! While the Working Group used a Python demo and client library to explore the ideas in the RFC, the output of the effort is an OpenAPI specification that can be implemented in any programming language or environment. 
 
 ### How is i3X related to MQTT or Sparkplug/B?
 
@@ -40,25 +48,29 @@ A thorough OPC UA implementation provides more type-safety, better type definiti
 
 i3X aims to provide a simplified interface that can be bound to an OPC UA server as one of the options for a back-end data source. However i3X does not *require* OPC UA. As such, it allows an implementation to have some of the key features of OPC UA, without the requirements of a full OPC UA server implementation.
 
-### What is the current status of i3X?
+### How does i3X support Class composition?
 
-i3X is in **pre-release Alpha** (as of early 2026). API signatures are largely stable, but response structures may change through Q1 2026. It is suitable for prototyping, development, and evaluation. The public demo server at [https://api.i3x.dev/v0](https://api.i3x.dev/v0) is available for testing.
+For the initial release, the Working Group chose to simplify composition representation to the *instance object* level. This means that an object may be made up of Types from different Namespaces. However, the API does *not* support representing composition at the type level. Types return in a query must be simplified to a flat list within a single namespace.
+
+Importantly, the underlying platform is still free to store and relate type definitions of any level of complexity or composition, but when responding to a query, must simplify results.
+
+While the Working Group plans to revisit this in the future, it was determined that this "middle ground" would provide the best compromise between un-typed environments (like MQTT) and strongly-typed environments (like OPC UA).
 
 ### How do I report a bug or request a feature?
 
-Open an issue on the [GitHub repository](https://github.com/cesmii/api/issues). For non-GitHub feedback, email [rfc@cesmii.org](mailto:rfc@cesmii.org).
+Open an issue on the [GitHub repository](https://github.com/cesmii/i3x/issues). For non-GitHub feedback, email [rfc@cesmii.org](mailto:rfc@cesmii.org).
 
 ### How do I get involved in the working group?
 
-Review the contributing guidelines in `Contributing.md` in the [GitHub repo](https://github.com/cesmii/api). For broader involvement with the CESMII initiative, visit [www.cesmii.org](https://www.cesmii.org).
+Review the contributing guidelines in `Contributing.md` in the [GitHub repo](https://github.com/cesmii/i3x). For broader involvement with the CESMII initiative, visit [www.cesmii.org](https://www.cesmii.org).
 
 ### Where can I find the formal specification?
 
-The RFC specification document is a work in progress, developed publicly in the [cesmii/api GitHub repository](https://github.com/cesmii/api). The live OpenAPI specification with interactive docs is at [https://api.i3x.dev/v0/docs](https://api.i3x.dev/v0/docs).
+The RFC specification document is a work in progress, developed publicly in the [cesmii/i3x GitHub repository](https://github.com/cesmii/i3x). The live OpenAPI specification with interactive docs is at [https://i3x.i3x.dev/v0/docs](https://i3x.i3x.dev/v0/docs).
 
 ### Where can I find more information?
 
 - **Quick Start**: [quickstart.md](quickstart.md)
 - **i3X Home**: [https://www.i3x.dev](https://www.i3x.dev)
-- **GitHub**: [https://github.com/cesmii/api](https://github.com/cesmii/api)
+- **GitHub**: [https://github.com/cesmii/i3x](https://github.com/cesmii/i3x)
 - **CESMII**: [https://www.cesmii.org](https://www.cesmii.org)
