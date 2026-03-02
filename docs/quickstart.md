@@ -119,7 +119,6 @@ The startup script creates a virtual environment and installs pre-requisites on 
 - Mac/Linux/WSL: `./setup.sh`
 - Windows PowerShell: `./setup.ps1`
 
-![Command Line Steps to Start Server](../static/img/StartServer.png "Start Your Own Server")
 ### Connect with i3X Explorer
 
 - Disconnect i3X Explorer from the public endpoint
