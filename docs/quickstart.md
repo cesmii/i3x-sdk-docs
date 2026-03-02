@@ -145,7 +145,7 @@ Copy/Paste this code block into your text editor:
 import i3x
 
 # Connect to an i3X server
-client = i3x.Client("http://i3x.cesmii.net")
+client = i3x.Client("https://api.i3x.dev/v0")
 client.connect()
 
 # Explore the data model
