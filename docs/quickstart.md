@@ -134,7 +134,7 @@ Examples shown should work on Mac, Linux, WSL and Windows PowerShell. Windows co
 
 - Create a folder for your new project: `mkdir ~/my-i3x-client`
 - Change directory to your new folder: `cd ~/my-i3x-client`
-- Install the i3x-client library: `pip install i3x-client --break-system-packages`
+- Install the i3x-client library: `pip3 install i3x-client --break-system-packages`
 - Create a new file to contain your script:
     - Mac/Linux/WSL: `nano main.py`
     - Windows: `notepad main.py`
@@ -151,15 +151,19 @@ client.connect()
 # Explore the data model
 namespaces = client.get_namespaces()
 object_types = client.get_object_types()
-objects = client.get_objects(type_id="some-type")
+objects = client.get_objects(type_id="work-unit-type")
+print (objects)
 
 # Read values
-value = client.get_value("element-id-1")
+value = client.get_value("sensor-001")
 print(value.data[0].value, value.data[0].quality)
 
 # Disconnect
 client.disconnect()
 ```
+
+- Save and exit, returning to the command line
+- Type: `python3 main.py` and hit enter to run your program!
 
 ## Learning More
 
