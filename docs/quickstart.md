@@ -109,7 +109,7 @@ This step requires Python 3, and will use the sample MQTT adapter included in th
 ### Configure the Server
 
 - Change directory to the Demo server project: `cd i3x/demo/server`
-- Copy the MQTT config file into place as the default config: `cp config.mqtt.json config.json`
+- Copy the MQTT config file into place as the default config: `cp config-mqtt.json config.json`
 - *Optional: edit `config.json` to point to your own MQTT broker if you prefer*
 
 ### Start the Server
