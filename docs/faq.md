@@ -16,14 +16,6 @@ Think of it as doing for industrial software what web browsers did for the inter
 
 i3X is coordinated by [CESMII](https://www.cesmii.org), a U.S. Department of Energy-funded smart manufacturing institute. The working group includes HighByte, GE Appliances, Georgia-Pacific, Rockwell Automation, Inductive Automation, AWS, Microsoft, Siemens, and ThinkIQ, among others.
 
-### Is i3X free to use?
-
-Yes. The specification is open source under the MIT license. The GitHub repository, OpenAPI specification, demo server, i3X Explorer tool, and Python client library are all freely available and open source!
-
-### Can I use this with AI?
-
-Yes! The i3X API was designed to be easily understood by both humans and AI. Direct your AI to [read the Spec](https://api.i3x.dev/v1/openapi.json) and [Implementation Guide](https://raw.githubusercontent.com/cesmii/i3X/refs/heads/1.0-Beta/spec/IMPLEMENTATION_GUIDE.md) into its context.
-
 ### What is the current status of i3X?
 
 i3X is in **Beta** (as of Q2 2026). API signatures and responses are largely stable, but there is continued refinement in-progress around the subscription interfaces. Documentation updates are also in-flight. The beta is suitable for early development, and evaluation, and should be fully stable by Q3 2026.
@@ -35,6 +27,14 @@ The public demo server at [https://api.i3x.dev/v1/docs](https://api.i3x.dev/v1/d
 Manufacturing software stacks are fragmented. A typical facility runs historians, MES systems, quality platforms, and maintenance tools from different vendors — each with its own proprietary API. This forces application developers to write custom integrations for every platform combination, making apps non-portable and driving up integration costs for everyone.
 
 i3X defines a single, stable API surface so an application written against it can run on any compliant platform without modification.
+
+### Is i3X free to use?
+
+Yes. The specification is open source under the MIT license. The GitHub repository, OpenAPI specification, demo server, i3X Explorer tool, and Python client library are all freely available and open source!
+
+### Can I use this with AI?
+
+Yes! The i3X API was designed to be easily understood by both humans and AI. Direct your AI to [read the Spec](https://api.i3x.dev/v1/openapi.json) and [Implementation Guide](https://raw.githubusercontent.com/cesmii/i3X/refs/heads/1.0-Beta/spec/IMPLEMENTATION_GUIDE.md) into its context.
 
 ### Is i3X only for Python?
 
