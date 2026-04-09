@@ -6,6 +6,8 @@ sidebar_position: 1
 
 i3X is the **Industrial Information Interoperability eXchange** API, a vendor-agnostic REST API specification for accessing contextualized manufacturing data. If you're unfamiliar with i3X, please visit [www.i3x.dev](https://www.i3x.dev) for more information.
 
+> Note: This Guide has been updated for the v1 Beta Specification
+
 ## The Basics
 
 i3X is an API, it does not provide a data platform or wire protocol. Rather, its functions are bound to (wrapped around) one or more existing platforms, normalizing the interface across heterogeneous architectures. Multiple back-end data sources can be coordinated, provided their data model is unified, to fulfill the interface.
@@ -64,9 +66,9 @@ For further exploration of relationships, please see the [Demo data Read Me](htt
 
 ## Step 1: View the API
 
-Explore the API in action with Demo data at the public endpoint: [https://api.i3x.dev/v0/docs](https://api.i3x.dev/v0/docs)
+Explore the API in action with Demo data at the public endpoint: [https://api.i3x.dev/v1/docs](https://api.i3x.dev/v1/docs)
 
-[![Open API Page](../static/img/APIDocsPage.png "Open API Docs Page")](https://api.i3x.dev/v0/docs)
+[![Open API Page](../static/img/APIDocsPage.png "Open API Docs Page")](https://api.i3x.dev/v1/docs)
 For example: 
 
 - Try using the `namespaces` endpoint to discover what Namespaces are present in the server.
@@ -133,7 +135,7 @@ Examples shown should work on Mac, Linux, WSL and Windows PowerShell. Windows co
 
 - Create a folder for your new project: `mkdir ~/my-i3x-client`
 - Change directory to your new folder: `cd ~/my-i3x-client`
-- Install the i3x-client library: `pip3 install i3x-client --break-system-packages`
+- Install the i3x-client library: `pip3 install i3x-client --upgrade --break-system-packages`
 - Create a new file to contain your script:
     - Mac/Linux/WSL: `nano main.py`
     - Windows: `notepad main.py`
@@ -142,23 +144,32 @@ Copy/Paste this code block into your text editor:
 
 ```
 import i3x
+with i3x.Client("https://api.i3x.dev/v1") as client:
+    # Get server info
+    info = client.get_info()
+    print(info.spec_version, info.capabilities)
+    print()
 
-# Connect to an i3X server
-client = i3x.Client("https://api.i3x.dev/v0")
-client.connect()
+    # Get namespaces
+    namespaces = client.get_namespaces()
+    print(namespaces)
+    print()
 
-# Explore the data model
-namespaces = client.get_namespaces()
-object_types = client.get_object_types()
-objects = client.get_objects(type_id="work-unit-type")
-print (objects)
+    # Get objects
+    objects = client.get_objects(root=True)
+    print(objects)
+    print()
 
-# Read values
-value = client.get_value("sensor-001")
-print(value.data[0].value, value.data[0].quality)
+    # Read a value
+    val = client.get_value("sensor-001")
+    print(val.value, val.quality)
+    print()
 
-# Disconnect
-client.disconnect()
+    # Subscribe and stream
+    client.on_value_change = lambda c, vc: print(f"{"sensor-001"}: {vc.value}")
+    sub = client.subscribe(["sensor-001"])
+    import time; time.sleep(5)  # watch for changes
+
 ```
 
 - Save and exit, returning to the command line
