@@ -2,4 +2,6 @@
 
 ## OpenAPI Specification
 
-This effort is a work-in-progress. For the most up-to-date details, refer to the in-development OpenAPI Specification at: [https://api.i3x.dev/v0/openapi.json](https://api.i3x.dev/v0/openapi.json)
+The live OpenAPI specification for the Beta API is available at: [https://api.i3x.dev/v1/openapi.json](https://api.i3x.dev/v1/openapi.json)
+
+Interactive API documentation (Swagger UI) is at: [https://api.i3x.dev/v1/docs](https://api.i3x.dev/v1/docs)

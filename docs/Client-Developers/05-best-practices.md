@@ -2,35 +2,63 @@
 
 ## Best Practices for Client Development
 
-### 1. Error Handling
+### 1. Check Capabilities First
 
-Implement robust error handling for API calls:
+Always call `GET /info` before using optional features. This endpoint requires no authentication:
 
 ```javascript
-const safeApiCall = async (apiFunction, ...args) => {
+const initClient = async (baseUrl, token) => {
+  // No auth required for /info
+  const infoResponse = await fetch(`${baseUrl}/info`);
+  const info = (await infoResponse.json()).result;
+
+  return {
+    token,
+    baseUrl,
+    capabilities: info.capabilities,
+    specVersion: info.specVersion
+  };
+};
+```
+
+### 2. Error Handling
+
+All responses use a `{success, result}` envelope. Implement robust error handling that checks this:
+
+```javascript
+const safeApiCall = async (url, options = {}) => {
   try {
-    const response = await apiFunction(...args);
-    
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.status} ${response.statusText}`);
+    const response = await fetch(url, options);
+
+    // 206 = partial content (depth limit) — not a failure
+    if (response.status === 206) {
+      console.warn('Partial results: server depth limit reached');
+    } else if (!response.ok) {
+      const data = await response.json();
+      throw new Error(`API Error ${data.error?.code}: ${data.error?.message}`);
     }
-    
-    return await response.json();
+
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error(`API Error ${data.error.code}: ${data.error.message}`);
+    }
+
+    return data.result ?? data.results;
   } catch (error) {
     console.error('API call failed:', error);
-    
+
     // Implement retry logic for transient failures
     if (error.message.includes('503') || error.message.includes('timeout')) {
-      // Retry with exponential backoff
-      return retryWithBackoff(apiFunction, ...args);
+      return retryWithBackoff(url, options);
     }
-    
+
     throw error;
   }
 };
 ```
 
-### 2. Caching Strategy
+### 3. Caching Strategy
 
 Implement intelligent caching to reduce API load:
 
@@ -63,7 +91,7 @@ class ApiCache {
 }
 ```
 
-### 3. Rate Limiting Awareness
+### 4. Rate Limiting Awareness
 
 Respect API rate limits to ensure service availability:
 
@@ -90,14 +118,14 @@ class RateLimiter {
 }
 ```
 
-### 4. Efficient Batch Data Retrieval
+### 5. Efficient Batch Data Retrieval
 
-When retrieving data for multiple objects, use batch endpoints:
+When retrieving data for multiple objects, use batch endpoints with `elementIds` arrays:
 
 ```javascript
 // Batch retrieve values for multiple objects
 const batchGetObjectValues = async (token, elementIds) => {
-  const response = await fetch('https://api.i3x.dev/v0/objects/value', {
+  const response = await fetch('https://api.i3x.dev/v1/objects/value', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -109,19 +137,42 @@ const batchGetObjectValues = async (token, elementIds) => {
     })
   });
 
-  return await response.json();
+  const data = await response.json();
+  return data.results;
 };
 
 // Get objects filtered by type
-const getObjectsByType = async (token, typeId) => {
+const getObjectsByType = async (token, typeElementId) => {
   const response = await fetch(
-    `https://api.i3x.dev/v0/objects?typeId=${encodeURIComponent(typeId)}`,
+    `https://api.i3x.dev/v1/objects?typeElementId=${encodeURIComponent(typeElementId)}`,
     {
       headers: { 'Authorization': `Bearer ${token}` }
     }
   );
 
-  return await response.json();
+  const data = await response.json();
+  return data.result;
 };
 ```
 
+### 6. Handling Partial Results (HTTP 206)
+
+When querying with `maxDepth`, the server may return HTTP 206 if it reaches its own depth limit. This is not an error — treat it as a partial success:
+
+```javascript
+const getValueWithDepth = async (token, elementIds, maxDepth) => {
+  const response = await fetch('https://api.i3x.dev/v1/objects/value', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ elementIds, maxDepth })
+  });
+
+  const isPartial = response.status === 206;
+  const data = await response.json();
+
+  return { data: data.results, isPartial };
+};
+```

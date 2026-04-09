@@ -6,174 +6,201 @@
 
 Your implementation MUST support:
 
-#### 1. Object Management
+#### 1. Health Check and Discovery
+
+- **Server Info**: Expose `GET /info` with no authentication required. Returns spec version, server metadata, and capabilities. Used as a health check and for client capability discovery.
+
+#### 2. Object Management
 
 - **Object Types**: Provide schemas for object types based on OPC UA Information Models
 - **Object Discovery**: Expose available manufacturing objects (equipment, processes, etc.)
-- **Relationships**: Support parent-child and compositional relationships at the instance object.
+- **Hierarchical Relationships**: Support parent-child relationships via `parentId`
+- **Compositional Relationships**: Support `isComposition` flag for component hierarchies
 
-#### 2. Data Access
+#### 3. Data Access
 
-- **Current Values**: Retrieve the latest values for object attributes
-- **Data Quality**: Include quality indicators with data points
+- **Current Values**: Retrieve the latest values for object attributes via `POST /objects/value`
+- **Data Quality**: Include quality indicators with all data points (one of: `Good`, `GoodNoData`, `Bad`, `Uncertain`)
+- **Bulk Operations**: All query endpoints accept arrays of `elementIds`
 
-#### 3. Authentication & Authorization
+#### 4. Authentication & Authorization
 
-- **User Authentication**: Secure API access with standard authentication mechanisms
-- **Encryption**: Encrypted (HTTPS) access *only* in production scenarios
-- **Audit Logging**: Optional: track API access and operations
+- **Token-based Access**: Secure API access with token-based authentication
+- **Encryption**: HTTPS only in production; TLS 1.2 or higher recommended
+- **Info Exempt**: `GET /info` must be accessible without authentication
 
-#### 4. Performance & Scalability
+#### 5. Response Format
 
-- **Performance**: Maintain performant responses to API calls, implementing strategies like paging or truncation only where necessary on the server-side
+All responses must use the standard envelope:
+
+```json
+{ "success": true, "result": <data> }
+```
+or
+```json
+{ "success": false, "error": { "code": <http-status>, "message": "<description>" } }
+```
+
+Bulk operations return:
+```json
+{
+  "success": true,
+  "results": [
+    { "success": true, "elementId": "...", "result": <data>, "error": null },
+    { "success": false, "elementId": "...", "result": null, "error": { "code": 404, "message": "..." } }
+  ]
+}
+```
+
+The top-level `success` is false if any item fails. Results match request order and size.
+
+#### 6. Performance & Scalability
+
+- **Performance**: Maintain performant responses, implementing pagination or truncation only where necessary
 - **Concurrent Connections**: Handle multiple simultaneous client connections
 
-### Core Capabilities
+### Optional Capabilities
 
-Your implementation MAY support:
+Your implementation MAY support (advertise in `GET /info` capabilities):
 
-- **Relationships**: Graph relationships, typically bi-directional, between instance objects
-- **Historical Data**: Optional: Query time-series data with time range filters
-- **Aggregations**: Support data aggregation (min, max, avg, count, etc.)
-- **Caching**: Utilize caching where appropriate
+- **Historical Data** (`capabilities.query.history`): Query time-series data with time range filters via `POST /objects/history`
+- **Write Current Values** (`capabilities.update.current`): Accept `PUT /objects/{elementId}/value`
+- **Write Historical Values** (`capabilities.update.history`): Accept `PUT /objects/{elementId}/history`
+- **Streaming Subscriptions** (`capabilities.subscribe.stream`): SSE streaming via `POST /subscriptions/stream`
+- **Graph Relationships**: Relationships beyond hierarchical and compositional
 
 ## API Specification Compliance
 
 ### RESTful Endpoint Structure
 
-Your implementation should follow the i3X API specification:
-
 ```
-Base URL: https://your-platform.example.com/i3x/v0/
+Base URL: https://your-platform.example.com/v1/
+
+Info:
+  GET    /info                         # Server info and capabilities (no auth)
 
 Explore Endpoints:
-  GET    /namespaces                  # List all namespaces
-  GET    /objecttypes                 # List object type schemas
-  POST   /objecttypes/query           # Query types by elementId(s)
-  GET    /relationshiptypes           # List relationship types
-  POST   /relationshiptypes/query     # Query relationship types by elementId(s)
-  GET    /objects                     # List all objects
-  POST   /objects/list                # Get objects by elementId(s)
-  POST   /objects/related             # Get related objects
+  GET    /namespaces                   # List all namespaces
+  GET    /objecttypes                  # List object type schemas
+  POST   /objecttypes/query            # Query types by elementId(s)
+  GET    /relationshiptypes            # List relationship types
+  POST   /relationshiptypes/query      # Query relationship types by elementId(s)
+  GET    /objects                      # List all objects
+  POST   /objects/list                 # Get objects by elementId(s)
+  POST   /objects/related              # Get related objects
 
 Query Endpoints:
-  POST   /objects/value               # Get current values for object(s)
-  POST   /objects/history             # Get historical values with time range
+  POST   /objects/value                # Get current values for object(s)
+  POST   /objects/history              # Get historical values with time range  [optional]
+  GET    /objects/{elementId}/history  # Get historical values for one object   [optional]
 
 Update Endpoints:
-  PUT    /objects/{elementId}/value   # Update object's current value
-  PUT    /objects/{elementId}/history # Update historical values
+  PUT    /objects/{elementId}/value    # Update object's current value          [optional]
+  PUT    /objects/{elementId}/history  # Update historical values               [optional]
 
 Subscription Endpoints:
-  GET    /subscriptions               # List all subscriptions
-  POST   /subscriptions               # Create new subscription
-  GET    /subscriptions/{id}          # Get subscription details
-  DELETE /subscriptions/{id}          # Delete subscription
-  POST   /subscriptions/{id}/register # Register objects to monitor
-  POST   /subscriptions/{id}/unregister # Unregister objects
-  GET    /subscriptions/{id}/stream   # SSE stream for real-time updates
-  POST   /subscriptions/{id}/sync     # Poll queued updates
+  POST   /subscriptions                # Create new subscription               [optional]
+  POST   /subscriptions/list           # Retrieve subscription details         [optional]
+  POST   /subscriptions/delete         # Delete subscriptions by ID            [optional]
+  POST   /subscriptions/register       # Add monitored objects                 [optional]
+  POST   /subscriptions/unregister     # Remove monitored objects              [optional]
+  POST   /subscriptions/stream         # Open SSE stream                       [optional]
+  POST   /subscriptions/sync           # Poll with sequence acknowledgment     [optional]
 ```
+
+Note: Subscription management uses flat POST endpoints with `subscriptionId` in the request body — **not** per-subscription URL paths.
 
 ### HTTP Methods and Semantics
 
 - **GET**: Retrieve resources (read-only)
-- **POST**: Create resources or execute non-idempotent operations
-- **PUT**: Update entire resource (idempotent)
+- **POST**: Create resources or execute query/action operations
+- **PUT**: Update a resource (idempotent)
 
 ### Standard HTTP Status Codes
 
-Your implementation should return appropriate status codes:
-
 ```
 2xx Success:
-  200 OK                  - Successful GET, PUT, PATCH
-  201 Created             - Successful POST creating a resource
-  204 No Content          - Successful DELETE
+  200 OK              - Successful request
+  206 Partial Content - Depth limit reached; partial results returned
 
 4xx Client Errors:
-  400 Bad Request         - Invalid request syntax
-  401 Unauthorized        - Missing or invalid authentication
-  403 Forbidden           - Insufficient permissions
-  404 Not Found           - Resource doesn't exist
-  409 Conflict            - Conflicting state (e.g., duplicate object)
-  422 Unprocessable       - Validation errors
-  429 Too Many Requests   - Rate limit exceeded
+  400 Bad Request     - Invalid request syntax or parameters
+  401 Unauthorized    - Missing or invalid authentication
+  403 Forbidden       - Insufficient permissions
+  404 Not Found       - ElementId does not exist
 
 5xx Server Errors:
-  500 Internal Error      - Unexpected server error
-  503 Service Unavailable - Temporary unavailability
+  500 Internal Error  - Unexpected server error
+  501 Not Implemented - Requested optional feature is not supported
 ```
+
+**Important**: Return HTTP 206 (not 200) when `maxDepth` recursion is cut short by server limits. Return HTTP 501 for any optional endpoint not implemented, not HTTP 404.
 
 ## Compliance Checklist
 
-Use this checklist to ensure your implementation meets minimum requirements:
+### Required: Info & Discovery
+- [ ] Server info endpoint (`GET /info`) — no auth required
+- [ ] Returns `specVersion`, `serverVersion`, `serverName`, `capabilities`
 
-### Object Management
-- [ ] List all objects (GET /objects)
-- [ ] Retrieve objects by elementId (POST /objects/list)
-- [ ] List object types (GET /objecttypes)
-- [ ] Query object types by elementId (POST /objecttypes/query)
-- [ ] Get related objects (POST /objects/related)
-- [ ] Support hierarchical relationships via parentId
-- [ ] List namespaces (GET /namespaces)
-- [ ] List relationship types (GET /relationshiptypes)
+### Required: Object Management
+- [ ] List all objects (`GET /objects`)
+- [ ] Retrieve objects by elementId (`POST /objects/list`)
+- [ ] List object types (`GET /objecttypes`)
+- [ ] Query object types by elementId (`POST /objecttypes/query`)
+- [ ] Get related objects (`POST /objects/related`)
+- [ ] Support hierarchical relationships via `parentId`
+- [ ] Support compositional relationships via `isComposition`
+- [ ] List namespaces (`GET /namespaces`)
+- [ ] List relationship types (`GET /relationshiptypes`)
+- [ ] Query relationship types by elementId (`POST /relationshiptypes/query`)
 
-### Data Access
-- [ ] Get current values (POST /objects/value)
-- [ ] Include data quality and timestamp indicators
-- [ ] Support maxDepth for compositional hierarchies
-- [ ] Update current values (PUT `/objects/{elementId}/value`)
+### Required: Data Access
+- [ ] Get current values (`POST /objects/value`)
+- [ ] Include `isComposition` in value responses
+- [ ] Include `quality` (one of: Good, GoodNoData, Bad, Uncertain) and `timestamp`
+- [ ] Support `maxDepth` for compositional hierarchies
+- [ ] Return HTTP 206 when depth limit is server-imposed
 
-### Historical Data Access (Optional)
-- [ ] Query historical time-series data (POST /objects/history)
-- [ ] Update historical values (PUT `/objects/{elementId}/history`)
+### Required: Response Format
+- [ ] All responses wrapped in `{success, result}` or `{success, error}` envelope
+- [ ] Bulk responses use `{success, results: [{success, elementId, result, error}]}`
+- [ ] Error format: `{success: false, error: {code, message}}`
+- [ ] Use correct HTTP status codes
 
-### Authentication & Authorization
-- [ ] Implement authentication
-- [ ] Require encrypted connections
-- [ ] Return appropriate 401/403 errors
+### Required: Authentication
+- [ ] Implement token-based authentication
+- [ ] Require HTTPS in production
+- [ ] `GET /info` accessible without authentication
+- [ ] Return 401/403 for auth failures
 
-### Performance & Scalability
-- [ ] Use strategies for maintain performance
-- [ ] Handle concurrent connections
+### Optional: Historical Data
+- [ ] Query historical values (`POST /objects/history`)
+- [ ] Query single-object history (`GET /objects/{elementId}/history`)
+- [ ] Update historical values (`PUT /objects/{elementId}/history`)
 
-### HTTP Compliance
-- [ ] Use correct HTTP methods
-- [ ] Return appropriate status codes
-- [ ] Include proper headers (Content-Type, etc.)
-- [ ] Support CORS
-- [ ] Implement proper error responses
+### Optional: Value Updates
+- [ ] Update current value (`PUT /objects/{elementId}/value`)
 
-### Data Format
-- [ ] Return JSON responses
-- [ ] Use RFC 3339 for timestamps
-- [ ] Include links in object responses
-- [ ] Support standard data types
-- [ ] Include quality indicators with data
-
-### Subscriptions (Optional)
-- [ ] Create subscriptions (POST /subscriptions)
-- [ ] List subscriptions (GET /subscriptions)
-- [ ] Get subscription details (GET `/subscriptions/{id}`)
-- [ ] Delete subscriptions (DELETE `/subscriptions/{id}`)
-- [ ] Register objects to monitor (POST `/subscriptions/{id}/register`)
-- [ ] Unregister objects (POST `/subscriptions/{id}/unregister`)
-- [ ] SSE streaming (GET `/subscriptions/{id}/stream`)
-- [ ] Queue-based sync (POST `/subscriptions/{id}/sync`)
+### Optional: Subscriptions
+- [ ] Create subscription (`POST /subscriptions`) with `clientId`, `displayName`
+- [ ] List subscriptions (`POST /subscriptions/list`)
+- [ ] Delete subscriptions (`POST /subscriptions/delete`)
+- [ ] Register monitored objects (`POST /subscriptions/register`)
+- [ ] Unregister monitored objects (`POST /subscriptions/unregister`)
+- [ ] SSE streaming (`POST /subscriptions/stream`)
+- [ ] Sync with sequence numbers (`POST /subscriptions/sync`)
 
 ## Versioning Strategy
 
-Your API should support versioning to allow evolution without breaking clients:
+The i3X API uses semantic versioning. The URL version (`/v1`) only changes for breaking API modifications. Non-breaking additions do not require a version increment.
 
-### URL Versioning (Recommended)
-```
-https://your-platform.example.com/i3x/v0/objects
-https://your-platform.example.com/i3x/v0/objects
-```
+Advertise the spec version your implementation targets via `GET /info`:
 
-### Best Practices
-- Maintain backward compatibility within major versions
-- Deprecate features gracefully with advance notice
-- Document version differences clearly
-- Support at least N-1 versions (current and previous)
+```json
+{
+  "specVersion": "1.0",
+  "serverVersion": "your-server-version",
+  "serverName": "Your Platform Name",
+  "capabilities": { ... }
+}
+```

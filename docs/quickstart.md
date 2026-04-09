@@ -88,7 +88,7 @@ i3X Explorer is a free client that works with any compliant i3X implementation, 
 ### Launch i3X Explorer
 
 - Open i3X Explorer from your Start Menu, Dock or Launcher
-- Connect to the Demo endpoint at https://api.i3x.dev/v0
+- Connect to the Demo endpoint at https://api.i3x.dev/v1
 
 ![i3X Explorer Steps Animated Gif](../static/img/i3XExplorer.gif "i3X Explorer")
 

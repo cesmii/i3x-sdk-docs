@@ -18,11 +18,15 @@ i3X is coordinated by [CESMII](https://www.cesmii.org), a U.S. Department of Ene
 
 ### Is i3X free to use?
 
-Yes. The specification is open source under the MIT license. The GitHub repository, OpenAPI specification, demo server, i3X Explorer tool, and Python client library are all freely available.
+Yes. The specification is open source under the MIT license. The GitHub repository, OpenAPI specification, demo server, i3X Explorer tool, and Python client library are all freely available and open source!
+
+### Can I use this with AI?
+
+Yes! The i3X API was designed to be easily understood by both humans and AI. Direct your AI to [read the Spec](https://api.i3x.dev/v1/openapi.json) and [Implementation Guide](https://raw.githubusercontent.com/cesmii/i3X/refs/heads/1.0-Beta/spec/IMPLEMENTATION_GUIDE.md) into its context.
 
 ### What is the current status of i3X?
 
-i3X is in **pre-release Alpha** (as of early 2026). API signatures are largely stable, but response structures may change through Q1 2026. It is suitable for prototyping, development, and evaluation. The public demo server at [https://i3x.i3x.dev/v0](https://i3x.i3x.dev/v0) is available for testing.
+i3X is in **pre-release Alpha** (as of early 2026). API signatures are largely stable, but response structures may change through Q1 2026. It is suitable for prototyping, development, and evaluation. The public demo server at [https://i3x.i3x.dev/v1/docs](https://i3x.i3x.dev/v1/docs) is available for testing.
 
 ### What problem does i3X solve?
 
@@ -48,6 +52,14 @@ A thorough OPC UA implementation provides more type-safety, better type definiti
 
 i3X aims to provide a simplified interface that can be bound to an OPC UA server as one of the options for a back-end data source. However i3X does not *require* OPC UA. As such, it allows an implementation to have some of the key features of OPC UA, without the requirements of a full OPC UA server implementation.
 
+### Should I implement i3X on a PLC or Edge device
+
+Probably not. The purpose of i3X is to standardize the programmers interface for contextualized information. This means, raw data that has been shaped into a pre-defined repeatable model, stored as instance objects, with those instances related to each other hierarchically and graphically, usually with history. While some PLCs are very sophisticated, their context is usually fairly focused on the things they're controlling (by design!) The first place you can really start to get value out of an i3X implementation is at the HMI/SCADA level (and on up from there!)
+
+### Does i3X support multiple inheritance?
+
+By design, no. Multiple inheritance can lead to the [diamond problem](https://en.wikipedia.org/wiki/Multiple_inheritance#The_diamond_problem) that results in type information being harder to understand -- not easier! If you need to track multiple derivations, you can define your RelationshipTypes, but the preferred pattern in i3X is composition.
+
 ### How does i3X support Class composition?
 
 For the initial release, the Working Group chose to simplify composition representation to the *instance object* level. This means that an object may be made up of Types from different Namespaces. However, the API does *not* support representing composition at the type level. Types return in a query must be simplified to a flat list within a single namespace.
@@ -58,7 +70,7 @@ While the Working Group plans to revisit this in the future, it was determined t
 
 ### How do I report a bug or request a feature?
 
-Open an issue on the [GitHub repository](https://github.com/cesmii/i3x/issues). For non-GitHub feedback, email [rfc@cesmii.org](mailto:rfc@cesmii.org).
+Open an issue on the [GitHub repository](https://github.com/cesmii/i3x/issues). For non-GitHub feedback, email [i3x@cesmii.org](mailto:i3x@cesmii.org).
 
 ### How do I get involved in the working group?
 
@@ -66,7 +78,7 @@ Review the contributing guidelines in `Contributing.md` in the [GitHub repo](htt
 
 ### Where can I find the formal specification?
 
-The RFC specification document is a work in progress, developed publicly in the [cesmii/i3x GitHub repository](https://github.com/cesmii/i3x). The live OpenAPI specification with interactive docs is at [https://i3x.i3x.dev/v0/docs](https://i3x.i3x.dev/v0/docs).
+The specification comes in two forms: an OpenAPI Spec and an Implementation Guide, both are in Beta, and being developed publicly in the [cesmii/i3x GitHub repository](https://github.com/cesmii/i3x). The live OpenAPI specification with interactive docs is at [https://api.i3x.dev/v0/docs](https://i3x.i3x.dev/v1/docs), while the Implementation Guide is at [text](https://github.com/cesmii/i3X/blob/1.0-Beta/spec/IMPLEMENTATION_GUIDE.md).
 
 ### Where can I find more information?
 

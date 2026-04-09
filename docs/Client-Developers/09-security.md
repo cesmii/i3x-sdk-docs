@@ -22,6 +22,8 @@ const credentials = {
 
 ### 2. Validate Server Certificates
 
+Always use HTTPS in production. TLS 1.2 or higher is recommended. Self-signed certificates are permitted in development environments only.
+
 Ensure SSL/TLS certificates are properly validated:
 
 ```javascript

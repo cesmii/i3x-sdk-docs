@@ -2,19 +2,35 @@
 
 ## Object Instance Representation
 
-Objects are serialized in JSON format following the i3X API structure. The `ObjectInstance` schema includes the full object with relationship metadata:
+Objects are serialized in JSON format. The base `ObjectInstanceResponse` schema:
 
 ```json
 {
   "elementId": "urn:platform:object:12345",
   "displayName": "Packaging Line 1",
-  "typeId": "urn:platform:type:Equipment",
+  "typeElementId": "urn:platform:type:Equipment",
   "parentId": "urn:platform:object:building-a",
   "isComposition": true,
-  "namespaceUri": "urn:platform:namespace:production",
-  "relationships": {
-    "HasComponent": ["urn:platform:object:conveyor-1", "urn:platform:object:sealer-1"],
-    "References": ["urn:platform:object:operator-station-1"]
+  "isExtended": false,
+  "metadata": null
+}
+```
+
+When `includeMetadata=true` is requested, populate the `metadata` field with relationship information:
+
+```json
+{
+  "elementId": "urn:platform:object:12345",
+  "displayName": "Packaging Line 1",
+  "typeElementId": "urn:platform:type:Equipment",
+  "parentId": "urn:platform:object:building-a",
+  "isComposition": true,
+  "isExtended": false,
+  "metadata": {
+    "relationships": {
+      "HasComponent": ["urn:platform:object:conveyor-1", "urn:platform:object:sealer-1"],
+      "References": ["urn:platform:object:operator-station-1"]
+    }
   }
 }
 ```
@@ -23,41 +39,30 @@ Objects are serialized in JSON format following the i3X API structure. The `Obje
 
 ### Required Fields
 
-- **elementId** (string): Unique string identifier for the element
-- **displayName** (string): Object name
-- **typeId** (string): ElementId of the object type
-- **isComposition** (boolean): Whether this element has child objects
-- **namespaceUri** (string): Namespace URI
+- **elementId** (string): Unique string identifier. Must have no leading/trailing whitespace or non-printable characters.
+- **displayName** (string): Human-readable name for UI presentation
+- **typeElementId** (string): ElementId of the object's type definition
+- **isComposition** (boolean): Whether this object encapsulates child component objects (HasComponent relationship)
+- **isExtended** (boolean, default: false): Whether this object carries attributes beyond its type schema
 
 ### Optional Fields
 
-- **parentId** (string | null): ElementId of the parent object
-- **relationships** (object | null): Relationships to other objects
+- **parentId** (string | null): ElementId of the parent object; null for root objects
+- **metadata** (object | null): Full relationship metadata; only populated when `includeMetadata=true`
 
-## ObjectInstanceMinimal
-
-A lightweight variant of `ObjectInstance` that excludes the `relationships` field. Returned by `GET /objects` and `GET /objects?includeMetadata=false`. Has the same required and optional fields as `ObjectInstance`, minus `relationships`.
-
-```json
-{
-  "elementId": "urn:platform:object:12345",
-  "displayName": "Packaging Line 1",
-  "typeId": "urn:platform:type:Equipment",
-  "parentId": "urn:platform:object:building-a",
-  "isComposition": true,
-  "namespaceUri": "urn:platform:namespace:production"
-}
-```
+**Note:** Objects do not carry a `namespaceUri`. Object instances exist in the server's implicit address space. Namespace is a property of types, not instances.
 
 ## ObjectType Representation
 
-ObjectTypes define the schema for objects. All fields are required:
+All required fields must be present:
 
 ```json
 {
   "elementId": "urn:platform:type:Equipment",
   "displayName": "Manufacturing Equipment",
   "namespaceUri": "urn:platform:namespace:production",
+  "sourceTypeId": "urn:platform:type:BaseAsset",
+  "version": "1.2.0",
   "schema": {
     "type": "object",
     "properties": {
@@ -66,21 +71,24 @@ ObjectTypes define the schema for objects. All fields are required:
       "status": {
         "type": "string",
         "enum": ["Running", "Stopped", "Maintenance"]
-      }
+      },
+      "temperature": { "type": ["number", "null"] }
     }
-  }
+  },
+  "related": null
 }
 ```
 
-**Fields** (all required):
-- **elementId** (string): Unique string identifier for the type
-- **displayName** (string): Type name
-- **namespaceUri** (string): Namespace URI
-- **schema** (object): JSON Schema definition for this object type
+**Fields:**
+- **elementId** (string, required): Unique string identifier
+- **displayName** (string, required): Human-readable name
+- **namespaceUri** (string, required): Namespace URI
+- **sourceTypeId** (string, required): Base/source type identifier this type derives from
+- **version** (string | null): Semantic version string (recommended)
+- **schema** (object, required): JSON Schema definition. Use `["number", "null"]` type unions for nullable fields.
+- **related** (object | null): Related type metadata
 
 ## Namespace Representation
-
-All fields are required:
 
 ```json
 {
@@ -91,11 +99,11 @@ All fields are required:
 
 **Fields** (all required):
 - **uri** (string): Namespace URI
-- **displayName** (string): Namespace name
+- **displayName** (string): Human-readable namespace name
 
 ## RelationshipType Representation
 
-All fields are required:
+Every relationship type must define its reverse:
 
 ```json
 {
@@ -107,18 +115,50 @@ All fields are required:
 ```
 
 **Fields** (all required):
-- **elementId** (string): Unique string identifier for the relationship type
-- **displayName** (string): Relationship type name
+- **elementId** (string): Unique string identifier
+- **displayName** (string): Human-readable name
 - **namespaceUri** (string): Namespace URI
-- **reverseOf** (string): Type name of the reverse relationship
+- **reverseOf** (string): ElementId or name of the inverse relationship — all relationships are bidirectional
 
-### Supported Data Types
+Common built-in relationship types:
+- `HasParent` / `HasChildren` — hierarchical organization
+- `HasComponent` / `ComponentOf` — compositional relationships
 
-- **Boolean**: true/false values
-- **Number**: numeric values
-- **String**: Text values
+## ServerInfo Response
 
-Other data types remain under consideration, with constraints including what is supported by JSON Schema.
+The `GET /info` endpoint (no authentication required) returns:
+
+```json
+{
+  "specVersion": "1.0",
+  "serverVersion": "2.3.1",
+  "serverName": "My Manufacturing Platform",
+  "capabilities": {
+    "query": { "history": true },
+    "update": { "current": true, "history": false },
+    "subscribe": { "stream": true }
+  }
+}
+```
+
+**Fields:**
+- **specVersion** (string, required): The i3X spec version this server implements
+- **serverVersion** (string | null): Server software version
+- **serverName** (string | null): Human-readable server/platform name
+- **capabilities** (object, required): Which optional features are supported
+
+## Data Quality Indicators
+
+Use exactly these four quality values — no others:
+
+| Quality | When to Use |
+|---------|-------------|
+| `Good` | Value is reliable and current |
+| `GoodNoData` | No data available; this is expected, not an error |
+| `Bad` | Value is unreliable or from a failed source |
+| `Uncertain` | Value reliability cannot be determined |
+
+When `value` is null, `quality` must be `Bad` or `GoodNoData`.
 
 ## Value Request/Response
 
@@ -136,185 +176,144 @@ Other data types remain under consideration, with constraints including what is 
 
 **Parameters:**
 - **elementIds** (string[], required): Array of element IDs to query
-- **maxDepth** (integer, default: 1, min: 0): Controls recursion depth. `0` = infinite (includes all HasComponent children recursively); `1` = no recursion (just the specified element)
+- **maxDepth** (integer, default: 1, min: 0): Controls recursion through HasComponent relationships. `0` = infinite (subject to server limits); `1` = no recursion
+
+### Current Value Response
+
+Return a bulk response. Each item in `results` corresponds to one `elementId` in request order:
+
+```json
+{
+  "success": true,
+  "results": [
+    {
+      "success": true,
+      "elementId": "urn:platform:object:12345",
+      "result": {
+        "isComposition": false,
+        "value": 125.5,
+        "quality": "Good",
+        "timestamp": "2025-01-15T12:00:00Z",
+        "components": null
+      },
+      "error": null
+    }
+  ]
+}
+```
+
+For composition objects with `maxDepth > 1`, populate `components`:
+
+```json
+{
+  "isComposition": true,
+  "value": null,
+  "quality": "Good",
+  "timestamp": "2025-01-15T12:00:00Z",
+  "components": {
+    "urn:platform:object:child-1": {
+      "value": 42.0,
+      "quality": "Good",
+      "timestamp": "2025-01-15T12:00:00Z"
+    }
+  }
+}
+```
+
+If the server reaches its depth limit before fulfilling `maxDepth`, return **HTTP 206** (not 200).
 
 ### GetObjectHistoryRequest (POST /objects/history)
 
 ```json
 {
-  "elementIds": [
-    "urn:platform:object:12345"
-  ],
+  "elementIds": ["urn:platform:object:12345"],
   "startTime": "2025-01-15T00:00:00Z",
   "endTime": "2025-01-15T23:59:59Z",
   "maxDepth": 1
 }
 ```
 
-**Parameters:**
-- **elementIds** (string[], required): Array of element IDs to query
-- **startTime** (string | null): RFC 3339 start time for filtering
-- **endTime** (string | null): RFC 3339 end time for filtering
-- **maxDepth** (integer, default: 1, min: 0): Controls recursion depth. `0` = infinite; `1` = no recursion
-
-### Value Response
-
-The value endpoints return an array of value objects in this shape:
+### Historical Value Response
 
 ```json
 {
-  "elementId": "urn:platform:object:12345",
-  "value": 125.5,
-  "timestamp": "2025-01-15T12:00:00.000Z",
-  "quality": "Good"
+  "success": true,
+  "results": [
+    {
+      "success": true,
+      "elementId": "urn:platform:object:12345",
+      "result": {
+        "isComposition": false,
+        "values": [
+          { "value": 120.0, "quality": "Good", "timestamp": "2025-01-15T10:00:00Z" },
+          { "value": 125.5, "quality": "Good", "timestamp": "2025-01-15T12:00:00Z" }
+        ]
+      },
+      "error": null
+    }
+  ]
 }
 ```
-
-**Response Fields:**
-- **elementId** (string): Object identifier
-- **value** (any): The current or historical value
-- **timestamp** (string | null): When the value was recorded (RFC 3339)
-- **quality** (string | null): Quality indicator
-
-## Data Quality Indicators
-
-Implement standard quality codes:
-
-```javascript
-const DataQuality = {
-  GOOD: 'Good',              // Value is reliable
-  BAD: 'Bad',                // Value is unreliable
-  UNCERTAIN: 'Uncertain',    // Value may be unreliable
-  NOT_CONNECTED: 'NotConnected',  // Source not connected
-  STALE: 'Stale',           // Value hasn't updated recently
-  CALCULATED: 'Calculated',  // Derived/calculated value
-  MANUALLY_ENTERED: 'ManuallyEntered'
-};
-```
-
-### Quality Code Meanings
-
-For a full list of Quality Codes and Meanings, refer to [https://reference.opcfoundation.org/Core/Part8/v104/docs/A.4.3.3](https://reference.opcfoundation.org/Core/Part8/v104/docs/A.4.3.3)
-
-## Object List/Query Requests
-
-### GetObjectsRequest (POST /objects/list)
-
-Return one or more objects by elementId. Returns full `ObjectInstance` with metadata.
-
-```json
-{
-  "elementIds": ["urn:platform:object:12345", "urn:platform:object:12346"],
-  "includeMetadata": false
-}
-```
-
-**Parameters:**
-- **elementIds** (string[], required): Array of element IDs to query
-- **includeMetadata** (boolean, default: false): Include full metadata in response
-
-### GetObjectTypesRequest (POST /objecttypes/query)
-
-Get the schema for one or more ObjectTypes by elementId.
-
-```json
-{
-  "elementIds": ["urn:platform:type:Equipment"]
-}
-```
-
-**Parameters:**
-- **elementIds** (string[], required): Array of element IDs to query
-
-### GetRelationshipTypesRequest (POST /relationshiptypes/query)
-
-Get one or more RelationshipTypes by elementId.
-
-```json
-{
-  "elementIds": ["urn:platform:reltype:HasComponent"]
-}
-```
-
-**Parameters:**
-- **elementIds** (string[], required): Array of element IDs to query
-
-## Related Objects Request
-
-### GetRelatedObjectsRequest (POST /objects/related)
-
-```json
-{
-  "elementIds": ["urn:platform:object:12345"],
-  "relationshiptype": "HasComponent",
-  "includeMetadata": true
-}
-```
-
-**Parameters:**
-- **elementIds** (string[], required): Array of element IDs to query
-- **relationshiptype** (string | null): Filter by relationship type
-- **includeMetadata** (boolean, default: false): Include full metadata in response
 
 ## Subscription Models
 
 ### CreateSubscriptionRequest
 
-Empty request body — no parameters required:
-
 ```json
-{}
+{
+  "clientId": "my-app-instance-001",
+  "displayName": "Dashboard Monitor"
+}
 ```
+
+Both fields are optional. `clientId` scopes the subscription to a client identifier.
 
 ### CreateSubscriptionResponse
 
 ```json
 {
+  "success": true,
+  "result": {
+    "subscriptionId": "sub-12345",
+    "clientId": "my-app-instance-001",
+    "displayName": "Dashboard Monitor"
+  }
+}
+```
+
+### RegisterMonitoredItemsRequest (POST /subscriptions/register)
+
+The `subscriptionId` is passed in the body — not in the URL path:
+
+```json
+{
   "subscriptionId": "sub-12345",
-  "message": "Subscription created successfully"
-}
-```
-
-**Fields** (all required):
-- **subscriptionId** (string): The new subscription ID
-- **message** (string): Confirmation message
-
-### GetSubscriptionsResponse
-
-```json
-{
-  "subscriptionIds": [
-    { "subscriptionId": 1, "created": "2025-01-15T10:00:00.000Z" },
-    { "subscriptionId": 2, "created": "2025-01-15T11:00:00.000Z" }
-  ]
-}
-```
-
-**Fields** (all required):
-- **subscriptionIds** (SubscriptionSummary[]): Array of active subscription summaries
-
-### RegisterMonitoredItemsRequest
-
-```json
-{
   "elementIds": ["urn:platform:object:12345", "urn:platform:object:12346"],
   "maxDepth": 1
 }
 ```
 
-**Parameters:**
-- **elementIds** (string[], required): Array of element IDs to monitor
-- **maxDepth** (integer | null, default: 1): Recursion depth for compositional hierarchies
+### SubscriptionSyncRequest (POST /subscriptions/sync)
 
-### SubscriptionSummary
+Uses monotonically increasing `sequenceNumber` (64-bit unsigned, starting at 1) to ensure no data loss:
 
 ```json
 {
-  "subscriptionId": 1,
-  "created": "2025-01-15T10:00:00.000Z"
+  "subscriptionId": "sub-12345",
+  "acknowledgeSequence": 42
 }
 ```
 
-**Fields** (all required):
-- **subscriptionId** (integer): Numeric subscription identifier
-- **created** (string): RFC 3339 timestamp when the subscription was created
+Server queues updates with sequence numbers. Client acknowledges the last received sequence when polling for new data. Each subscription has independent numbering.
+
+### SubscriptionDetail (from POST /subscriptions/list)
+
+```json
+{
+  "subscriptionId": "sub-12345",
+  "displayName": "Dashboard Monitor",
+  "monitoredObjects": [
+    { "elementId": "urn:platform:object:12345", "maxDepth": 1 }
+  ]
+}
+```

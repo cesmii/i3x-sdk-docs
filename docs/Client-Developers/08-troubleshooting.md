@@ -25,60 +25,136 @@ const fetchWithBackoff = async (url, options, maxRetries = 3) => {
 };
 ```
 
+### Issue: Feature Not Supported (HTTP 501)
+
+**Symptoms**: HTTP 501 Not Implemented response
+
+**Solution**: Check server capabilities via `GET /info` before calling optional features. History, update, and streaming subscriptions are optional.
+
+```javascript
+const info = await fetch('https://api.i3x.dev/v1/info').then(r => r.json());
+
+if (!info.result.capabilities.query.history) {
+  console.warn('This server does not support historical queries');
+  // Fall back to current values only
+}
+```
+
+### Issue: Partial Results (HTTP 206)
+
+**Symptoms**: HTTP 206 Partial Content response from value or history queries
+
+**Explanation**: The server reached its internal depth limit before completing the requested `maxDepth`. This is not an error — the response contains valid data, just not as deep as requested.
+
+**Solution**: Process partial results normally, optionally retry with a smaller `maxDepth`:
+
+```javascript
+const response = await fetch('https://api.i3x.dev/v1/objects/value', {
+  method: 'POST',
+  headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+  body: JSON.stringify({ elementIds, maxDepth: 5 })
+});
+
+if (response.status === 206) {
+  console.warn('Partial results returned — server depth limit reached');
+}
+
+const data = await response.json();
+// data.results contains the partial results — still process them
+```
+
 ### Issue: Large Data Set Handling
 
 **Solution**: Use time-bounded queries and subscriptions for streaming
 
 ```javascript
 // For historical data, use time-bounded queries
-const getHistoryInChunks = async (token, elementId, startTime, endTime) => {
-  const response = await fetch('https://api.i3x.dev/v0/objects/history', {
+const getHistoryInChunks = async (token, elementIds, startTime, endTime) => {
+  const response = await fetch('https://api.i3x.dev/v1/objects/history', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      elementId: elementId,
+      elementIds: elementIds,
       startTime: startTime,
       endTime: endTime,
       maxDepth: 1
     })
   });
 
-  return await response.json();
+  const data = await response.json();
+  return data.results;
 };
 
 // For real-time streaming, use subscriptions
+// Note: subscription management uses flat POST endpoints — subscriptionId goes in the body
 const streamObjectData = async (token, elementIds, callback) => {
   // Create subscription
-  const createRes = await fetch('https://api.i3x.dev/v0/subscriptions', {
+  const createRes = await fetch('https://api.i3x.dev/v1/subscriptions', {
     method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({})
+    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ displayName: 'Stream Monitor' })
   });
-  const { subscriptionId } = await createRes.json();
+  const createData = await createRes.json();
+  const subscriptionId = createData.result.subscriptionId;
 
-  // Register objects to monitor
-  await fetch(`https://api.i3x.dev/v0/subscriptions/${subscriptionId}/register`, {
+  // Register objects to monitor (subscriptionId in body)
+  await fetch('https://api.i3x.dev/v1/subscriptions/register', {
     method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ elementIds, maxDepth: 1 })
+    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ subscriptionId, elementIds, maxDepth: 1 })
   });
 
-  // Stream via SSE
-  const eventSource = new EventSource(
-    `https://api.i3x.dev/v0/subscriptions/${subscriptionId}/stream`
-  );
-  eventSource.onmessage = (event) => callback(JSON.parse(event.data));
+  // Stream via SSE (subscriptionId in body)
+  const streamRes = await fetch('https://api.i3x.dev/v1/subscriptions/stream', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ subscriptionId })
+  });
 
-  return { subscriptionId, eventSource };
+  const reader = streamRes.body.getReader();
+  const decoder = new TextDecoder();
+
+  const read = async () => {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const text = decoder.decode(value);
+      for (const line of text.split('\n')) {
+        if (line.startsWith('data: ')) {
+          callback(JSON.parse(line.slice(6)));
+        }
+      }
+    }
+  };
+
+  read();
+  return { subscriptionId };
 };
 ```
 
+### Issue: Unexpected `success: false` in Bulk Results
+
+**Symptoms**: Top-level `success` is false even though some items succeeded
+
+**Explanation**: In bulk operations, the top-level `success` is false if *any* item fails. Check individual items in `results`:
+
+```javascript
+const data = await response.json();
+
+// Don't just check data.success — inspect each result
+const succeeded = data.results.filter(r => r.success);
+const failed = data.results.filter(r => !r.success);
+
+if (failed.length > 0) {
+  console.warn('Some items failed:', failed.map(r => ({
+    elementId: r.elementId,
+    error: r.error
+  })));
+}
+
+// Process successful results
+succeeded.forEach(r => processValue(r.elementId, r.result));
+```

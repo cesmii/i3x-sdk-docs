@@ -16,8 +16,17 @@ const useManufacturingData = (elementId) => {
     const fetchData = async () => {
       try {
         const token = await getAuthToken();
-        const objectValue = await getObjectValue(token, elementId);
-        setData(objectValue);
+        const response = await fetch('https://api.i3x.dev/v1/objects/value', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ elementIds: [elementId] })
+        });
+        const body = await response.json();
+        // First result in the bulk response
+        setData(body.results[0]?.result ?? null);
       } catch (err) {
         setError(err);
       } finally {
@@ -45,56 +54,59 @@ from typing import Dict, List, Optional
 from datetime import datetime, timedelta
 
 class I3XAPIClient:
-    def __init__(self, base_url: str, credentials: Dict[str, str]):
+    def __init__(self, base_url: str, token: str):
         self.base_url = base_url
-        self.token = self._authenticate(credentials)
         self.session = requests.Session()
         self.session.headers.update({
-            'Authorization': f'Bearer {self.token}',
+            'Authorization': f'Bearer {token}',
             'Content-Type': 'application/json'
         })
 
-    def _authenticate(self, credentials: Dict[str, str]) -> str:
-        response = requests.post(
-            f'{self.base_url}/auth/token',
-            json=credentials
-        )
+    @classmethod
+    def get_info(cls, base_url: str) -> Dict:
+        """Get server capabilities — no auth required."""
+        response = requests.get(f'{base_url}/info')
         response.raise_for_status()
-        return response.json()['access_token']
+        return response.json()['result']
 
-    def get_objects(self, type_id: Optional[str] = None) -> List[Dict]:
+    def get_objects(self, type_element_id: Optional[str] = None) -> List[Dict]:
         params = {}
-        if type_id:
-            params['typeId'] = type_id
+        if type_element_id:
+            params['typeElementId'] = type_element_id
         response = self.session.get(
             f'{self.base_url}/objects',
             params=params
         )
         response.raise_for_status()
-        return response.json()
+        return response.json()['result']
 
-    def get_object_value(
+    def get_object_values(
         self,
-        element_id: str,
+        element_ids: List[str],
         max_depth: int = 1
-    ) -> Dict:
+    ) -> List[Dict]:
         response = self.session.post(
             f'{self.base_url}/objects/value',
             json={
-                'elementId': element_id,
+                'elementIds': element_ids,
                 'maxDepth': max_depth
             }
         )
         response.raise_for_status()
-        return response.json()
+        data = response.json()
+        # HTTP 206 = partial results (depth limit reached)
+        if response.status_code == 206:
+            import warnings
+            warnings.warn('Partial results: server depth limit reached')
+        return data.get('results', [])
 
     def get_object_history(
         self,
-        element_id: str,
+        element_ids: List[str],
         start_time: Optional[datetime] = None,
         end_time: Optional[datetime] = None
-    ) -> Dict:
-        payload = {'elementId': element_id}
+    ) -> List[Dict]:
+        payload = {'elementIds': element_ids}
         if start_time:
             payload['startTime'] = start_time.isoformat() + 'Z'
         if end_time:
@@ -105,19 +117,19 @@ class I3XAPIClient:
             json=payload
         )
         response.raise_for_status()
-        return response.json()
+        return response.json().get('results', [])
 
 # Usage example
-client = I3XAPIClient(
-    'https://api.i3x.dev/v0',
-    {'username': 'user', 'password': 'pass'}
-)
+info = I3XAPIClient.get_info('https://api.i3x.dev/v1')
+print(f"Spec version: {info['specVersion']}")
+print(f"History supported: {info['capabilities']['query']['history']}")
+
+client = I3XAPIClient('https://api.i3x.dev/v1', token='your-token-here')
 
 objects = client.get_objects()
-value = client.get_object_value(objects[0]['elementId'])
+values = client.get_object_values([objects[0]['elementId']])
 history = client.get_object_history(
-    objects[0]['elementId'],
+    [objects[0]['elementId']],
     start_time=datetime.now() - timedelta(hours=1)
 )
 ```
-

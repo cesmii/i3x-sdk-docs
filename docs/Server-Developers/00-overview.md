@@ -87,6 +87,6 @@ This server implementation guide is organized into the following categories:
 ## Quick Links
 
 - **RFC Specification**: https://github.com/cesmii/i3X
-- **Demo Server**: https://api.i3x.dev/v0
+- **Demo Server**: https://api.i3x.dev/v1
 - **Issue Tracker**: https://github.com/cesmii/i3X/issues
 - **Community Email**: rfc@cesmii.org

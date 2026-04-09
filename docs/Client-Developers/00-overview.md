@@ -44,10 +44,10 @@ The API assumes that data has already been contextualized by underlying platform
 
 ### Demo Environment
 
-A public prototype endpoint is available for testing and development:
+A public endpoint is available for testing and development:
 
-- **Base URL**: `https://api.i3x.dev/v0`
-- **Documentation**: `https://api.i3x.dev/v0/docs`
+- **Base URL**: `https://api.i3x.dev/v1`
+- **Documentation**: `https://api.i3x.dev/v1/docs`
 
 ### Prerequisites
 
@@ -76,7 +76,7 @@ This client developer guide is organized into the following categories:
 
 ## Quick Links
 
-- **Demo Server**: https://api.i3x.dev/v0
-- **API Documentation**: https://api.i3x.dev/v0/docs
+- **Demo Server**: https://api.i3x.dev/v1
+- **API Documentation**: https://api.i3x.dev/v1/docs
 - **RFC Specification**: https://github.com/cesmii/API
 - **Community Email**: rfc@cesmii.org
