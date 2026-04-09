@@ -26,7 +26,9 @@ Yes! The i3X API was designed to be easily understood by both humans and AI. Dir
 
 ### What is the current status of i3X?
 
-i3X is in **pre-release Alpha** (as of early 2026). API signatures are largely stable, but response structures may change through Q1 2026. It is suitable for prototyping, development, and evaluation. The public demo server at [https://i3x.i3x.dev/v1/docs](https://i3x.i3x.dev/v1/docs) is available for testing.
+i3X is in **Beta** (as of Q2 2026). API signatures and responses are largely stable, but there is continued refinement in-progress around the subscription interfaces. Documentation updates are also in-flight. The beta is suitable for early development, and evaluation, and should be fully stable by Q3 2026.
+
+The public demo server at [https://api.i3x.dev/v1/docs](https://api.i3x.dev/v1/docs) is available for testing.
 
 ### What problem does i3X solve?
 
@@ -78,7 +80,7 @@ Review the contributing guidelines in `Contributing.md` in the [GitHub repo](htt
 
 ### Where can I find the formal specification?
 
-The specification comes in two forms: an OpenAPI Spec and an Implementation Guide, both are in Beta, and being developed publicly in the [cesmii/i3x GitHub repository](https://github.com/cesmii/i3x). The live OpenAPI specification with interactive docs is at [https://api.i3x.dev/v0/docs](https://i3x.i3x.dev/v1/docs), while the Implementation Guide is at [text](https://github.com/cesmii/i3X/blob/1.0-Beta/spec/IMPLEMENTATION_GUIDE.md).
+The specification comes in two forms: an OpenAPI Spec and an Implementation Guide, both are in Beta, and being developed publicly in the [cesmii/i3x GitHub repository](https://github.com/cesmii/i3x). The live OpenAPI specification with interactive docs is at [https://api.i3x.dev/v0/docs](https://api.i3x.dev/v1/docs), while the Implementation Guide is at [text](https://github.com/cesmii/i3X/blob/1.0-Beta/spec/IMPLEMENTATION_GUIDE.md).
 
 ### Where can I find more information?
 
