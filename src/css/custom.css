@@ -88,9 +88,9 @@
   position: relative;
 }
 
-/* DRAFT watermark for docs pages */
+/* BETA watermark for docs pages */
 .docs-wrapper::before {
-  content: "DRAFT";
+  content: "BETA";
   position: fixed;
   top: 50%;
   left: 50%;
