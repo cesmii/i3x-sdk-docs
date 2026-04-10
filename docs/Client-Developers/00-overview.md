@@ -4,6 +4,8 @@
 
 The i3X API provides a standardized interface for accessing and manipulating manufacturing data across diverse platforms. This guide is designed for application developers building clients that consume the API to create analytics, visualizations, notifications, and machine learning applications.
 
+These documents are a companion to the formal [Implementation Guide](https://github.com/cesmii/i3X/blob/1.0-Beta/spec/IMPLEMENTATION_GUIDE.md). If there are differences between the two, the Implementation Guide should be considered authoritative; please report any errors you observe.
+
 ## Purpose and Scope
 
 i3x aims to solve the fragmentation problem in manufacturing information systems by providing a common set of server primitives that enable application portability across different platform implementations. This means you can write your application once and deploy it against any platform that implements this API specification.

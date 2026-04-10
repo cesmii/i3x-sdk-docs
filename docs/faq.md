@@ -80,7 +80,7 @@ Review the contributing guidelines in `Contributing.md` in the [GitHub repo](htt
 
 ### Where can I find the formal specification?
 
-The specification comes in two forms: an OpenAPI Spec and an Implementation Guide, both are in Beta, and being developed publicly in the [cesmii/i3x GitHub repository](https://github.com/cesmii/i3x). The live OpenAPI specification with interactive docs is at [https://api.i3x.dev/v0/docs](https://api.i3x.dev/v1/docs), while the Implementation Guide is at [text](https://github.com/cesmii/i3X/blob/1.0-Beta/spec/IMPLEMENTATION_GUIDE.md).
+The specification comes in two forms: an OpenAPI Spec and an Implementation Guide, both are in Beta, and being developed publicly in the [cesmii/i3x GitHub repository](https://github.com/cesmii/i3x). The live OpenAPI specification with interactive docs is at [https://api.i3x.dev/v1/docs](https://api.i3x.dev/v1/docs), while the Implementation Guide is at [text](https://github.com/cesmii/i3X/blob/1.0-Beta/spec/IMPLEMENTATION_GUIDE.md).
 
 ### Where can I find more information?
 
