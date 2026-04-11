@@ -54,7 +54,7 @@ A thorough OPC UA implementation provides more type-safety, better type definiti
 
 i3X aims to provide a simplified interface that can be bound to an OPC UA server as one of the options for a back-end data source. However i3X does not *require* OPC UA. As such, it allows an implementation to have some of the key features of OPC UA, without the requirements of a full OPC UA server implementation.
 
-### Should I implement i3X on a PLC or Edge device
+### Should I implement i3X on a PLC or Edge device?
 
 Probably not. The purpose of i3X is to standardize the programmers interface for contextualized information. This means, raw data that has been shaped into a pre-defined repeatable model, stored as instance objects, with those instances related to each other hierarchically and graphically, usually with history. While some PLCs are very sophisticated, their context is usually fairly focused on the things they're controlling (by design!) The first place you can really start to get value out of an i3X implementation is at the HMI/SCADA level (and on up from there!)
 
